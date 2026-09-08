@@ -9,6 +9,10 @@
   <meta property="og:title" content="Dr. Hidayaturrahman — Computer Science, BINUS University" />
   <meta property="og:description" content="Lecturer · Intelligent Systems · NLP · Deep Learning · Domain Adaptation. Publications, teaching, talks, and contact." />
   <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://hi-day.github.io/" />
+  <meta property="og:url" content="https://hi-day.github.io/" />
+  <meta property="og:locale" content="id_ID" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Georgia'>H</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -47,7 +51,10 @@
     "sameAs": [
       "https://orcid.org/0000-0001-5005-8006",
       "https://www.linkedin.com/in/hidayaturrahman",
-      "https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/"
+      "https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/",
+      "https://sinta.kemdikbud.go.id/authors/profile/6772118",
+      "https://dblp.dagstuhl.de/pid/299/4899.html",
+      "https://bridge.apps.binus.ac.id/researcher/BN123817282-hidayaturrahman-skom-mt"
     ]
   }
   </script>
@@ -59,8 +66,6 @@
     .chip-active { background: #1e3a5f !important; color: #fff !important; border-color: #1e3a5f !important; }
     .dark .chip-active { background: #e2e8f0 !important; color: #0f172a !important; border-color: #e2e8f0 !important; }
     #progress-bar { transition: width .1s linear; }
-    details > summary { list-style: none; cursor: pointer; }
-    details > summary::-webkit-details-marker { display: none; }
     @media print {
       nav, #theme-btn, #to-top, #pub-search-wrap, footer .no-print { display: none !important; }
       body { background: #fff !important; color: #000 !important; }
@@ -106,7 +111,7 @@
       </div>
       <div class="md:hidden flex items-center gap-2">
         <button id="theme-btn-mobile" aria-label="Toggle theme" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">◐</button>
-        <button id="menu-btn" aria-label="Menu" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">☰</button>
+        <button id="menu-btn" aria-label="Menu" aria-expanded="false" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">☰</button>
       </div>
     </div>
     <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex flex-col gap-3 text-sm font-medium">
@@ -141,12 +146,12 @@
         </div>
         <!-- metrics -->
         <dl class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
-          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Works tracked</dt><dd class="serif-display text-2xl font-semibold">36</dd></div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Scholarly outputs</dt><dd class="serif-display text-2xl font-semibold">36</dd></div>
           <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Citations</dt><dd class="serif-display text-2xl font-semibold">57</dd></div>
           <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">h-index</dt><dd class="serif-display text-2xl font-semibold">4</dd></div>
           <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Top venue</dt><dd class="font-semibold mt-1">IEEE Access ×2</dd></div>
         </dl>
-        <p class="text-[11px] opacity-50 mt-2">Metrics via ORCID / LinkedIn scholarly snapshot (2025–2026). Update manually as citations grow.</p>
+        <p class="text-[11px] opacity-50 mt-2">36 outputs (LinkedIn snapshot) vs 6 works on ORCID. Update manually as citations grow.</p>
       </div>
     </div>
   </header>
@@ -283,7 +288,7 @@
           <p class="text-xs opacity-60">Sources: ORCID · IEEE Xplore · arXiv · J. Big Data · EMACS · SIET. Verify DOIs before citing.</p>
         </div>
         <div id="pub-search-wrap" class="mt-5 flex flex-col md:flex-row gap-3">
-          <input id="pub-search" type="search" placeholder="Search title, venue, co-author… (e.g. domain, sarcasm, Suhartono)"
+          <input id="pub-search" type="search" aria-label="Search publications" placeholder="Search title, venue, co-author… (e.g. domain, sarcasm, Suhartono)"
             class="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2.5 text-sm outline-none focus:border-amber-600" />
           <div class="flex gap-2 text-sm" id="pub-filters">
             <button data-f="all" class="chip-active px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700">All</button>
@@ -323,7 +328,8 @@
           <li><span class="font-mono text-xs opacity-60">18 OCT 2022 · BINUS × PT PHAROS</span><br/><strong>AutoCopywriting with AI</strong>, Workshop Pengembangan Perangkat Lunak Berbasis Sistem Cerdas (Kampus Anggrek, onsite + online). Live demo of AI copywriting vs. humans; tuning length, branching &amp; sampling for natural, audience-fit text. Opened by Derwin Suhartono; co-speaker Yoga Pratama Aliarham (Tiket.com, ML in Production).</li>
           <li><span class="font-mono text-xs opacity-60">09 APR 2021 · NUNI NATIONAL SEMINAR</span><br/><strong>Style Transfer — How AI Can Paint Like an Artist</strong>, NUNI Online Seminar Series via Zoom. 100+ attendees across Indonesian universities; deep Q&amp;A on AI + art futures.</li>
           <li><span class="font-mono text-xs opacity-60">22 NOV 2020 · SOCS ESSAY</span><br/><strong>Style Transfer: Memindahkan Style Lukisan ke Gambar Lain dengan ML</strong> — widely referenced introductory essay (cited by later batik-motif &amp; style-transfer student papers).</li>
-          <li><span class="font-mono text-xs opacity-60">ONGOING</span><br/><strong>Reviewer / community service</strong> — list journals, program committees, and pengabdian masyarakat entries from BINUS Scholar here.</li>
+          <!-- Instruksi pemilik: list journals, program committees, and pengabdian masyarakat entries from BINUS Scholar here. -->
+          <li><span class="font-mono text-xs opacity-60">ONGOING</span><br/>Reviewer and community-service record available on request — full list on BINUS Scholar.</li>
         </ul>
         <div class="mt-5 text-sm opacity-70">Pull the authoritative lists from <a class="underline" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar tabs</a>: Teaching · Research &amp; Publication · Community Services · Certifications · Achievements.</div>
       </div>
@@ -377,7 +383,7 @@
           <ul class="mt-5 space-y-2 text-sm">
             <li>🏛️ School of Computer Science, BINUS University</li>
             <li>📍 Jl. Raya Kebon Jeruk No. 27, Jakarta Barat 11530</li>
-            <li>📧 <span class="opacity-70">Use the BINUS directory / Scholar contact — add your public email here</span></li>
+            <li>📧 <span class="opacity-70">Contact via BINUS directory or LinkedIn below.</span></li>
           </ul>
           <div class="mt-5 flex flex-wrap gap-2 text-[13px]">
             <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2" target="_blank" rel="noopener" href="https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/">SoCS page</a>
@@ -395,7 +401,8 @@
             <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://www.csauthors.net/hidayaturrahman/"><strong>csauthors</strong><br/><span class="opacity-60 text-xs">Co-author graph</span></a>
             <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://www.linkedin.com/in/hidayaturrahman"><strong>LinkedIn</strong><br/><span class="opacity-60 text-xs">/in/hidayaturrahman</span></a>
           </div>
-          <p class="mt-4 text-xs opacity-60 leading-relaxed">TODO: add Google Scholar &amp; Scopus Author page links once claimed. Teaching / service / certification detail lives on the <a class="underline" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar tabs</a>.</p>
+          <!-- Instruksi pemilik: add Google Scholar & Scopus Author page links once claimed. -->
+          <p class="mt-4 text-xs opacity-60 leading-relaxed">Teaching / service / certification detail lives on the <a class="underline" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar tabs</a>.</p>
         </div>
       </div>
     </section>
@@ -487,7 +494,7 @@
                     conference: ['Conference', 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200'],
                     preprint: ['Preprint', 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'] };
       const [label, cls] = map[t] || map.journal;
-      return `<span class="text-[11px] font-semibold px-2.5 py-1 rounded-full ${cls}">${label} · ${''}</span>`;
+      return `<span class="text-[11px] font-semibold px-2.5 py-1 rounded-full ${cls}">${label}</span>`;
     }
 
     function render() {
@@ -528,8 +535,18 @@
     try { setTheme(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)); } catch(e){}
     document.getElementById('theme-btn')?.addEventListener('click', () => setTheme(!root.classList.contains('dark')));
     document.getElementById('theme-btn-mobile')?.addEventListener('click', () => setTheme(!root.classList.contains('dark')));
-    document.getElementById('menu-btn')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
-    document.getElementById('mobile-menu')?.addEventListener('click', e => { if (e.target.tagName === 'A') e.currentTarget.classList.add('hidden'); });
+    document.getElementById('menu-btn')?.addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('menu-btn');
+      const hidden = menu.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', String(!hidden));
+    });
+    document.getElementById('mobile-menu')?.addEventListener('click', e => {
+      if (e.target.tagName === 'A') {
+        e.currentTarget.classList.add('hidden');
+        document.getElementById('menu-btn')?.setAttribute('aria-expanded', 'false');
+      }
+    });
 
     // progress + to-top + year
     document.getElementById('year').textContent = new Date().getFullYear();

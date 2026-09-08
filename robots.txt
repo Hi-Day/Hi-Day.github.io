@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hi-day.github.io/sitemap.xml
