@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Hidayaturrahman, S.Kom., M.T. — Computer Science, BINUS University</title>
+  <meta name="description" content="Academic profile of Dr. Hidayaturrahman, Lecturer and Concentration Content Coordinator for Intelligent Systems, School of Computer Science, BINUS University. Unpad → ITB → BINUS doctorate. Research in NLP, vision, domain adaptation, generative AI. Leader, BINUS Agentic-AI Hub." />
+  <meta name="author" content="Hidayaturrahman" />
+  <meta property="og:title" content="Dr. Hidayaturrahman — Computer Science, BINUS University" />
+  <meta property="og:description" content="Lecturer · Intelligent Systems · NLP · Deep Learning · Domain Adaptation. Publications, teaching, talks, and contact." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Georgia'>H</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink: '#1a2332',
+            accent: '#1e3a5f',
+            gold: '#b9975b',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Dr. Hidayaturrahman, S.Kom., M.T.",
+    "jobTitle": "Lecturer, Concentration Content Coordinator — Intelligent Systems",
+    "affiliation": { "@type": "Organization", "name": "School of Computer Science, BINUS University" },
+    "identifier": [
+      { "@type": "PropertyValue", "name": "ORCID", "value": "0000-0001-5005-8006" },
+      { "@type": "PropertyValue", "name": "Scopus Author ID", "value": "57226269422" }
+    ],
+    "url": "https://hidayaturrahman.github.io",
+    "sameAs": [
+      "https://orcid.org/0000-0001-5005-8006",
+      "https://www.linkedin.com/in/hidayaturrahman",
+      "https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/"
+    ]
+  }
+  </script>
+  <style>
+    body { font-feature-settings: "cv11", "ss01"; }
+    .serif-display { font-family: 'Fraunces', Georgia, serif; }
+    .pub-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .pub-card:hover { transform: translateY(-2px); }
+    .chip-active { background: #1e3a5f !important; color: #fff !important; border-color: #1e3a5f !important; }
+    .dark .chip-active { background: #e2e8f0 !important; color: #0f172a !important; border-color: #e2e8f0 !important; }
+    #progress-bar { transition: width .1s linear; }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    @media print {
+      nav, #theme-btn, #to-top, #pub-search-wrap, footer .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 font-sans antialiased">
+
+  <!-- reading progress -->
+  <div class="fixed top-0 left-0 h-1 bg-amber-600 z-[60]" id="progress-bar" style="width:0%"></div>
+
+  <!-- top affiliation bar -->
+  <div class="bg-[#1e3a5f] text-white/90 text-xs">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+      <p class="tracking-wide">School of Computer Science · BINUS University · Jakarta, Indonesia</p>
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline opacity-70">Staff ID D6423</span>
+        <button onclick="window.print()" class="underline underline-offset-2 hover:text-white">Print / Save CV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- nav -->
+  <nav class="sticky top-0 z-50 backdrop-blur bg-stone-50/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <a href="#top" class="flex items-center gap-3">
+        <span class="w-9 h-9 rounded-xl bg-[#1e3a5f] text-white grid place-items-center font-serif font-bold text-lg">H</span>
+        <span class="leading-tight">
+          <span class="block font-semibold text-sm">Dr. Hidayaturrahman</span>
+          <span class="block text-xs opacity-60">Computer Science · BINUS</span>
+        </span>
+      </a>
+      <div class="hidden md:flex items-center gap-5 text-sm font-medium">
+        <a href="#about" class="hover:text-amber-700">About</a>
+        <a href="#journey" class="hover:text-amber-700">Journey</a>
+        <a href="#research" class="hover:text-amber-700">Research</a>
+        <a href="#publications" class="hover:text-amber-700">Publications</a>
+        <a href="#teaching" class="hover:text-amber-700">Teaching</a>
+        <a href="#talks" class="hover:text-amber-700">Talks</a>
+        <a href="#projects" class="hover:text-amber-700">Projects</a>
+        <a href="#contact" class="px-4 py-2 rounded-full bg-[#1e3a5f] text-white hover:bg-[#152a46]">Contact</a>
+        <button id="theme-btn" aria-label="Toggle theme" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">◐</button>
+      </div>
+      <div class="md:hidden flex items-center gap-2">
+        <button id="theme-btn-mobile" aria-label="Toggle theme" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">◐</button>
+        <button id="menu-btn" aria-label="Menu" class="w-9 h-9 rounded-full border border-slate-300 dark:border-slate-700 grid place-items-center">☰</button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+      <a href="#about">About</a><a href="#journey">Journey</a><a href="#research">Research</a><a href="#publications">Publications</a>
+      <a href="#teaching">Teaching</a><a href="#talks">Talks</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- hero -->
+  <header id="top" class="max-w-6xl mx-auto px-4 pt-10 pb-8">
+    <div class="grid md:grid-cols-[220px_1fr] gap-8 items-start">
+      <div class="mx-auto md:mx-0">
+        <div class="w-52 h-64 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-800 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700 grid place-items-center relative">
+          <span class="serif-display text-6xl text-slate-400 absolute">H</span>
+          <img src="https://socs.binus.ac.id/computer-science/wp-content/uploads/sites/8/2026/05/IMG_7016.jpg"
+               alt="Portrait of Dr. Hidayaturrahman"
+               class="w-full h-full object-cover relative"
+               loading="lazy"
+               onerror="this.remove()" />
+        </div>
+        <p class="text-[11px] opacity-60 mt-2 text-center md:text-left leading-snug">Photo: BINUS SoCS faculty page.<br/>Replace with <code>assets/profile.jpg</code> if self-hosting.</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-amber-700 dark:text-amber-500">Academic Profile</p>
+        <h1 class="serif-display text-4xl md:text-5xl font-semibold text-ink dark:text-white mt-2 leading-tight">Dr. Hidayaturrahman,<br/>S.Kom., M.T.</h1>
+        <p class="mt-3 text-lg opacity-80">Lecturer &amp; Concentration Content Coordinator — <strong>Intelligent Systems</strong><br class="hidden md:block"/> School of Computer Science, BINUS University · Leader, <strong>BINUS Agentic-AI Hub</strong></p>
+        <p class="mt-4 max-w-2xl leading-relaxed opacity-80">I work on <strong>natural language processing</strong>, <strong>deep learning</strong>, <strong>computer vision</strong>, and <strong>domain adaptation</strong> — from argument mining, sarcasm detection, and neural style transfer to adversarial multitask learning and catastrophic forgetting. Trained at <strong>Unpad</strong> (B.Sc. Informatics, 2014–2018), <strong>ITB</strong> (M.T. Informatics, 2018–2020), and <strong>BINUS</strong> (Dr. Computer Science, 2022–2025), I coordinate the Intelligent Systems concentration and build applied AI with students and industry partners.</p>
+        <div class="mt-5 flex flex-wrap gap-2 text-sm">
+          <a href="#publications" class="px-4 py-2 rounded-full bg-[#1e3a5f] text-white font-medium hover:bg-[#152a46]">View publications</a>
+          <a href="#contact" class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700 font-medium hover:border-amber-600">Get in touch</a>
+          <a href="https://orcid.org/0000-0001-5005-8006" target="_blank" rel="noopener" class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700 hover:border-amber-600">⌀ ORCID</a>
+        </div>
+        <!-- metrics -->
+        <dl class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Works tracked</dt><dd class="serif-display text-2xl font-semibold">36</dd></div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Citations</dt><dd class="serif-display text-2xl font-semibold">57</dd></div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">h-index</dt><dd class="serif-display text-2xl font-semibold">4</dd></div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"><dt class="text-[11px] uppercase tracking-wider opacity-60">Top venue</dt><dd class="font-semibold mt-1">IEEE Access ×2</dd></div>
+        </dl>
+        <p class="text-[11px] opacity-50 mt-2">Metrics via ORCID / LinkedIn scholarly snapshot (2025–2026). Update manually as citations grow.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-16 space-y-12">
+
+    <!-- about + sidebar -->
+    <section id="about" class="grid lg:grid-cols-[1fr_320px] gap-6 scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <h2 class="serif-display text-2xl font-semibold">About</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <div class="prose dark:prose-invert max-w-none text-[15px] leading-relaxed opacity-90">
+          <p><strong>Dr. Hidayaturrahman, S.Kom., M.T.</strong> is a faculty member in the School of Computer Science at <strong>BINUS University</strong> (Staff ID D6423), serving as <strong>Concentration Content Coordinator for Intelligent Systems</strong> and <strong>Leader of the BINUS Agentic-AI Hub</strong> (Agentic AI Center, Innovation Award 2025). His BRIDGE research profile lists keywords across computer vision, NLP, recommendation systems, generative AI, and deep learning, with a hands-on stack of Python, TensorFlow, PyTorch, and OpenCV.</p>
+          <p class="mt-3">His research sits at the intersection of <em>language, vision, learning, and adaptation</em>: contextual language models for argumentation mining (J. Big Data 2021, most-cited), data augmentation for sarcasm detection, neural style transfer accelerated with knowledge distillation (IEEE AIDAS 2022), and — most recently — adversarial multitask learning with a domain adapter plus catastrophic-forgetting studies on Office-31 (2× IEEE Access 2024, doctoral research on domain adaptation, deep learning, and multitask learning). He also publishes applied reviews on mobile-health engagement and tourism UI/UX.</p>
+          <p class="mt-3">Beyond papers, he is a visible science communicator and builder: a 100+ attendee NUNI national seminar on <em>“Style Transfer — How AI Can Paint Like an Artist”</em> (2021), an industry workshop on <em>AutoCopywriting with AI</em> with PT Pharos Indonesia (2022), an introductory ML essay widely cited by student work (SoCS 2020), and the BINUS Gallery product <em>FLAVORFUL</em>. He mentors undergraduate research — several student co-authors (Emmanuel Dave, Alif Tri Handoyo, Samuel Philip) appear on his papers — and collaborates with senior BINUS professors including Derwin Suhartono, Agung Trisetyarso, Iman H. Kartowisastro, Widodo Budiharto, Harco Warnars, Benfano Soewito, and Ford Lumban Gaol.</p>
+        </div>
+        <div class="mt-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60">Education</h3>
+          <ol class="mt-3 space-y-3 text-[15px]">
+            <li class="flex gap-3"><span class="mt-1.5 w-2 h-2 rounded-full bg-amber-600 shrink-0"></span><span><strong>Doctoral Degree (Dr.), Computer Science</strong> — BINUS University, 2022–2025. Dissertation area: domain adaptation · deep learning · multitask learning.</span></li>
+            <li class="flex gap-3"><span class="mt-1.5 w-2 h-2 rounded-full bg-amber-600 shrink-0"></span><span><strong>M.T. (Master's), Informatics</strong> — Institut Teknologi Bandung (ITB), 2018–2020.</span></li>
+            <li class="flex gap-3"><span class="mt-1.5 w-2 h-2 rounded-full bg-amber-600 shrink-0"></span><span><strong>S.Kom. (Bachelor's), Teknik Informatika</strong> — Universitas Padjadjaran (Unpad), 2014–2018. Early work includes a 2012 creoles/linguistics study.</span></li>
+          </ol>
+        </div>
+      </div>
+      <aside class="space-y-6">
+        <div class="rounded-2xl bg-[#1e3a5f] text-white p-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider text-white/60">Academic IDs</h3>
+          <ul class="mt-3 space-y-2 text-sm">
+            <li class="flex justify-between gap-2"><span class="opacity-70">ORCID</span><a class="underline underline-offset-2 font-mono text-[13px]" target="_blank" rel="noopener" href="https://orcid.org/0000-0001-5005-8006">0000-0001-5005-8006</a></li>
+            <li class="flex justify-between gap-2"><span class="opacity-70">Scopus ID</span><span class="font-mono text-[13px]">57226269422</span></li>
+            <li class="flex justify-between gap-2"><span class="opacity-70">BINUS Staff</span><span class="font-mono text-[13px]">D6423</span></li>
+          </ul>
+          <div class="mt-4 grid grid-cols-2 gap-2 text-[13px]">
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-center" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar</a>
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-center" target="_blank" rel="noopener" href="https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/">SoCS Profile</a>
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-center" target="_blank" rel="noopener" href="https://www.linkedin.com/in/hidayaturrahman">LinkedIn</a>
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-center" target="_blank" rel="noopener" href="https://www.csauthors.net/hidayaturrahman/">csauthors</a>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60">News</h3>
+          <ul class="mt-3 space-y-3 text-sm leading-relaxed">
+            <li><span class="font-mono text-xs opacity-60">2025</span><br/>Leader, <strong>BINUS Agentic-AI Hub</strong> (Innovation Award 2025) · completed doctorate at BINUS.</li>
+            <li><span class="font-mono text-xs opacity-60">2024</span><br/>Two first-author papers in <em>IEEE Access</em> (domain adapter; catastrophic forgetting) + mHealth review in <em>EMACS</em>.</li>
+            <li><span class="font-mono text-xs opacity-60">2022</span><br/>IEEE AIDAS paper on style-transfer distillation; industry workshop <em>AutoCopywriting with AI</em> (BINUS × Pharos).</li>
+            <li><span class="font-mono text-xs opacity-60">2021</span><br/>NUNI national seminar <em>How AI Can Paint Like an Artist</em> (100+ attendees); J. Big Data argument-mining paper.</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+
+    <!-- journey: experience + skills -->
+    <section id="journey" class="grid lg:grid-cols-[1fr_320px] gap-6 scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <h2 class="serif-display text-2xl font-semibold">Journey</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <ol class="relative border-l-2 border-slate-200 dark:border-slate-700 ml-2 space-y-6 text-[15px]">
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-amber-600"></span>
+            <p class="font-mono text-xs opacity-60">2025 — PRESENT</p>
+            <p><strong>Leader, BINUS Agentic-AI Hub</strong> — Agentic AI Center (Innovation Award 2025), with mentor Andry Chowanda. Building an agentic-AI hub for research-driven innovation.</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-[#1e3a5f]"></span>
+            <p class="font-mono text-xs opacity-60">PRESENT</p>
+            <p><strong>Concentration Content Coordinator — Intelligent Systems</strong>, School of Computer Science, BINUS University. Owns concentration curriculum and content standards.</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-[#1e3a5f]"></span>
+            <p class="font-mono text-xs opacity-60">LECTURER</p>
+            <p><strong>Lecturer (Faculty Member), Computer Science</strong>, BINUS University — teaching, thesis supervision, and research in intelligent systems / AI. Active in IEEE / Machine Learning Society collaborations.</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-slate-400"></span>
+            <p class="font-mono text-xs opacity-60">2022 – 2025</p>
+            <p><strong>Doctoral researcher, Computer Science</strong>, BINUS University — domain adaptation, deep learning, multitask learning. Output: 2× IEEE Access (2024) + IEEE AIDAS (2022) with Warnars, Soewito &amp; Gaol.</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-slate-400"></span>
+            <p class="font-mono text-xs opacity-60">2022</p>
+            <p><strong>AI Solution Developer (professional)</strong> — invited industry speaker, BINUS × PT Pharos Indonesia workshop: live <em>AutoCopywriting with AI</em> demo (tunable length, branching, sampling) alongside Tiket.com's <em>ML in Production</em>.</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-slate-400"></span>
+            <p class="font-mono text-xs opacity-60">2018 – 2020</p>
+            <p><strong>Master's, Informatics</strong>, Institut Teknologi Bandung — foundation for NLP / deep-learning research (sarcasm, argument mining).</p></li>
+          <li class="pl-6 relative"><span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-slate-400"></span>
+            <p class="font-mono text-xs opacity-60">2014 – 2018</p>
+            <p><strong>Bachelor's, Teknik Informatika</strong>, Universitas Padjadjaran — incl. early linguistics/creoles work (2012) and warehouse-robot prototype (JITSI 2020).</p></li>
+        </ol>
+      </div>
+      <aside class="space-y-6">
+        <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60">Toolbox</h3>
+          <div class="mt-3 flex flex-wrap gap-2 text-[13px]">
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Python</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">PyTorch</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">TensorFlow</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">OpenCV</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Hugging Face</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Scikit-learn</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Generative AI / LLMs</span>
+            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Recommender systems</span>
+          </div>
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60 mt-6">Languages</h3>
+          <p class="mt-2 text-sm opacity-80">English (9 research works) · Bahasa Indonesia</p>
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60 mt-6">Memberships</h3>
+          <p class="mt-2 text-sm opacity-80">Machine Learning Society / IEEE collaborations · NUNI university network · BRIDGE researcher</p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- research interests -->
+    <section id="research" class="scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <h2 class="serif-display text-2xl font-semibold">Research interests</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Natural Language Processing</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Domain Adaptation</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Multitask Learning</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Deep Learning &amp; Forgetting</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Argument Mining</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Sarcasm Detection</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">Intelligent Systems</span>
+          <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">HCI / UI-UX Reviews</span>
+        </div>
+        <div class="mt-6 grid md:grid-cols-3 gap-4 text-sm leading-relaxed">
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-4"><p class="font-semibold">Language &amp; context</p><p class="opacity-75 mt-1">Contextual language models for argument component classification; augmentation with word embeddings for sarcasm.</p></div>
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-4"><p class="font-semibold">Learning that transfers</p><p class="opacity-75 mt-1">Adversarial multitask setups with a domain adapter; studying when deep models forget (Office-31).</p></div>
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-4"><p class="font-semibold">Applied AI reviews</p><p class="opacity-75 mt-1">Evidence synthesis for mobile-health engagement and tourism information services.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- publications -->
+    <section id="publications" class="scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="serif-display text-2xl font-semibold">Selected publications</h2>
+            <div class="h-1 w-12 bg-amber-600 rounded mt-2"></div>
+          </div>
+          <p class="text-xs opacity-60">Sources: ORCID · IEEE Xplore · arXiv · J. Big Data · EMACS · SIET. Verify DOIs before citing.</p>
+        </div>
+        <div id="pub-search-wrap" class="mt-5 flex flex-col md:flex-row gap-3">
+          <input id="pub-search" type="search" placeholder="Search title, venue, co-author… (e.g. domain, sarcasm, Suhartono)"
+            class="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2.5 text-sm outline-none focus:border-amber-600" />
+          <div class="flex gap-2 text-sm" id="pub-filters">
+            <button data-f="all" class="chip-active px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700">All</button>
+            <button data-f="journal" class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700">Journal</button>
+            <button data-f="conference" class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700">Conference</button>
+            <button data-f="preprint" class="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700">Preprint</button>
+          </div>
+        </div>
+        <div id="pub-list" class="mt-5 grid gap-4"></div>
+        <p id="pub-empty" class="hidden mt-4 text-sm opacity-60">No publications match your filter.</p>
+        <div class="mt-6 rounded-xl bg-amber-50 dark:bg-amber-950/30 ring-1 ring-amber-200 dark:ring-amber-900 p-4 text-sm leading-relaxed">
+          <strong>Full list:</strong> see
+          <a class="underline underline-offset-2" target="_blank" rel="noopener" href="https://orcid.org/0000-0001-5005-8006">ORCID (6 works)</a> ·
+          <a class="underline underline-offset-2" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar</a> ·
+          <a class="underline underline-offset-2" target="_blank" rel="noopener" href="https://www.csauthors.net/hidayaturrahman/">csauthors</a>.
+          Add your Google Scholar / Scopus links in <code>index.html</code> once claimed.
+        </div>
+      </div>
+    </section>
+
+    <!-- teaching & service -->
+    <section id="teaching" class="grid lg:grid-cols-2 gap-6 scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <h2 class="serif-display text-2xl font-semibold">Teaching &amp; roles</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <ul class="space-y-4 text-[15px] leading-relaxed">
+          <li><strong>Concentration Content Coordinator — Intelligent Systems</strong><br/><span class="opacity-70">School of Computer Science, BINUS University. Curates concentration curriculum and content standards across campuses (Jakarta, Bandung, Malang, Semarang, Bekasi, Medan).</span></li>
+          <li><strong>Lecturer, Computer Science</strong><br/><span class="opacity-70">Intelligent-systems / AI track: NLP, deep learning, computer vision, and applied ML. Known for live demos (e.g., AutoCopywriting with AI) over slides-only teaching.</span></li>
+          <li><strong>Thesis &amp; student research supervision</strong><br/><span class="opacity-70">Student co-authors on record: Emmanuel Dave (argument mining, J. Big Data 2021), Alif Tri Handoyo (sarcasm detection, arXiv 2021), Samuel Philip (mHealth review, EMACS 2024). Open to topics in NLP, transfer/domain adaptation, generative AI, and vision.</span></li>
+          <li><strong>Leader, BINUS Agentic-AI Hub</strong><br/><span class="opacity-70">Agentic AI Center, Innovation Award 2025 — steering applied agentic-AI products toward societal impact via BRIDGE.</span></li>
+        </ul>
+      </div>
+      <div id="talks" class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8 scroll-mt-24">
+        <h2 class="serif-display text-2xl font-semibold">Talks &amp; service</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <ul class="space-y-4 text-[15px] leading-relaxed">
+          <li><span class="font-mono text-xs opacity-60">18 OCT 2022 · BINUS × PT PHAROS</span><br/><strong>AutoCopywriting with AI</strong>, Workshop Pengembangan Perangkat Lunak Berbasis Sistem Cerdas (Kampus Anggrek, onsite + online). Live demo of AI copywriting vs. humans; tuning length, branching &amp; sampling for natural, audience-fit text. Opened by Derwin Suhartono; co-speaker Yoga Pratama Aliarham (Tiket.com, ML in Production).</li>
+          <li><span class="font-mono text-xs opacity-60">09 APR 2021 · NUNI NATIONAL SEMINAR</span><br/><strong>Style Transfer — How AI Can Paint Like an Artist</strong>, NUNI Online Seminar Series via Zoom. 100+ attendees across Indonesian universities; deep Q&amp;A on AI + art futures.</li>
+          <li><span class="font-mono text-xs opacity-60">22 NOV 2020 · SOCS ESSAY</span><br/><strong>Style Transfer: Memindahkan Style Lukisan ke Gambar Lain dengan ML</strong> — widely referenced introductory essay (cited by later batik-motif &amp; style-transfer student papers).</li>
+          <li><span class="font-mono text-xs opacity-60">ONGOING</span><br/><strong>Reviewer / community service</strong> — list journals, program committees, and pengabdian masyarakat entries from BINUS Scholar here.</li>
+        </ul>
+        <div class="mt-5 text-sm opacity-70">Pull the authoritative lists from <a class="underline" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar tabs</a>: Teaching · Research &amp; Publication · Community Services · Certifications · Achievements.</div>
+      </div>
+    </section>
+
+    <!-- projects -->
+    <section id="projects" class="scroll-mt-24">
+      <div class="rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-6 md:p-8">
+        <h2 class="serif-display text-2xl font-semibold">Projects &amp; initiatives</h2>
+        <div class="h-1 w-12 bg-amber-600 rounded mt-2 mb-4"></div>
+        <div class="grid md:grid-cols-3 gap-4 text-sm leading-relaxed">
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-5">
+            <p class="font-mono text-xs opacity-60">2025 · LEADER</p>
+            <p class="font-semibold mt-1 text-base">BINUS Agentic-AI Hub</p>
+            <p class="opacity-75 mt-1">Agentic AI Center, Innovation Award 2025. Research-driven products for societal impact via BRIDGE.</p>
+          </div>
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-5">
+            <p class="font-mono text-xs opacity-60">PRODUCT · BINUS GALLERY</p>
+            <p class="font-semibold mt-1 text-base">FLAVORFUL</p>
+            <p class="opacity-75 mt-1">Listed product under SoCS on BINUS Gallery. <a class="underline underline-offset-2" target="_blank" rel="noopener" href="https://binus.ac.id/gallery/artist/1244/hidayaturrahman-s-kom-m-t/">View gallery ↗</a></p>
+          </div>
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-950 ring-1 ring-slate-200 dark:ring-slate-800 p-5">
+            <p class="font-mono text-xs opacity-60">THREAD · 2020 → 2024</p>
+            <p class="font-semibold mt-1 text-base">Style transfer → domain adaptation</p>
+            <p class="opacity-75 mt-1">From the 2020 SoCS explainer and NUNI talk, through AIDAS-2022 distillation, to the 2024 IEEE Access domain-adapter doctorate work.</p>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60">Frequent collaborators</h3>
+          <div class="mt-3 flex flex-wrap gap-2 text-[13px]">
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Derwin Suhartono</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Agung Trisetyarso</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Iman H. Kartowisastro</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Widodo Budiharto</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Harco Warnars</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Benfano Soewito</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Ford Lumban Gaol</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Aniati M. Arymurthy</span>
+            <span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700">Andry Chowanda (Agentic-AI Hub)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- contact -->
+    <section id="contact" class="scroll-mt-24">
+      <div class="rounded-2xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-800 grid md:grid-cols-2">
+        <div class="bg-[#1e3a5f] text-white p-6 md:p-8">
+          <h2 class="serif-display text-2xl font-semibold">Contact</h2>
+          <p class="mt-2 text-white/75 text-sm leading-relaxed">For supervision, collaboration, or invited talks, reach out via BINUS channels. Include your affiliation, topic, and timeline.</p>
+          <ul class="mt-5 space-y-2 text-sm">
+            <li>🏛️ School of Computer Science, BINUS University</li>
+            <li>📍 Jl. Raya Kebon Jeruk No. 27, Jakarta Barat 11530</li>
+            <li>📧 <span class="opacity-70">Use the BINUS directory / Scholar contact — add your public email here</span></li>
+          </ul>
+          <div class="mt-5 flex flex-wrap gap-2 text-[13px]">
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2" target="_blank" rel="noopener" href="https://socs.binus.ac.id/computer-science/people/dr-hidayaturrahman-s-kom-m-t/">SoCS page</a>
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2" target="_blank" rel="noopener" href="https://bridge.apps.binus.ac.id/researcher/BN123817282-hidayaturrahman-skom-mt">BRIDGE researcher</a>
+            <a class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2" target="_blank" rel="noopener" href="https://www.linkedin.com/in/hidayaturrahman">LinkedIn</a>
+          </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-6 md:p-8">
+          <h3 class="font-semibold text-sm uppercase tracking-wider opacity-60">Academic profiles</h3>
+          <div class="mt-3 grid sm:grid-cols-2 gap-2 text-sm">
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://orcid.org/0000-0001-5005-8006"><strong>ORCID</strong><br/><span class="opacity-60 font-mono text-xs">0000-0001-5005-8006</span></a>
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt"><strong>BINUS Scholar</strong><br/><span class="opacity-60 text-xs">Publications &amp; teaching record</span></a>
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://sinta.kemdikbud.go.id/authors/profile/6772118"><strong>SINTA</strong><br/><span class="opacity-60 font-mono text-xs">ID 6772118</span></a>
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://dblp.dagstuhl.de/pid/299/4899.html"><strong>dblp</strong><br/><span class="opacity-60 text-xs">Computer-science bibliography</span></a>
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://www.csauthors.net/hidayaturrahman/"><strong>csauthors</strong><br/><span class="opacity-60 text-xs">Co-author graph</span></a>
+            <a class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:border-amber-600" target="_blank" rel="noopener" href="https://www.linkedin.com/in/hidayaturrahman"><strong>LinkedIn</strong><br/><span class="opacity-60 text-xs">/in/hidayaturrahman</span></a>
+          </div>
+          <p class="mt-4 text-xs opacity-60 leading-relaxed">TODO: add Google Scholar &amp; Scopus Author page links once claimed. Teaching / service / certification detail lives on the <a class="underline" target="_blank" rel="noopener" href="https://scholar.binus.ac.id/lecturer/D6423/hidayaturrahman-skom-mt">BINUS Scholar tabs</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm flex flex-col md:flex-row gap-3 items-start md:items-center justify-between">
+      <p class="opacity-70">© <span id="year"></span> Hidayaturrahman · School of Computer Science, BINUS University · Built as a static page for GitHub Pages.</p>
+      <p class="opacity-60 no-print">Data compiled from public sources (BINUS SoCS, ORCID, LinkedIn snapshot). Confirm details before citing.</p>
+    </div>
+  </footer>
+
+  <button id="to-top" aria-label="Back to top" class="hidden fixed bottom-5 right-5 w-11 h-11 rounded-full bg-[#1e3a5f] text-white shadow-lg">↑</button>
+
+  <script>
+    const PUBS = [
+      {
+        title: "Adversarial Multitask Learning for Domain Adaptation Through Domain Adapter",
+        authors: "Hidayaturrahman, A. Trisetyarso, I. H. Kartowisastro, W. Budiharto",
+        venue: "IEEE Access", year: 2024, type: "journal",
+        note: "Proposes a domain-adapter module inside adversarial multitask learning for cross-domain transfer.",
+        doi: "10.1109/ACCESS.2024.3512544", link: "https://doi.org/10.1109/ACCESS.2024.3512544"
+      },
+      {
+        title: "Investigating Catastrophic Forgetting of Deep Learning Models Within Office 31 Dataset",
+        authors: "Hidayaturrahman, A. Trisetyarso, I. H. Kartowisastro, W. Budiharto",
+        venue: "IEEE Access", year: 2024, type: "journal",
+        note: "Empirical study of forgetting behaviour of deep models across Office-31 domains.",
+        doi: "10.1109/ACCESS.2024.3465491", link: "https://doi.org/10.1109/ACCESS.2024.3465491"
+      },
+      {
+        title: "Effective Approaches for User Engagement Improvement in Mobile Health Applications: A Comprehensive Literature Analysis",
+        authors: "S. Philip, Hidayaturrahman",
+        venue: "EMACS Journal, Vol. 6 No. 3", year: 2024, type: "journal",
+        note: "Literature synthesis on engagement strategies for mHealth apps.",
+        doi: "10.21512/emacsjournal.v6i3.11837", link: "https://doi.org/10.21512/emacsjournal.v6i3.11837"
+      },
+      {
+        title: "Application of UI/UX in Tourism Information Service Problems: A Review",
+        authors: "Hidayaturrahman et al.",
+        venue: "Proc. 8th Int. Conf. on Sustainable Information Engineering and Technology (SIET)", year: 2023, type: "conference",
+        note: "Review of UI/UX approaches to tourism information-service problems.",
+        doi: "", link: "https://www.csauthors.net/hidayaturrahman/"
+      },
+      {
+        title: "Enhancing Argumentation Component Classification Using Contextual Language Model",
+        authors: "Hidayaturrahman, E. Dave, D. Suhartono, A. M. Arymurthy",
+        venue: "Journal of Big Data, 8(1):103", year: 2021, type: "journal",
+        note: "Most-cited: contextual LMs improve argument component classification. 9+ citations.",
+        doi: "10.1186/s40537-021-00490-2", link: "https://doi.org/10.1186/s40537-021-00490-2"
+      },
+      {
+        title: "Sarcasm Detection in Twitter — Performance Impact While Using Data Augmentation: Word Embeddings",
+        authors: "A. T. Handoyo, Hidayaturrahman, D. Suhartono",
+        venue: "arXiv / CoRR", year: 2021, type: "preprint",
+        note: "Studies augmentation + embeddings for Twitter sarcasm detection.",
+        doi: "10.48550/arXiv.2108.09924", link: "https://doi.org/10.48550/arXiv.2108.09924"
+      },
+      {
+        title: "Shrinking Neural Style Transfer Model with Knowledge Distillation",
+        authors: "Hidayaturrahman, H. L. H. S. Warnars, B. Soewito, F. L. Gaol",
+        venue: "Proc. IEEE AIDAS 2022", year: 2022, type: "conference",
+        note: "Distils style-transfer into a faster student model; discusses when distillation yields good students.",
+        doi: "10.1109/AIDAS56890.2022.9918806", link: "https://doi.org/10.1109/AIDAS56890.2022.9918806"
+      },
+      {
+        title: "Prototipe Robot Pengangkut Barang dengan Sistem Pengalamatan Lokasi di dalam Gudang",
+        authors: "Hidayaturrahman, R. Hadi, Yulherniwati",
+        venue: "JITSI: Jurnal Ilmiah Teknologi Sistem Informasi, Vol. 1 No. 3", year: 2020, type: "journal",
+        note: "Warehouse goods-transport robot prototype with in-building location addressing.",
+        doi: "10.30630/jitsi.1.3.13", link: "https://doi.org/10.30630/jitsi.1.3.13"
+      },
+      {
+        title: "Language Contact Resulted from the Dutch Post-Colonization in Kangean: An Analysis of Creoles Perspective",
+        authors: "Hidayaturrahman",
+        venue: "Linguistics / creoles study", year: 2012, type: "journal",
+        note: "Early pre-CS work on Dutch post-colonial language contact in Kangean — shows a long-standing language interest feeding later NLP research.",
+        doi: "", link: "https://orcid.org/0000-0001-5005-8006"
+      }
+    ];
+
+    const list = document.getElementById('pub-list');
+    const empty = document.getElementById('pub-empty');
+    const search = document.getElementById('pub-search');
+    let activeFilter = 'all';
+
+    function badge(t) {
+      const map = { journal: ['Journal', 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'],
+                    conference: ['Conference', 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200'],
+                    preprint: ['Preprint', 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'] };
+      const [label, cls] = map[t] || map.journal;
+      return `<span class="text-[11px] font-semibold px-2.5 py-1 rounded-full ${cls}">${label} · ${''}</span>`;
+    }
+
+    function render() {
+      const q = (search.value || '').toLowerCase().trim();
+      const items = PUBS.filter(p =>
+        (activeFilter === 'all' || p.type === activeFilter) &&
+        (!q || (p.title + ' ' + p.authors + ' ' + p.venue + ' ' + p.year).toLowerCase().includes(q))
+      );
+      empty.classList.toggle('hidden', items.length > 0);
+      list.innerHTML = items.map(p => `
+        <article class="pub-card rounded-xl border border-slate-200 dark:border-slate-700 p-4 md:p-5 bg-stone-50/60 dark:bg-slate-950/60">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-mono text-xs px-2 py-1 rounded bg-[#1e3a5f] text-white">${p.year}</span>
+            ${badge(p.type)}
+            <span class="text-xs opacity-60">${p.venue}</span>
+          </div>
+          <h3 class="mt-2 font-semibold leading-snug">${p.title}</h3>
+          <p class="mt-1 text-sm opacity-70">${p.authors}</p>
+          <p class="mt-2 text-sm opacity-75">${p.note}</p>
+          <div class="mt-3 flex flex-wrap gap-2 text-[13px]">
+            ${p.link ? `<a href="${p.link}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-full bg-[#1e3a5f] text-white hover:bg-[#152a46]">View paper ↗</a>` : ''}
+            ${p.doi ? `<span class="px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 font-mono text-xs">DOI: ${p.doi}</span>` : ''}
+          </div>
+        </article>`).join('');
+    }
+    search.addEventListener('input', render);
+    document.getElementById('pub-filters').addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      activeFilter = b.dataset.f;
+      document.querySelectorAll('#pub-filters button').forEach(x => x.classList.remove('chip-active'));
+      b.classList.add('chip-active'); render();
+    });
+    render();
+
+    // theme
+    const root = document.documentElement;
+    function setTheme(dark) { root.classList.toggle('dark', dark); try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e){} }
+    try { setTheme(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)); } catch(e){}
+    document.getElementById('theme-btn')?.addEventListener('click', () => setTheme(!root.classList.contains('dark')));
+    document.getElementById('theme-btn-mobile')?.addEventListener('click', () => setTheme(!root.classList.contains('dark')));
+    document.getElementById('menu-btn')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
+    document.getElementById('mobile-menu')?.addEventListener('click', e => { if (e.target.tagName === 'A') e.currentTarget.classList.add('hidden'); });
+
+    // progress + to-top + year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const bar = document.getElementById('progress-bar'), toTop = document.getElementById('to-top');
+    addEventListener('scroll', () => {
+      const h = document.documentElement;
+      bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+      toTop.classList.toggle('hidden', h.scrollTop < 600);
+    }, { passive: true });
+    toTop.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
