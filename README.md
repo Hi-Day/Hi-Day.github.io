@@ -14,18 +14,15 @@ python3 -m http.server 8000
 
 ## Deploy to GitHub Pages
 
-1. Create a public repo named **`hidayaturrahman.github.io`** (exact: `<username>.github.io`).
-2. Push this folder:
+1. Repo **`Hi-Day/Hi-Day.github.io`** sudah dibuat (user site).
+2. Push:
    ```bash
-   git init
-   git add index.html .nojekyll README.md assets
-   git commit -m "feat: academic profile site"
+   git remote add origin git@github.com:Hi-Day/Hi-Day.github.io.git
    git branch -M main
-   git remote add origin git@github.com:hidayaturrahman/hidayaturrahman.github.io.git
    git push -u origin main
    ```
-3. Repo → **Settings → Pages** → Deploy from branch → `main` / root.
-4. Live at `https://hidayaturrahman.github.io` (ganti `hidayaturrahman` dengan username GitHub Anda).
+3. Repo → **Settings → Pages** → Deploy from branch → `main` / root (biasanya otomatis aktif untuk user site).
+4. Live di `https://hi-day.github.io`.
 
 ## Customize
 
