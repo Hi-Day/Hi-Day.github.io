@@ -90,6 +90,12 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 .meta span{color:#334155;background:#fff;border-color:#c3cfdb}
 #notes .small{color:#475569}
 
+
+/* Footnote readability: linked sources on every slide */
+.source{font-size:clamp(9px,.78vw,11px);line-height:1.3;color:#334155;margin-top:8px;max-width:100%;overflow-wrap:anywhere}
+.source a{color:#174f78;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.source a:visited{color:#174f78}
+@media(max-width:700px){.source{font-size:9px;line-height:1.2;margin-top:6px}}
 </style>
 </head>
 <body>
@@ -97,6 +103,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <section class="slide active" data-title="Title" data-notes="Frame the talk around one core proposition: AI capability is inseparable from the systems that compute, deliver, govern, and sustain it.">
 <div class="cover-art"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="wire"></div></div>
 <div class="cover-copy"><div class="kicker">Industry outlook · Research agenda</div><h1>Industry Challenges &amp; Research Opportunities in <span class="accent">AI</span>, Cloud Computing &amp; <span class="gold">Sovereign Digital Infrastructure</span></h1><p class="lead">Building intelligent systems that are efficient, resilient, and under meaningful local control.</p><div class="meta"><span>Research &amp; Industry</span><span>October 2026</span></div></div>
+<div class="source">Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">IEA, Energy and AI (2025)</a></div>
 <div class="foot"><span>AI × CLOUD × SOVEREIGNTY</span><span>01 / 20</span></div></section>
 <section class="slide" data-title="Three domains, one system" data-notes="Explain the dependencies. A strong model can still fail as a product if inference is expensive, infrastructure unreliable, or data governance unacceptable.">
 <div class="kicker">01 · Strategic context</div><h2>Three domains. <span class="accent">One interdependent system.</span></h2><p class="lead">The strategic question is no longer only what AI can do—but what it takes to operate it responsibly at scale.</p>
@@ -105,6 +112,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><span class="icon blue">▦</span><h3>Cloud computing</h3><p>Elastic compute, storage, networking, orchestration, and managed services.</p><div class="rule"></div><span class="tag">Execution</span></div>
 <div class="card"><span class="icon gold">⌘</span><h3>Sovereign infrastructure</h3><p>Meaningful control over data, operations, access, jurisdiction, and strategic capabilities.</p><div class="rule"></div><span class="tag">Control</span></div>
 </div><div class="quote" style="margin-top:20px">The most consequential constraints emerge <strong>between layers</strong>, not within a single technology.</div>
+<div class="source">Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://doi.org/10.6028/NIST.SP.800-145" target="_blank" rel="noopener noreferrer">NIST Cloud Computing Definition (2011)</a></div>
 <div class="foot"><span>THESIS · CROSS-LAYER THINKING</span><span>02 / 20</span></div></section>
 <section class="slide" data-title="From digital to AI-native" data-notes="The progression is conceptual rather than a claim that every organization follows the same maturity path. Emphasize systems integration and operations.">
 <div class="kicker">02 · Industry landscape</div><h2>From digitalization to <span class="accent">AI-native infrastructure</span></h2><p>AI is shifting from an application feature toward a capability embedded across products, workflows, and operations.</p>
@@ -114,6 +122,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="phase"><span class="label">Stage 03</span><h3 style="margin-top:12px">AI-native</h3><p>Accelerated compute<br>Model-aware orchestration<br>Continuous evaluation</p></div>
 </div>
 <div class="grid two" style="margin-top:22px"><div class="card"><span class="label">Industry implication</span><h3 style="margin-top:8px">Operational excellence becomes a differentiator</h3><p>Model quality, cost, latency, reliability, and governance must be managed together.</p></div><div class="card"><span class="label">Research implication</span><h3 style="margin-top:8px">Optimize the whole lifecycle</h3><p>From data and training to serving, monitoring, updates, and retirement.</p></div></div>
+<div class="source">Sources: <a href="https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html" target="_blank" rel="noopener noreferrer">Sculley et al., Hidden Technical Debt in ML Systems (2015)</a> · <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a></div>
 <div class="foot"><span>LANDSCAPE · MATURITY IS NOT LINEAR</span><span>03 / 20</span></div></section>
 <section class="slide" data-title="The adoption gap" data-notes="Avoid unsupported percentages. This funnel is a conceptual model for discussing why pilots do not reliably become measurable business value.">
 <div class="kicker">03 · Adoption challenge</div><h2>The <span class="pink">AI adoption gap</span>: from pilot to measurable value</h2><p class="lead">Technical feasibility is necessary—but not sufficient—for sustained business impact.</p>
@@ -130,7 +139,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><h3><span class="pink">×</span> Unclear economics</h3><p>Integration, review, inference, and failure costs are underestimated.</p></div>
 <div class="card"><h3><span class="pink">×</span> Weak evaluation</h3><p>Teams measure demos rather than outcomes and sustained performance.</p></div>
 </div></div>
-<div class="source">Conceptual funnel; not a quantified industry survey.</div>
+<div class="source">Conceptual funnel; not a quantified industry survey. &nbsp;|&nbsp; Sources: <a href="https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html" target="_blank" rel="noopener noreferrer">Sculley et al., Hidden Technical Debt in ML Systems (2015)</a> · <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a></div>
 <div class="foot"><span>ADOPTION · VALUE REALIZATION</span><span>04 / 20</span></div></section>
 <section class="slide" data-title="Why sovereignty matters" data-notes="Sovereignty is multidimensional. Local hosting alone does not settle questions of provider jurisdiction, administrative access, software control, or substitutability.">
 <div class="kicker">04 · Sovereign digital infrastructure</div><h2>Digital sovereignty is about <span class="gold">meaningful control</span></h2><p>It is the ability to govern critical digital assets and maintain strategic options—not necessarily to build every component domestically.</p>
@@ -139,6 +148,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><span class="icon accent">↔</span><h3>What must remain possible?</h3><p>Audit critical systems, switch providers, recover from disruption, enforce policy, and retain local capacity to operate.</p><div class="rule"></div><p class="small">Sovereignty is a spectrum of capabilities and dependencies—not a binary label.</p></div>
 </div>
 <div class="diagram"><div class="node">Data control</div><span class="arrow">+</span><div class="node">Operational control</div><span class="arrow">+</span><div class="node">Technology options</div><span class="arrow">=</span><div class="node" style="border-color:#5ee7e1;color:var(--cyan)">Resilience</div></div>
+<div class="source">Sources: <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener noreferrer">EU Data Act (2023)</a> · <a href="https://www.oecd.org/en/publications/oecd-digital-economy-outlook-2024-volume-1_a1689dc5-en.html" target="_blank" rel="noopener noreferrer">OECD Digital Economy Outlook 2024</a></div>
 <div class="foot"><span>DEFINITION · CONTROL, NOT ISOLATION</span><span>05 / 20</span></div></section>
 <section class="slide" data-title="AI infrastructure bottlenecks" data-notes="IEA's Energy and AI report (2025) projects global data-centre electricity consumption at around 945 TWh in 2030 in its Base Case. This is a scenario projection, not measured future consumption.">
 <div class="kicker">05 · Industry challenges</div><h2>AI infrastructure: compute is only <span class="accent">one bottleneck</span></h2>
@@ -149,7 +159,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div><div style="display:flex;justify-content:space-between"><strong>Power &amp; cooling</strong><span class="small">Capacity</span></div><div class="bar"><i style="width:82%;background:linear-gradient(90deg,#f4c777,#ef9c6a)"></i></div></div>
 <div><div style="display:flex;justify-content:space-between"><strong>Network &amp; storage</strong><span class="small">Data movement</span></div><div class="bar"><i style="width:66%;background:linear-gradient(90deg,#9be3b0,#5ee7e1)"></i></div></div>
 <p class="small">Qualitative illustration; bars do not represent measured values.</p></div></div>
-<div><div class="big-number">≈945 TWh</div><p>Projected global data-centre electricity consumption in 2030 under the IEA Base Case.</p><div class="rule"></div><h3>Research question</h3><p>How can we improve AI performance per watt without compromising task quality or service-level objectives?</p><div class="pillrow"><span class="tag">GPU scheduling</span><span class="tag">Memory efficiency</span><span class="tag">Energy-aware serving</span></div><div class="source">Source: IEA, <em>Energy and AI</em> (2025), Base Case projection.</div></div>
+<div><div class="big-number">≈945 TWh</div><p>Projected global data-centre electricity consumption in 2030 under the IEA Base Case.</p><div class="rule"></div><h3>Research question</h3><p>How can we improve AI performance per watt without compromising task quality or service-level objectives?</p><div class="pillrow"><span class="tag">GPU scheduling</span><span class="tag">Memory efficiency</span><span class="tag">Energy-aware serving</span></div><div class="source">Source: IEA, <em>Energy and AI</em> (2025), Base Case projection. &nbsp;|&nbsp; Sources: <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">IEA, Energy and AI (2025)</a></div></div>
 </div>
 <div class="foot"><span>INFRASTRUCTURE · PERFORMANCE / WATT</span><span>06 / 20</span></div></section>
 <section class="slide" data-title="Cloud economics and portability" data-notes="Frame this as a constrained optimization problem. Multi-cloud is not automatically cheaper or more resilient; operational complexity and data movement can offset benefits.">
@@ -161,6 +171,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 </div>
 <div class="diagram"><div class="node">Workload + SLA</div><span class="arrow">→</span><div class="node">Placement policy</div><span class="arrow">→</span><div class="node">Cloud / edge / local</div><span class="arrow">→</span><div class="node">Observe &amp; optimize</div></div>
 <div class="quote">Research question: can workload placement jointly optimize <strong>total cost, tail latency, policy compliance, and failure risk</strong>?</div>
+<div class="source">Sources: <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener noreferrer">EU Data Act (2023)</a> · <a href="https://www.finops.org/framework/" target="_blank" rel="noopener noreferrer">FinOps Framework</a></div>
 <div class="foot"><span>CLOUD · FINOPS &amp; SYSTEMS RESEARCH</span><span>07 / 20</span></div></section>
 <section class="slide" data-title="Security and trustworthy AI" data-notes="Use NIST AI RMF 1.0 as a governance framework: Govern, Map, Measure, Manage. Security controls and AI risk evaluation are related but not interchangeable.">
 <div class="kicker">07 · Security &amp; trust</div><h2>Trustworthy AI requires <span class="pink">end-to-end assurance</span></h2>
@@ -175,7 +186,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card" style="padding:14px"><h3 class="blue">MAP</h3><p>Context, stakeholders, harms</p></div>
 <div class="card" style="padding:14px"><h3 class="gold">MEASURE</h3><p>Tests, metrics, evidence</p></div>
 <div class="card" style="padding:14px"><h3 class="pink">MANAGE</h3><p>Mitigation, monitoring, response</p></div>
-</div><div class="source">Reference: NIST AI RMF 1.0 (2023), AI 100-1.</div></div>
+</div><div class="source">Reference: NIST AI RMF 1.0 (2023), AI 100-1. &nbsp;|&nbsp; Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener noreferrer">OWASP Top 10 for LLM Applications</a></div></div>
 </div>
 <div class="foot"><span>SECURITY · ASSURANCE THROUGH THE LIFECYCLE</span><span>08 / 20</span></div></section>
 <section class="slide" data-title="Sovereignty and interoperability" data-notes="Emphasize nuanced trade-offs. Data residency does not by itself guarantee full sovereignty; jurisdiction, operator access, control plane, keys, and vendor dependencies matter.">
@@ -187,6 +198,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><span class="icon accent">↗</span><h3>Risk of over-isolation</h3><p>Higher cost, reduced interoperability, duplicated effort, and slower innovation.</p></div>
 </div>
 <div class="quote" style="margin-top:17px">Design for <strong>controlled interdependence</strong>, not absolute self-sufficiency.</div>
+<div class="source">Sources: <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener noreferrer">EU Data Act (2023)</a> · <a href="https://doi.org/10.6028/NIST.SP.800-207" target="_blank" rel="noopener noreferrer">NIST Zero Trust Architecture (2020)</a></div>
 <div class="foot"><span>TRADE-OFF · CONTROL / COST / OPENNESS</span><span>09 / 20</span></div></section>
 <section class="slide" data-title="Structural ecosystem challenges" data-notes="Infrastructure investment has limited value without the people, supply chains, institutions, and incentives needed to operate and improve it.">
 <div class="kicker">09 · Ecosystem constraints</div><h2>The structural challenge: <span class="accent">capital, talent, ecosystem</span></h2>
@@ -198,6 +210,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 </div>
 <div class="diagram" style="margin-top:24px"><div class="node">Government</div><span class="arrow">↔</span><div class="node">Universities</div><span class="arrow">↔</span><div class="node">Industry</div><span class="arrow">↔</span><div class="node">Infrastructure providers</div></div>
 <div class="quote">Infrastructure without local capability can reproduce dependency in a different form.</div>
+<div class="source">Sources: <a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" target="_blank" rel="noopener noreferrer">Stanford AI Index Report 2025</a> · <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">IEA, Energy and AI (2025)</a></div>
 <div class="foot"><span>ECOSYSTEM · CAPABILITY IS STRATEGIC</span><span>10 / 20</span></div></section>
 <section class="slide" data-title="Efficient adaptive AI" data-notes="A viable study should compare against a strong baseline and report task quality, latency, energy, and cost per successful task. Avoid optimizing tokens or latency in isolation.">
 <div class="kicker">10 · Research opportunities</div><h2>Opportunity I — <span class="accent">Efficient, adaptive AI systems</span></h2><p class="lead">Make intelligence more efficient, rather than assuming that bigger models are always the best answer.</p>
@@ -205,6 +218,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><div class="label">Methods to investigate</div><div class="pillrow" style="margin-top:12px"><span class="pill">Quantization</span><span class="pill">Distillation</span><span class="pill">Pruning</span><span class="pill">Adaptive inference</span><span class="pill">Model routing</span><span class="pill">Mixture-of-experts</span></div><div class="rule"></div><p>Choose computation based on task difficulty, uncertainty, latency budget, and available resources.</p></div>
 <div class="card"><div class="label">Example research question</div><div class="quote" style="margin-top:12px">Can adaptive model routing reduce inference cost while preserving task quality within a defined tolerance?</div><div class="rule"></div><div class="label">Evaluation protocol</div><div class="pillrow" style="margin-top:10px"><span class="tag">Task quality</span><span class="tag">p95 latency</span><span class="tag">Energy / task</span><span class="tag">Cost / success</span></div></div>
 </div>
+<div class="source">Sources: <a href="https://arxiv.org/abs/1510.00149" target="_blank" rel="noopener noreferrer">Han et al., Deep Compression (2016)</a> · <a href="https://arxiv.org/abs/1503.02531" target="_blank" rel="noopener noreferrer">Hinton et al., Distilling the Knowledge in a Neural Network (2015)</a></div>
 <div class="foot"><span>RESEARCH I · EFFICIENCY WITH QUALITY GUARDRAILS</span><span>11 / 20</span></div></section>
 <section class="slide" data-title="AI-native cloud orchestration" data-notes="The contribution can be a scheduler, placement algorithm, policy, or simulator. Compare against standard scheduling baselines under reproducible workload traces.">
 <div class="kicker">11 · Research opportunities</div><h2>Opportunity II — <span class="blue">AI-native cloud orchestration</span></h2><p>Cloud systems should be aware of model characteristics, accelerator heterogeneity, and application-level service objectives.</p>
@@ -215,6 +229,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><h3>Cross-layer policy</h3><p>Co-optimize compute, network, data location, and reliability.</p></div>
 </div>
 <div class="quote" style="margin-top:18px">Measure throughput, p95/p99 latency, utilization, cost, and SLA violations—not a single metric.</div>
+<div class="source">Sources: <a href="https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/" target="_blank" rel="noopener noreferrer">Verma et al., Large-scale Cluster Management at Google with Borg (2015)</a> · <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/" target="_blank" rel="noopener noreferrer">Kubernetes, Scheduling and Eviction</a></div>
 <div class="foot"><span>RESEARCH II · SCHEDULING &amp; ORCHESTRATION</span><span>12 / 20</span></div></section>
 <section class="slide" data-title="Privacy-preserving distributed AI" data-notes="Federated learning does not automatically guarantee privacy. Consider inference leakage, gradient leakage, participant heterogeneity, secure aggregation, and explicit privacy accounting.">
 <div class="kicker">12 · Research opportunities</div><h2>Opportunity III — <span class="green">Privacy-preserving distributed AI</span></h2><p>Enable collaboration across organizations without assuming all raw data can be pooled in one location.</p>
@@ -226,6 +241,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><h3>Open problem</h3><p>Balance utility, privacy, communication, and heterogeneous data.</p></div>
 <div class="card"><h3>Evaluation</h3><p>Model utility, privacy budget, communication overhead, robustness.</p></div>
 </div>
+<div class="source">Sources: <a href="https://proceedings.mlr.press/v54/mcmahan17a.html" target="_blank" rel="noopener noreferrer">McMahan et al., Communication-Efficient Learning (2017)</a> · <a href="https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf" target="_blank" rel="noopener noreferrer">Dwork & Roth, The Algorithmic Foundations of Differential Privacy (2014)</a></div>
 <div class="foot"><span>RESEARCH III · DISTRIBUTED TRUST</span><span>13 / 20</span></div></section>
 <section class="slide" data-title="Sovereign cloud architecture" data-notes="Operationalize sovereignty using measurable indicators. Avoid claiming that location alone proves sovereignty. Compare architecture options against a clear threat model and policy requirements.">
 <div class="kicker">13 · Research opportunities</div><h2>Opportunity IV — <span class="gold">Sovereign cloud architecture</span></h2><p>Translate sovereignty from a policy aspiration into system properties that can be designed, measured, and audited.</p>
@@ -234,6 +250,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><div class="label">Example research question</div><div class="quote" style="margin-top:10px">How can a workload satisfy data policy, latency targets, and cost limits across multiple infrastructure domains?</div><div class="rule"></div><div class="label">Candidate metrics</div><p>Policy compliance · portability effort · availability · total cost · verified access control</p></div>
 </div>
 <div class="diagram"><div class="node">Policy constraints</div><span class="arrow">+</span><div class="node">Threat model</div><span class="arrow">+</span><div class="node">Placement optimizer</div><span class="arrow">→</span><div class="node" style="border-color:#f4c777;color:var(--gold)">Auditable deployment</div></div>
+<div class="source">Sources: <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener noreferrer">EU Data Act (2023)</a> · <a href="https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final" target="_blank" rel="noopener noreferrer">NIST Key Management Recommendations, SP 800-57</a></div>
 <div class="foot"><span>RESEARCH IV · SOVEREIGNTY AS A MEASURABLE PROPERTY</span><span>14 / 20</span></div></section>
 <section class="slide" data-title="Sustainable AI infrastructure" data-notes="Carbon-aware scheduling depends on data quality and workload flexibility. Evaluate deadline compliance and total system effects; avoid assuming renewable energy availability or low-carbon timing without evidence.">
 <div class="kicker">14 · Research opportunities</div><h2>Opportunity V — <span class="green">Sustainable AI infrastructure</span></h2><p>Reduce energy and carbon intensity while maintaining service quality and operational constraints.</p>
@@ -245,6 +262,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><h3>Core trade-off</h3><p>Environmental impact versus latency, cost, and reliability.</p></div>
 </div>
 </div>
+<div class="source">Sources: <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">IEA, Energy and AI (2025)</a> · <a href="https://arxiv.org/abs/1907.10597" target="_blank" rel="noopener noreferrer">Schwartz et al., Green AI (2019)</a></div>
 <div class="foot"><span>RESEARCH V · ENERGY-AWARE COMPUTING</span><span>15 / 20</span></div></section>
 <section class="slide" data-title="Benchmarking and infrastructure intelligence" data-notes="Strong benchmarks must be reproducible, transparent about workloads, and robust to provider changes. Do not reduce system quality to model benchmark scores alone.">
 <div class="kicker">15 · Research opportunities</div><h2>Opportunity VI — <span class="accent">Benchmarking &amp; infrastructure intelligence</span></h2><p>Build evidence that helps researchers and industry make deployment decisions that generalize beyond a single demo.</p>
@@ -254,6 +272,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><span class="icon gold">◷</span><h3>Predictive operations</h3><p>Forecast capacity, costs, failures, and workload demand from operational signals.</p></div>
 </div>
 <div class="card" style="margin-top:14px"><div class="label">A useful benchmark scorecard</div><div class="grid four" style="margin-top:10px"><div><div class="big-number">Q</div><p>Task quality</p></div><div><div class="big-number">T</div><p>Latency &amp; throughput</p></div><div><div class="big-number">＄</div><p>Cost per successful task</p></div><div><div class="big-number">C</div><p>Compliance &amp; control</p></div></div></div>
+<div class="source">Sources: <a href="https://mlcommons.org/benchmarks/inference-datacenter/" target="_blank" rel="noopener noreferrer">MLCommons, MLPerf Inference</a> · <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a></div>
 <div class="foot"><span>RESEARCH VI · REPRODUCIBLE EVIDENCE</span><span>16 / 20</span></div></section>
 <section class="slide" data-title="Integrated research framework" data-notes="This is the unifying framework of the talk. The research novelty can lie in a cross-layer optimizer, a benchmark, a formal policy model, or an empirical study with rigorous baselines.">
 <div class="kicker">16 · Integrated framework</div><h2>One research framework: <span class="accent">cross-layer optimization</span></h2><p>Optimize the system as a whole under explicit operational, economic, security, and governance constraints.</p>
@@ -265,6 +284,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 </div>
 <div class="diagram"><div class="node">Security</div><div class="node">Efficiency</div><div class="node">Reliability</div><div class="node">Sustainability</div><div class="node">Control</div></div>
 <div class="quote">A useful research contribution states the <strong>objective, constraints, baselines, and measurable outcomes</strong> before selecting an algorithm.</div>
+<div class="source">Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://www.finops.org/framework/" target="_blank" rel="noopener noreferrer">FinOps Framework</a></div>
 <div class="foot"><span>FRAMEWORK · OPTIMIZE ACROSS LAYERS</span><span>17 / 20</span></div></section>
 <section class="slide" data-title="Indonesia context" data-notes="Treat the listed items as candidate issues to validate using national datasets and stakeholder interviews. Do not present them as quantified facts without sources.">
 <div class="kicker">17 · Indonesia context</div><h2>Indonesia: a <span class="gold">research and capability agenda</span></h2><p>National context can shape high-value research questions—especially where infrastructure, language, governance, and access intersect.</p>
@@ -273,6 +293,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><div class="label">Potential research pilots</div><div style="margin-top:12px"><h3 class="accent">01 · Local AI benchmark</h3><p>Quality, latency, and cost across Indonesian-language tasks.</p><h3 class="blue" style="margin-top:12px">02 · Heterogeneous workload placement</h3><p>Cloud, local data centers, and edge under real network constraints.</p><h3 class="gold" style="margin-top:12px">03 · Cross-institution learning</h3><p>Privacy-aware collaboration under institutional data policies.</p></div></div>
 </div>
 <div class="quote" style="margin-top:15px">Build from measured local needs—not from assumptions about what the market lacks.</div>
+<div class="source">Sources: <a href="https://unesdoc.unesco.org/ark:/48223/pf0000385097" target="_blank" rel="noopener noreferrer">UNESCO, AI Readiness Assessment Methodology</a> · <a href="https://aclanthology.org/2020.aacl-main.85/" target="_blank" rel="noopener noreferrer">Wilie et al., IndoNLU (2020)</a></div>
 <div class="foot"><span>INDONESIA · EVIDENCE-LED PRIORITIES</span><span>18 / 20</span></div></section>
 <section class="slide" data-title="Collaborative roadmap" data-notes="Use the phases as an initial planning scaffold. Each project should set explicit stage gates and should not move to deployment simply because a prototype works.">
 <div class="kicker">18 · From research to impact</div><h2>From research question to <span class="accent">industry deployment</span></h2><p>Organize collaboration around evidence and stage gates rather than around technology demonstrations alone.</p>
@@ -281,7 +302,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="phase"><span class="label">Phase 02 · 6–18 months</span><h3 style="margin-top:12px">Research &amp; prototype</h3><p>Develop method or simulator<br>Run reproducible experiments<br>Compare strong baselines</p><div class="tag">Output: validated prototype</div></div>
 <div class="phase"><span class="label">Phase 03 · 18–36 months</span><h3 style="margin-top:12px">Validate &amp; transfer</h3><p>Test with industry partner<br>Assess cost, risk, and usability<br>Plan adoption and maintenance</p><div class="tag">Output: pilot &amp; evidence</div></div>
 </div>
-<div class="source">Planning ranges are illustrative; duration depends on scope, access to infrastructure, and partner readiness.</div>
+<div class="source">Planning ranges are illustrative; duration depends on scope, access to infrastructure, and partner readiness. &nbsp;|&nbsp; Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://doi.org/10.1787/9789264304604-en" target="_blank" rel="noopener noreferrer">OECD Oslo Manual (2018)</a></div>
 <div class="foot"><span>ROADMAP · STAGE-GATED COLLABORATION</span><span>19 / 20</span></div></section>
 <section class="slide" data-title="Conclusion" data-notes="Close by returning to the three pillars: efficiency, control, and capability. Invite the audience to identify which constraint is most binding in their own context.">
 <div class="kicker">19 · Conclusion</div><h2>Build digital systems that are <span class="accent">capable</span>, <span class="gold">efficient</span>, and <span class="green">sovereign</span>.</h2><p class="lead">The next competitive advantage will come from how well we integrate intelligence, infrastructure, and control.</p>
@@ -291,6 +312,7 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 <div class="card"><span class="icon green">⌘</span><h3>03 · Capability</h3><p>Invest in research, talent, institutions, and the ability to operate and improve systems locally.</p></div>
 </div>
 <div class="quote" style="margin-top:24px">How can we build AI infrastructure that is globally competitive, economically sustainable, and digitally sovereign?</div>
+<div class="source">Sources: <a href="https://doi.org/10.6028/NIST.AI.100-1" target="_blank" rel="noopener noreferrer">NIST AI RMF 1.0 (2023)</a> · <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer">IEA, Energy and AI (2025)</a> · <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj" target="_blank" rel="noopener noreferrer">EU Data Act (2023)</a></div>
 <div class="foot"><span>DISCUSSION · THANK YOU</span><span>20 / 20</span></div></section>
 </div>
 <div id="controls" aria-label="Slide controls"><button id="prev" aria-label="Previous slide" title="Previous (←)">‹</button><span id="counter">01 / 20</span><button id="next" aria-label="Next slide" title="Next (→)">›</button><button id="notesBtn" aria-label="Toggle speaker notes" title="Speaker notes (N)">▤</button><button id="helpBtn" aria-label="Keyboard shortcuts" title="Help (?)">?</button><button id="fullBtn" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button></div>
