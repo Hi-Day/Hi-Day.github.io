@@ -149,6 +149,19 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 
+
+/* Critical print fix: every slide must retain its vertical content flow */
+@media print{
+ .slide,.slide.active,.slide:not(.active){flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important}
+ .slide h1,.slide h2,.slide h3,.slide p,.slide .grid,.slide .diagram,.slide .quote,.slide .source,.slide .foot{flex-shrink:0}
+ .slide h2,.slide h1,.slide>p{width:100%;max-width:100%}
+ .slide .grid{width:100%}
+ .slide .diagram{width:100%;flex-wrap:nowrap;justify-content:space-between}
+ .slide .node{flex:1;text-align:center;overflow-wrap:anywhere}
+ .slide .quote{margin-top:8pt!important}
+ .slide .source{margin-top:5pt!important}
+}
+
 </style>
 </head>
 <body>
