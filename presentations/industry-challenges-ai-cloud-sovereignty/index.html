@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="20-slide research presentation on industry challenges and research opportunities in AI, cloud computing, and sovereign digital infrastructure.">
+<title>Industry Challenges & Research Opportunities — AI, Cloud & Sovereign Infrastructure</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2b;--panel2:#102438;--line:#21384b;--ink:#f1f6fb;--muted:#a4b5c5;--cyan:#5ee7e1;--blue:#7aa9ff;--gold:#f4c777;--pink:#f49cb4;--green:#9be3b0;--w:1280px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 85% 10%,#12314a66,transparent 38%),radial-gradient(ellipse at 0% 100%,#10283b55,transparent 40%)}
+#deck{position:relative;width:100vw;height:100dvh;display:grid;place-items:center}
+.slide{display:none;position:absolute;width:min(100vw,calc(100dvh * 16 / 9));height:min(100dvh,calc(100vw * 9 / 16));aspect-ratio:16/9;padding:5.1% 6.2% 4.8%;overflow:hidden;background:linear-gradient(135deg,#091624 0%,#07111f 65%,#0a1b2a 100%);isolation:isolate}
+.slide:after{content:"";position:absolute;inset:0;z-index:-1;opacity:.14;background-image:linear-gradient(#45617622 1px,transparent 1px),linear-gradient(90deg,#45617622 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom right,black,transparent 75%)}
+.slide.active{display:flex;flex-direction:column;animation:enter .28s ease-out}
+@keyframes enter{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:none}}
+.kicker{font-size:clamp(9px,.82vw,13px);font-weight:750;letter-spacing:.19em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:10px}
+.kicker:before{content:"";width:22px;height:2px;background:var(--cyan)}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(30px,4.2vw,65px);line-height:1.04;letter-spacing:-.045em;max-width:980px;margin:25px 0 20px;font-weight:760}h2{font-size:clamp(25px,3vw,44px);line-height:1.08;letter-spacing:-.035em;margin:15px 0 16px;max-width:1050px}h3{font-size:clamp(14px,1.4vw,21px);line-height:1.2;margin:0 0 9px}p,.body{font-size:clamp(11px,1.18vw,17px);line-height:1.5;color:var(--muted)}.lead{font-size:clamp(14px,1.65vw,23px);line-height:1.48;max-width:800px}.accent{color:var(--cyan)}.blue{color:var(--blue)}.gold{color:var(--gold)}.pink{color:var(--pink)}.green{color:var(--green)}.muted{color:var(--muted)}.small{font-size:clamp(9px,.82vw,12px);line-height:1.4}.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:clamp(8px,.75vw,11px);color:#71869a;border-top:1px solid #23384a;padding-top:12px}.foot span:last-child{font-variant-numeric:tabular-nums}
+.grid{display:grid;gap:14px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}.card{background:linear-gradient(145deg,#102236dd,#0c1a29dd);border:1px solid var(--line);border-radius:15px;padding:clamp(12px,1.5vw,22px);min-width:0}.card p{margin:0;font-size:clamp(10px,1vw,14px)}.icon{font-size:clamp(22px,2.3vw,34px);margin-bottom:12px;display:block}.tag{display:inline-flex;border:1px solid #285267;border-radius:999px;padding:6px 10px;font-size:clamp(9px,.8vw,12px);color:var(--cyan);letter-spacing:.04em;margin:0 6px 6px 0}.rule{height:1px;background:var(--line);margin:12px 0}.big-number{font-size:clamp(27px,3.2vw,48px);font-weight:760;letter-spacing:-.04em;color:var(--cyan)}.label{font-size:clamp(9px,.8vw,12px);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}.bar{height:8px;background:#20364a;border-radius:8px;overflow:hidden;margin:8px 0 10px}.bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--cyan),var(--blue))}.diagram{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0}.node{border:1px solid #2c5267;background:#0f2436;padding:14px 18px;border-radius:12px;text-align:center;min-width:115px}.arrow{color:var(--cyan);font-size:24px}.pillrow{display:flex;flex-wrap:wrap;gap:8px}.pill{border-radius:10px;background:#13283b;padding:10px 12px;font-size:clamp(10px,.95vw,14px);color:#d6e2ed;border:1px solid #284155}.quote{border-left:3px solid var(--cyan);padding:6px 0 6px 20px;font-size:clamp(16px,1.8vw,25px);line-height:1.4;color:#dbe9f3;max-width:850px}.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.matrix .card{min-height:100px}.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:15px}.phase{border-top:3px solid var(--cyan);padding-top:13px}.phase:nth-child(2){border-color:var(--blue)}.phase:nth-child(3){border-color:var(--gold)}.phase strong{font-size:clamp(12px,1.2vw,17px)}.cover-art{position:absolute;right:3%;top:12%;width:38%;height:72%;opacity:.95;pointer-events:none}.orb{position:absolute;border-radius:50%;border:1px solid #5ee7e144;box-shadow:inset 0 0 50px #5ee7e111,0 0 45px #5ee7e111}.orb.a{width:290px;height:290px;right:10%;top:16%}.orb.b{width:210px;height:210px;right:21%;top:26%;border-color:#7aa9ff66}.orb.c{width:120px;height:120px;right:31%;top:37%;border-color:#f4c77777;background:#f4c77710}.wire{position:absolute;height:1px;background:linear-gradient(90deg,transparent,#5ee7e188,transparent);width:100%;top:50%;transform:rotate(-30deg)}.cover-copy{position:relative;z-index:2;max-width:73%}.cover-copy h1{font-size:clamp(31px,4.4vw,67px)}.cover-copy .lead{max-width:640px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.meta span{padding:9px 12px;border:1px solid #294256;border-radius:8px;color:#c0cfdd;font-size:clamp(9px,.9vw,13px)}.chart{display:flex;align-items:flex-end;gap:16px;height:185px;padding:15px 8px 0;border-bottom:1px solid #345064}.chart-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%}.chart-col i{width:min(60px,75%);border-radius:8px 8px 2px 2px;background:linear-gradient(180deg,var(--cyan),#398eac);min-height:8px}.chart-col span{font-size:10px;color:var(--muted);text-align:center}.chart-col b{font-size:12px;color:#eaf6fb}.source{font-size:clamp(8px,.7vw,10px);color:#7c91a5;margin-top:10px}
+#controls{position:fixed;z-index:20;bottom:15px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:7px 10px;background:#091624eF;border:1px solid #284155;border-radius:999px;backdrop-filter:blur(14px);box-shadow:0 10px 35px #0005}
+#controls button{border:0;color:#e5eff8;background:#14283a;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer}#controls button:hover{background:#23465c}#counter{font-size:11px;color:#a4b5c5;min-width:54px;text-align:center;font-variant-numeric:tabular-nums}#progress{position:fixed;bottom:0;left:0;z-index:30;height:3px;background:var(--cyan);width:5%;transition:width .2s}
+#help{display:none;position:fixed;z-index:40;inset:0;background:#020812eF;place-items:center;padding:20px}#help.open{display:grid}.helpbox{max-width:480px;background:#0e2030;border:1px solid #2d4b60;border-radius:18px;padding:28px}.helpbox p{margin-bottom:8px}kbd{background:#20384b;border:1px solid #3a566b;border-radius:5px;padding:2px 6px;color:#fff}
+#notes{display:none;position:fixed;right:16px;top:16px;width:min(360px,35vw);z-index:25;background:#0a1927f5;border:1px solid #315066;border-radius:12px;padding:16px;box-shadow:0 10px 40px #0008}#notes.show{display:block}#notes h3{color:var(--cyan)}#notes p{font-size:13px}
+@media(max-width:650px){.slide{padding:6% 6% 11%}.cover-art{right:-15%;width:50%;opacity:.45}.cover-copy{max-width:100%}.grid{gap:7px}.card{padding:10px;border-radius:10px}.icon{margin-bottom:5px}.foot{padding-top:6px}.timeline{gap:7px}#controls{bottom:8px}#controls button{width:31px;height:31px}h2{margin:10px 0}.slide:after{background-size:28px 28px}}
+@media(prefers-reduced-motion:reduce){.slide.active{animation:none}*{transition:none!important}}
+@media print{html,body{overflow:visible;background:#fff;color:#111;height:auto}#deck{display:block;height:auto}.slide,.slide.active{display:flex!important;position:relative;width:100vw;height:56.25vw;page-break-after:always;background:#07111f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slide:not(.active){animation:none}#controls,#progress,#help,#notes{display:none!important}@page{size:13.333in 7.5in;margin:0}}
+</style>
+</head>
+<body>
+<div id="deck" aria-live="polite">
+<section class="slide active" data-title="Title" data-notes="Frame the talk around one core proposition: AI capability is inseparable from the systems that compute, deliver, govern, and sustain it.">
+<div class="cover-art"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="wire"></div></div>
+<div class="cover-copy"><div class="kicker">Industry outlook · Research agenda</div><h1>Industry Challenges &amp; Research Opportunities in <span class="accent">AI</span>, Cloud Computing &amp; <span class="gold">Sovereign Digital Infrastructure</span></h1><p class="lead">Building intelligent systems that are efficient, resilient, and under meaningful local control.</p><div class="meta"><span>Research &amp; Industry</span><span>20-slide briefing</span><span>October 2026</span></div></div>
+<div class="foot"><span>AI × CLOUD × SOVEREIGNTY</span><span>01 / 20</span></div></section>
+<section class="slide" data-title="Three domains, one system" data-notes="Explain the dependencies. A strong model can still fail as a product if inference is expensive, infrastructure unreliable, or data governance unacceptable.">
+<div class="kicker">01 · Strategic context</div><h2>Three domains. <span class="accent">One interdependent system.</span></h2><p class="lead">The strategic question is no longer only what AI can do—but what it takes to operate it responsibly at scale.</p>
+<div class="grid three" style="margin-top:22px">
+<div class="card"><span class="icon accent">◈</span><h3>Artificial intelligence</h3><p>Models, agents, inference, learning, evaluation, and human-facing capabilities.</p><div class="rule"></div><span class="tag">Intelligence</span></div>
+<div class="card"><span class="icon blue">▦</span><h3>Cloud computing</h3><p>Elastic compute, storage, networking, orchestration, and managed services.</p><div class="rule"></div><span class="tag">Execution</span></div>
+<div class="card"><span class="icon gold">⌘</span><h3>Sovereign infrastructure</h3><p>Meaningful control over data, operations, access, jurisdiction, and strategic capabilities.</p><div class="rule"></div><span class="tag">Control</span></div>
+</div><div class="quote" style="margin-top:20px">The most consequential constraints emerge <strong>between layers</strong>, not within a single technology.</div>
+<div class="foot"><span>THESIS · CROSS-LAYER THINKING</span><span>02 / 20</span></div></section>
+<section class="slide" data-title="From digital to AI-native" data-notes="The progression is conceptual rather than a claim that every organization follows the same maturity path. Emphasize systems integration and operations.">
+<div class="kicker">02 · Industry landscape</div><h2>From digitalization to <span class="accent">AI-native infrastructure</span></h2><p>AI is shifting from an application feature toward a capability embedded across products, workflows, and operations.</p>
+<div class="timeline">
+<div class="phase"><span class="label">Stage 01</span><h3 style="margin-top:12px">Traditional IT</h3><p>Fixed capacity<br>Human-driven workflows<br>Application-centric operations</p></div>
+<div class="phase"><span class="label">Stage 02</span><h3 style="margin-top:12px">Cloud-native</h3><p>Elastic resources<br>APIs and microservices<br>Automated deployment</p></div>
+<div class="phase"><span class="label">Stage 03</span><h3 style="margin-top:12px">AI-native</h3><p>Accelerated compute<br>Model-aware orchestration<br>Continuous evaluation</p></div>
+</div>
+<div class="grid two" style="margin-top:22px"><div class="card"><span class="label">Industry implication</span><h3 style="margin-top:8px">Operational excellence becomes a differentiator</h3><p>Model quality, cost, latency, reliability, and governance must be managed together.</p></div><div class="card"><span class="label">Research implication</span><h3 style="margin-top:8px">Optimize the whole lifecycle</h3><p>From data and training to serving, monitoring, updates, and retirement.</p></div></div>
+<div class="foot"><span>LANDSCAPE · MATURITY IS NOT LINEAR</span><span>03 / 20</span></div></section>
+<section class="slide" data-title="The adoption gap" data-notes="Avoid unsupported percentages. This funnel is a conceptual model for discussing why pilots do not reliably become measurable business value.">
+<div class="kicker">03 · Adoption challenge</div><h2>The <span class="pink">AI adoption gap</span>: from pilot to measurable value</h2><p class="lead">Technical feasibility is necessary—but not sufficient—for sustained business impact.</p>
+<div class="grid two" style="align-items:center;margin-top:12px">
+<div>
+<div class="card" style="margin:0 auto 8px;width:95%;border-color:#286077"><div class="label">01 · Experiment</div><h3 style="margin:6px 0">Can it work?</h3><p>Promising demo; bounded scope.</p></div>
+<div style="text-align:center;color:var(--cyan);font-size:20px">↓</div>
+<div class="card" style="margin:8px auto;width:78%"><div class="label">02 · Pilot</div><h3 style="margin:6px 0">Does it help?</h3><p>Data, workflow, and user fit.</p></div>
+<div style="text-align:center;color:var(--cyan);font-size:20px">↓</div>
+<div class="card" style="margin:8px auto 0;width:60%;border-color:#6a5935"><div class="label">03 · Production</div><h3 style="margin:6px 0">Does it endure?</h3><p>Reliability, governance, ROI.</p></div>
+</div>
+<div class="grid" style="gap:10px">
+<div class="card"><h3><span class="pink">×</span> Workflow friction</h3><p>Tools are disconnected from real processes and accountability.</p></div>
+<div class="card"><h3><span class="pink">×</span> Unclear economics</h3><p>Integration, review, inference, and failure costs are underestimated.</p></div>
+<div class="card"><h3><span class="pink">×</span> Weak evaluation</h3><p>Teams measure demos rather than outcomes and sustained performance.</p></div>
+</div></div>
+<div class="source">Conceptual funnel; not a quantified industry survey.</div>
+<div class="foot"><span>ADOPTION · VALUE REALIZATION</span><span>04 / 20</span></div></section>
+<section class="slide" data-title="Why sovereignty matters" data-notes="Sovereignty is multidimensional. Local hosting alone does not settle questions of provider jurisdiction, administrative access, software control, or substitutability.">
+<div class="kicker">04 · Sovereign digital infrastructure</div><h2>Digital sovereignty is about <span class="gold">meaningful control</span></h2><p>It is the ability to govern critical digital assets and maintain strategic options—not necessarily to build every component domestically.</p>
+<div class="grid two" style="margin-top:20px">
+<div class="card"><span class="icon gold">◎</span><h3>What must be controlled?</h3><div class="pillrow"><span class="pill">Data &amp; access</span><span class="pill">Jurisdiction</span><span class="pill">Operations</span><span class="pill">Identity &amp; keys</span><span class="pill">Continuity</span><span class="pill">Strategic skills</span></div></div>
+<div class="card"><span class="icon accent">↔</span><h3>What must remain possible?</h3><p>Audit critical systems, switch providers, recover from disruption, enforce policy, and retain local capacity to operate.</p><div class="rule"></div><p class="small">Sovereignty is a spectrum of capabilities and dependencies—not a binary label.</p></div>
+</div>
+<div class="diagram"><div class="node">Data control</div><span class="arrow">+</span><div class="node">Operational control</div><span class="arrow">+</span><div class="node">Technology options</div><span class="arrow">=</span><div class="node" style="border-color:#5ee7e1;color:var(--cyan)">Resilience</div></div>
+<div class="foot"><span>DEFINITION · CONTROL, NOT ISOLATION</span><span>05 / 20</span></div></section>
+<section class="slide" data-title="AI infrastructure bottlenecks" data-notes="IEA's Energy and AI report (2025) projects global data-centre electricity consumption at around 945 TWh in 2030 in its Base Case. This is a scenario projection, not measured future consumption.">
+<div class="kicker">05 · Industry challenges</div><h2>AI infrastructure: compute is only <span class="accent">one bottleneck</span></h2>
+<div class="grid two" style="margin-top:8px;align-items:center">
+<div class="card"><div class="label">Illustrative bottleneck map</div><div style="margin-top:16px">
+<div><div style="display:flex;justify-content:space-between"><strong>Accelerators</strong><span class="small">Availability</span></div><div class="bar"><i style="width:90%"></i></div></div>
+<div><div style="display:flex;justify-content:space-between"><strong>Memory &amp; interconnect</strong><span class="small">Bandwidth</span></div><div class="bar"><i style="width:77%;background:linear-gradient(90deg,#7aa9ff,#a7bfff)"></i></div></div>
+<div><div style="display:flex;justify-content:space-between"><strong>Power &amp; cooling</strong><span class="small">Capacity</span></div><div class="bar"><i style="width:82%;background:linear-gradient(90deg,#f4c777,#ef9c6a)"></i></div></div>
+<div><div style="display:flex;justify-content:space-between"><strong>Network &amp; storage</strong><span class="small">Data movement</span></div><div class="bar"><i style="width:66%;background:linear-gradient(90deg,#9be3b0,#5ee7e1)"></i></div></div>
+<p class="small">Qualitative illustration; bars do not represent measured values.</p></div></div>
+<div><div class="big-number">≈945 TWh</div><p>Projected global data-centre electricity consumption in 2030 under the IEA Base Case.</p><div class="rule"></div><h3>Research question</h3><p>How can we improve AI performance per watt without compromising task quality or service-level objectives?</p><div class="pillrow"><span class="tag">GPU scheduling</span><span class="tag">Memory efficiency</span><span class="tag">Energy-aware serving</span></div><div class="source">Source: IEA, <em>Energy and AI</em> (2025), Base Case projection.</div></div>
+</div>
+<div class="foot"><span>INFRASTRUCTURE · PERFORMANCE / WATT</span><span>06 / 20</span></div></section>
+<section class="slide" data-title="Cloud economics and portability" data-notes="Frame this as a constrained optimization problem. Multi-cloud is not automatically cheaper or more resilient; operational complexity and data movement can offset benefits.">
+<div class="kicker">06 · Cloud computing</div><h2>Cloud trade-offs: <span class="blue">cost, portability, reliability</span></h2><p>Elasticity lowers the barrier to entry, but complexity can migrate from hardware ownership to service dependencies and operating costs.</p>
+<div class="grid three" style="margin-top:17px">
+<div class="card"><span class="icon blue">＄</span><h3>Cost visibility</h3><p>GPU idle time, egress, overprovisioning, managed-service premiums, and unpredictable inference demand.</p></div>
+<div class="card"><span class="icon accent">⇄</span><h3>Portability</h3><p>Provider-specific APIs, data gravity, migration effort, and differences in service semantics.</p></div>
+<div class="card"><span class="icon gold">⟳</span><h3>Reliability</h3><p>Regional outages, capacity constraints, recovery objectives, and multi-cloud complexity.</p></div>
+</div>
+<div class="diagram"><div class="node">Workload + SLA</div><span class="arrow">→</span><div class="node">Placement policy</div><span class="arrow">→</span><div class="node">Cloud / edge / local</div><span class="arrow">→</span><div class="node">Observe &amp; optimize</div></div>
+<div class="quote">Research question: can workload placement jointly optimize <strong>total cost, tail latency, policy compliance, and failure risk</strong>?</div>
+<div class="foot"><span>CLOUD · FINOPS &amp; SYSTEMS RESEARCH</span><span>07 / 20</span></div></section>
+<section class="slide" data-title="Security and trustworthy AI" data-notes="Use NIST AI RMF 1.0 as a governance framework: Govern, Map, Measure, Manage. Security controls and AI risk evaluation are related but not interchangeable.">
+<div class="kicker">07 · Security &amp; trust</div><h2>Trustworthy AI requires <span class="pink">end-to-end assurance</span></h2>
+<div class="grid two" style="margin-top:14px">
+<div class="grid" style="gap:9px">
+<div class="card"><h3>Model &amp; data risks</h3><p>Data poisoning, leakage, prompt injection, unsafe tool use, and model misuse.</p></div>
+<div class="card"><h3>Infrastructure risks</h3><p>Identity abuse, secrets exposure, tenant isolation failure, and software supply-chain compromise.</p></div>
+<div class="card"><h3>Operational risks</h3><p>Untraceable decisions, evaluation drift, weak incident response, and unclear accountability.</p></div>
+</div>
+<div class="card"><div class="label">Governance lifecycle · NIST AI RMF</div><div class="grid two" style="margin-top:14px">
+<div class="card" style="padding:14px;border-color:#5ee7e155"><h3 class="accent">GOVERN</h3><p>Roles, policy, accountability</p></div>
+<div class="card" style="padding:14px"><h3 class="blue">MAP</h3><p>Context, stakeholders, harms</p></div>
+<div class="card" style="padding:14px"><h3 class="gold">MEASURE</h3><p>Tests, metrics, evidence</p></div>
+<div class="card" style="padding:14px"><h3 class="pink">MANAGE</h3><p>Mitigation, monitoring, response</p></div>
+</div><div class="source">Reference: NIST AI RMF 1.0 (2023), AI 100-1.</div></div>
+</div>
+<div class="foot"><span>SECURITY · ASSURANCE THROUGH THE LIFECYCLE</span><span>08 / 20</span></div></section>
+<section class="slide" data-title="Sovereignty and interoperability" data-notes="Emphasize nuanced trade-offs. Data residency does not by itself guarantee full sovereignty; jurisdiction, operator access, control plane, keys, and vendor dependencies matter.">
+<div class="kicker">08 · Sovereignty trade-offs</div><h2>Sovereignty vs. <span class="gold">global interoperability</span></h2><p>Local control and global connectivity are not opposites; the challenge is to design explicit, testable boundaries.</p>
+<div class="matrix" style="margin-top:14px">
+<div class="card"><span class="icon gold">⌂</span><h3>Local control</h3><p>Data location, access policy, auditability, jurisdictional obligations.</p></div>
+<div class="card"><span class="icon blue">◎</span><h3>Global ecosystem</h3><p>Advanced services, research collaboration, scale, and access to innovation.</p></div>
+<div class="card"><span class="icon pink">⚖</span><h3>Risk of over-centralization</h3><p>Single-provider dependency, limited substitutability, concentrated failure domains.</p></div>
+<div class="card"><span class="icon accent">↗</span><h3>Risk of over-isolation</h3><p>Higher cost, reduced interoperability, duplicated effort, and slower innovation.</p></div>
+</div>
+<div class="quote" style="margin-top:17px">Design for <strong>controlled interdependence</strong>, not absolute self-sufficiency.</div>
+<div class="foot"><span>TRADE-OFF · CONTROL / COST / OPENNESS</span><span>09 / 20</span></div></section>
+<section class="slide" data-title="Structural ecosystem challenges" data-notes="Infrastructure investment has limited value without the people, supply chains, institutions, and incentives needed to operate and improve it.">
+<div class="kicker">09 · Ecosystem constraints</div><h2>The structural challenge: <span class="accent">capital, talent, ecosystem</span></h2>
+<div class="grid four" style="margin-top:20px">
+<div class="card"><span class="icon gold">◉</span><h3>Capital intensity</h3><p>Accelerators, power, cooling, connectivity, and refresh cycles require sustained investment.</p></div>
+<div class="card"><span class="icon blue">⌘</span><h3>Talent</h3><p>AI systems, distributed computing, security, operations, and energy expertise must intersect.</p></div>
+<div class="card"><span class="icon pink">⛓</span><h3>Supply chains</h3><p>Critical chips and components depend on concentrated global production networks.</p></div>
+<div class="card"><span class="icon accent">⇄</span><h3>Research transfer</h3><p>Benchmarks and prototypes need pathways to real workloads and production evaluation.</p></div>
+</div>
+<div class="diagram" style="margin-top:24px"><div class="node">Government</div><span class="arrow">↔</span><div class="node">Universities</div><span class="arrow">↔</span><div class="node">Industry</div><span class="arrow">↔</span><div class="node">Infrastructure providers</div></div>
+<div class="quote">Infrastructure without local capability can reproduce dependency in a different form.</div>
+<div class="foot"><span>ECOSYSTEM · CAPABILITY IS STRATEGIC</span><span>10 / 20</span></div></section>
+<section class="slide" data-title="Efficient adaptive AI" data-notes="A viable study should compare against a strong baseline and report task quality, latency, energy, and cost per successful task. Avoid optimizing tokens or latency in isolation.">
+<div class="kicker">10 · Research opportunities</div><h2>Opportunity I — <span class="accent">Efficient, adaptive AI systems</span></h2><p class="lead">Make intelligence more efficient, rather than assuming that bigger models are always the best answer.</p>
+<div class="grid two" style="margin-top:15px">
+<div class="card"><div class="label">Methods to investigate</div><div class="pillrow" style="margin-top:12px"><span class="pill">Quantization</span><span class="pill">Distillation</span><span class="pill">Pruning</span><span class="pill">Adaptive inference</span><span class="pill">Model routing</span><span class="pill">Mixture-of-experts</span></div><div class="rule"></div><p>Choose computation based on task difficulty, uncertainty, latency budget, and available resources.</p></div>
+<div class="card"><div class="label">Example research question</div><div class="quote" style="margin-top:12px">Can adaptive model routing reduce inference cost while preserving task quality within a defined tolerance?</div><div class="rule"></div><div class="label">Evaluation protocol</div><div class="pillrow" style="margin-top:10px"><span class="tag">Task quality</span><span class="tag">p95 latency</span><span class="tag">Energy / task</span><span class="tag">Cost / success</span></div></div>
+</div>
+<div class="foot"><span>RESEARCH I · EFFICIENCY WITH QUALITY GUARDRAILS</span><span>11 / 20</span></div></section>
+<section class="slide" data-title="AI-native cloud orchestration" data-notes="The contribution can be a scheduler, placement algorithm, policy, or simulator. Compare against standard scheduling baselines under reproducible workload traces.">
+<div class="kicker">11 · Research opportunities</div><h2>Opportunity II — <span class="blue">AI-native cloud orchestration</span></h2><p>Cloud systems should be aware of model characteristics, accelerator heterogeneity, and application-level service objectives.</p>
+<div class="diagram" style="margin-top:16px"><div class="node">Workload profile<br><span class="small">quality, size, deadline</span></div><span class="arrow">→</span><div class="node" style="border-color:#7aa9ff">Intelligent scheduler<br><span class="small">cost / SLA / policy</span></div><span class="arrow">→</span><div class="node">GPU / CPU / edge<br><span class="small">heterogeneous pool</span></div></div>
+<div class="grid three" style="margin-top:15px">
+<div class="card"><h3>Scheduling</h3><p>Allocate accelerators based on queueing, memory, and workload priority.</p></div>
+<div class="card"><h3>Autoscaling</h3><p>Predict demand and scale before tail latency degrades.</p></div>
+<div class="card"><h3>Cross-layer policy</h3><p>Co-optimize compute, network, data location, and reliability.</p></div>
+</div>
+<div class="quote" style="margin-top:18px">Measure throughput, p95/p99 latency, utilization, cost, and SLA violations—not a single metric.</div>
+<div class="foot"><span>RESEARCH II · SCHEDULING &amp; ORCHESTRATION</span><span>12 / 20</span></div></section>
+<section class="slide" data-title="Privacy-preserving distributed AI" data-notes="Federated learning does not automatically guarantee privacy. Consider inference leakage, gradient leakage, participant heterogeneity, secure aggregation, and explicit privacy accounting.">
+<div class="kicker">12 · Research opportunities</div><h2>Opportunity III — <span class="green">Privacy-preserving distributed AI</span></h2><p>Enable collaboration across organizations without assuming all raw data can be pooled in one location.</p>
+<div class="diagram"><div class="node">Hospital A<br><span class="small">local data</span></div><div class="node">University B<br><span class="small">local data</span></div><div class="node">Agency C<br><span class="small">local data</span></div></div>
+<div style="text-align:center;color:var(--cyan);font-size:22px">↘ &nbsp;&nbsp; model updates / protected statistics &nbsp;&nbsp; ↙</div>
+<div class="card" style="max-width:580px;margin:12px auto;text-align:center;border-color:#438575"><h3>Federated coordination layer</h3><p>Secure aggregation · policy enforcement · privacy accounting</p></div>
+<div class="grid three" style="margin-top:14px">
+<div class="card"><h3>Methods</h3><p>Federated learning, differential privacy, confidential computing.</p></div>
+<div class="card"><h3>Open problem</h3><p>Balance utility, privacy, communication, and heterogeneous data.</p></div>
+<div class="card"><h3>Evaluation</h3><p>Model utility, privacy budget, communication overhead, robustness.</p></div>
+</div>
+<div class="foot"><span>RESEARCH III · DISTRIBUTED TRUST</span><span>13 / 20</span></div></section>
+<section class="slide" data-title="Sovereign cloud architecture" data-notes="Operationalize sovereignty using measurable indicators. Avoid claiming that location alone proves sovereignty. Compare architecture options against a clear threat model and policy requirements.">
+<div class="kicker">13 · Research opportunities</div><h2>Opportunity IV — <span class="gold">Sovereign cloud architecture</span></h2><p>Translate sovereignty from a policy aspiration into system properties that can be designed, measured, and audited.</p>
+<div class="grid two" style="margin-top:15px">
+<div class="card"><div class="label">Architecture controls</div><div class="pillrow" style="margin-top:10px"><span class="pill">Policy-aware placement</span><span class="pill">Key custody</span><span class="pill">Identity boundaries</span><span class="pill">Audit trails</span><span class="pill">Portable deployment</span><span class="pill">Recovery plans</span></div></div>
+<div class="card"><div class="label">Example research question</div><div class="quote" style="margin-top:10px">How can a workload satisfy data policy, latency targets, and cost limits across multiple infrastructure domains?</div><div class="rule"></div><div class="label">Candidate metrics</div><p>Policy compliance · portability effort · availability · total cost · verified access control</p></div>
+</div>
+<div class="diagram"><div class="node">Policy constraints</div><span class="arrow">+</span><div class="node">Threat model</div><span class="arrow">+</span><div class="node">Placement optimizer</div><span class="arrow">→</span><div class="node" style="border-color:#f4c777;color:var(--gold)">Auditable deployment</div></div>
+<div class="foot"><span>RESEARCH IV · SOVEREIGNTY AS A MEASURABLE PROPERTY</span><span>14 / 20</span></div></section>
+<section class="slide" data-title="Sustainable AI infrastructure" data-notes="Carbon-aware scheduling depends on data quality and workload flexibility. Evaluate deadline compliance and total system effects; avoid assuming renewable energy availability or low-carbon timing without evidence.">
+<div class="kicker">14 · Research opportunities</div><h2>Opportunity V — <span class="green">Sustainable AI infrastructure</span></h2><p>Reduce energy and carbon intensity while maintaining service quality and operational constraints.</p>
+<div class="grid two" style="margin-top:14px;align-items:center">
+<div class="card"><div class="label">Potential control loop</div><div class="diagram" style="margin:12px 0"><div class="node">Energy &amp; grid signals</div><span class="arrow">→</span><div class="node">Workload scheduler</div></div><div class="diagram" style="margin:10px 0"><div class="node">SLA / deadlines</div><span class="arrow">→</span><div class="node">Placement &amp; timing</div></div><p class="small">Only defer workloads that are safe to defer; real-time tasks remain latency-constrained.</p></div>
+<div class="grid" style="gap:10px">
+<div class="card"><h3>Research directions</h3><p>Carbon-aware scheduling, cooling optimization, workload shifting, waste-heat reuse.</p></div>
+<div class="card"><h3>Evaluation metrics</h3><p>Energy per task, carbon emissions, cooling overhead, deadline compliance.</p></div>
+<div class="card"><h3>Core trade-off</h3><p>Environmental impact versus latency, cost, and reliability.</p></div>
+</div>
+</div>
+<div class="foot"><span>RESEARCH V · ENERGY-AWARE COMPUTING</span><span>15 / 20</span></div></section>
+<section class="slide" data-title="Benchmarking and infrastructure intelligence" data-notes="Strong benchmarks must be reproducible, transparent about workloads, and robust to provider changes. Do not reduce system quality to model benchmark scores alone.">
+<div class="kicker">15 · Research opportunities</div><h2>Opportunity VI — <span class="accent">Benchmarking &amp; infrastructure intelligence</span></h2><p>Build evidence that helps researchers and industry make deployment decisions that generalize beyond a single demo.</p>
+<div class="grid three" style="margin-top:16px">
+<div class="card"><span class="icon accent">▥</span><h3>Cross-provider benchmark</h3><p>Compare model and system behavior across deployment environments and workload types.</p></div>
+<div class="card"><span class="icon blue">⌁</span><h3>Observability</h3><p>Trace latency, utilization, errors, quality drift, and resource bottlenecks end to end.</p></div>
+<div class="card"><span class="icon gold">◷</span><h3>Predictive operations</h3><p>Forecast capacity, costs, failures, and workload demand from operational signals.</p></div>
+</div>
+<div class="card" style="margin-top:14px"><div class="label">A useful benchmark scorecard</div><div class="grid four" style="margin-top:10px"><div><div class="big-number">Q</div><p>Task quality</p></div><div><div class="big-number">T</div><p>Latency &amp; throughput</p></div><div><div class="big-number">＄</div><p>Cost per successful task</p></div><div><div class="big-number">C</div><p>Compliance &amp; control</p></div></div></div>
+<div class="foot"><span>RESEARCH VI · REPRODUCIBLE EVIDENCE</span><span>16 / 20</span></div></section>
+<section class="slide" data-title="Integrated research framework" data-notes="This is the unifying framework of the talk. The research novelty can lie in a cross-layer optimizer, a benchmark, a formal policy model, or an empirical study with rigorous baselines.">
+<div class="kicker">16 · Integrated framework</div><h2>One research framework: <span class="accent">cross-layer optimization</span></h2><p>Optimize the system as a whole under explicit operational, economic, security, and governance constraints.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px">
+<div class="card" style="border-left:4px solid var(--cyan)"><h3>AI layer</h3><p>Model choice · routing · inference · evaluation</p></div>
+<div class="card" style="border-left:4px solid var(--blue)"><h3>Cloud layer</h3><p>Scheduling · orchestration · observability</p></div>
+<div class="card" style="border-left:4px solid var(--gold)"><h3>Infrastructure layer</h3><p>Compute · storage · network · energy</p></div>
+<div class="card" style="border-left:4px solid var(--pink)"><h3>Sovereignty layer</h3><p>Governance · identity · jurisdiction · portability</p></div>
+</div>
+<div class="diagram"><div class="node">Security</div><div class="node">Efficiency</div><div class="node">Reliability</div><div class="node">Sustainability</div><div class="node">Control</div></div>
+<div class="quote">A useful research contribution states the <strong>objective, constraints, baselines, and measurable outcomes</strong> before selecting an algorithm.</div>
+<div class="foot"><span>FRAMEWORK · OPTIMIZE ACROSS LAYERS</span><span>17 / 20</span></div></section>
+<section class="slide" data-title="Indonesia context" data-notes="Treat the listed items as candidate issues to validate using national datasets and stakeholder interviews. Do not present them as quantified facts without sources.">
+<div class="kicker">17 · Indonesia context</div><h2>Indonesia: a <span class="gold">research and capability agenda</span></h2><p>National context can shape high-value research questions—especially where infrastructure, language, governance, and access intersect.</p>
+<div class="grid two" style="margin-top:14px">
+<div class="card"><div class="label">Questions to validate with evidence</div><div class="pillrow" style="margin-top:10px"><span class="pill">Regional connectivity</span><span class="pill">Compute access &amp; cost</span><span class="pill">Energy capacity</span><span class="pill">Indonesian-language AI</span><span class="pill">Data governance</span><span class="pill">Specialist talent</span></div></div>
+<div class="card"><div class="label">Potential research pilots</div><div style="margin-top:12px"><h3 class="accent">01 · Local AI benchmark</h3><p>Quality, latency, and cost across Indonesian-language tasks.</p><h3 class="blue" style="margin-top:12px">02 · Heterogeneous workload placement</h3><p>Cloud, local data centers, and edge under real network constraints.</p><h3 class="gold" style="margin-top:12px">03 · Cross-institution learning</h3><p>Privacy-aware collaboration under institutional data policies.</p></div></div>
+</div>
+<div class="quote" style="margin-top:15px">Build from measured local needs—not from assumptions about what the market lacks.</div>
+<div class="foot"><span>INDONESIA · EVIDENCE-LED PRIORITIES</span><span>18 / 20</span></div></section>
+<section class="slide" data-title="Collaborative roadmap" data-notes="Use the phases as an initial planning scaffold. Each project should set explicit stage gates and should not move to deployment simply because a prototype works.">
+<div class="kicker">18 · From research to impact</div><h2>From research question to <span class="accent">industry deployment</span></h2><p>Organize collaboration around evidence and stage gates rather than around technology demonstrations alone.</p>
+<div class="timeline" style="margin-top:20px">
+<div class="phase"><span class="label">Phase 01 · 0–6 months</span><h3 style="margin-top:12px">Discover</h3><p>Interview stakeholders<br>Define threat model and use case<br>Establish baselines and KPIs</p><div class="tag">Output: problem brief</div></div>
+<div class="phase"><span class="label">Phase 02 · 6–18 months</span><h3 style="margin-top:12px">Research &amp; prototype</h3><p>Develop method or simulator<br>Run reproducible experiments<br>Compare strong baselines</p><div class="tag">Output: validated prototype</div></div>
+<div class="phase"><span class="label">Phase 03 · 18–36 months</span><h3 style="margin-top:12px">Validate &amp; transfer</h3><p>Test with industry partner<br>Assess cost, risk, and usability<br>Plan adoption and maintenance</p><div class="tag">Output: pilot &amp; evidence</div></div>
+</div>
+<div class="source">Planning ranges are illustrative; duration depends on scope, access to infrastructure, and partner readiness.</div>
+<div class="foot"><span>ROADMAP · STAGE-GATED COLLABORATION</span><span>19 / 20</span></div></section>
+<section class="slide" data-title="Conclusion" data-notes="Close by returning to the three pillars: efficiency, control, and capability. Invite the audience to identify which constraint is most binding in their own context.">
+<div class="kicker">19 · Conclusion</div><h2>Build digital systems that are <span class="accent">capable</span>, <span class="gold">efficient</span>, and <span class="green">sovereign</span>.</h2><p class="lead">The next competitive advantage will come from how well we integrate intelligence, infrastructure, and control.</p>
+<div class="grid three" style="margin-top:24px">
+<div class="card"><span class="icon accent">↗</span><h3>01 · Efficiency</h3><p>Measure value per unit of compute, energy, time, and cost.</p></div>
+<div class="card"><span class="icon gold">◎</span><h3>02 · Control</h3><p>Design for auditable governance, resilience, and credible technology options.</p></div>
+<div class="card"><span class="icon green">⌘</span><h3>03 · Capability</h3><p>Invest in research, talent, institutions, and the ability to operate and improve systems locally.</p></div>
+</div>
+<div class="quote" style="margin-top:24px">How can we build AI infrastructure that is globally competitive, economically sustainable, and digitally sovereign?</div>
+<div class="foot"><span>DISCUSSION · THANK YOU</span><span>20 / 20</span></div></section>
+</div>
+<div id="controls" aria-label="Slide controls"><button id="prev" aria-label="Previous slide" title="Previous (←)">‹</button><span id="counter">01 / 20</span><button id="next" aria-label="Next slide" title="Next (→)">›</button><button id="notesBtn" aria-label="Toggle speaker notes" title="Speaker notes (N)">▤</button><button id="helpBtn" aria-label="Keyboard shortcuts" title="Help (?)">?</button><button id="fullBtn" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button></div>
+<div id="progress"></div>
+<div id="notes"><h3>Speaker notes</h3><p id="notesText"></p><p class="small">Press N to hide notes.</p></div>
+<div id="help"><div class="helpbox"><div class="kicker">Navigation</div><h2 style="font-size:30px">Presentation controls</h2><p><kbd>→</kbd> / <kbd>Space</kbd> Next slide</p><p><kbd>←</kbd> Previous slide</p><p><kbd>F</kbd> Fullscreen</p><p><kbd>N</kbd> Speaker notes</p><p><kbd>P</kbd> Presenter view (opens notes in a new window)</p><p><kbd>Home</kbd> First slide · <kbd>End</kbd> Last slide</p><p><kbd>Esc</kbd> Close help</p><button id="closeHelp" style="margin-top:14px;border:0;border-radius:8px;padding:10px 16px;background:#5ee7e1;color:#07111f;font-weight:700;cursor:pointer">Got it</button></div></div>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')],counter=document.getElementById('counter'),progress=document.getElementById('progress'),notes=document.getElementById('notes'),notesText=document.getElementById('notesText'),help=document.getElementById('help');let index=0;
+function show(n){index=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===index));counter.textContent=String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');progress.style.width=((index+1)/slides.length*100)+'%';notesText.textContent=slides[index].dataset.notes||'No notes for this slide.';document.title=slides[index].dataset.title+' — AI, Cloud & Sovereign Infrastructure';}
+function next(){show(index+1)}function prev(){show(index-1)}function fullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}}
+function presenter(){const s=slides[index];const w=window.open('','presenterNotes','width=520,height=640');if(!w)return;w.document.write('<!doctype html><html><head><title>Presenter Notes</title><style>body{font:16px/1.6 system-ui;background:#07111f;color:#eaf3fb;padding:26px}h1{font-size:24px;color:#5ee7e1}p{color:#afc0d0}</style></head><body><h1>'+escapeHtml(s.dataset.title||'Slide')+'</h1><p>'+escapeHtml(s.dataset.notes||'No notes available.')+'</p><p>Use the main presentation window to navigate slides.</p></body></html>');w.document.close()}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('next').addEventListener('click',next);document.getElementById('prev').addEventListener('click',prev);document.getElementById('fullBtn').addEventListener('click',fullscreen);document.getElementById('notesBtn').addEventListener('click',()=>notes.classList.toggle('show'));document.getElementById('helpBtn').addEventListener('click',()=>help.classList.add('open'));document.getElementById('closeHelp').addEventListener('click',()=>help.classList.remove('open'));
+document.addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();next()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key.toLowerCase()==='f')fullscreen();else if(e.key.toLowerCase()==='n')notes.classList.toggle('show');else if(e.key.toLowerCase()==='p')presenter();else if(e.key==='?'||e.key==='/')help.classList.add('open');else if(e.key==='Escape')help.classList.remove('open')});
+let x0=null,y0=null;document.addEventListener('touchstart',e=>{if(e.touches.length===1){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){dx<0?next():prev()}x0=null;y0=null},{passive:true});
+show(0);
+})();
+</script>
+</body></html>
