@@ -24,8 +24,6 @@ h1,h2,h3,p{margin-top:0}h1{font-size:clamp(30px,4.2vw,65px);line-height:1.04;let
 #notes{display:none;position:fixed;right:16px;top:16px;width:min(360px,35vw);z-index:25;background:#0a1927f5;border:1px solid #315066;border-radius:12px;padding:16px;box-shadow:0 10px 40px #0008}#notes.show{display:block}#notes h3{color:var(--cyan)}#notes p{font-size:13px}
 @media(max-width:650px){.slide{padding:6% 6% 11%}.cover-art{right:-15%;width:50%;opacity:.45}.cover-copy{max-width:100%}.grid{gap:7px}.card{padding:10px;border-radius:10px}.icon{margin-bottom:5px}.foot{padding-top:6px}.timeline{gap:7px}#controls{bottom:8px}#controls button{width:31px;height:31px}h2{margin:10px 0}.slide:after{background-size:28px 28px}}
 @media(prefers-reduced-motion:reduce){.slide.active{animation:none}*{transition:none!important}}
-@media print{html,body{overflow:visible;background:#fff;color:#111;height:auto}#deck{display:block;height:auto}.slide,.slide.active{display:flex!important;position:relative;width:100vw;height:56.25vw;page-break-after:always;background:#07111f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slide:not(.active){animation:none}#controls,#progress,#help,#notes{display:none!important}@page{size:13.333in 7.5in;margin:0}}
-
 /* Enterprise theme override: clean light canvas, navy typography, restrained teal accent */
 :root{
  --bg:#f3f6fa;--panel:#ffffff;--panel2:#edf2f7;--line:#d8e1eb;
@@ -96,6 +94,61 @@ p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
 .source a{color:#174f78;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 .source a:visited{color:#174f78}
 @media(max-width:700px){.source{font-size:9px;line-height:1.2;margin-top:6px}}
+
+/* Print/PDF layout: one slide per landscape 16:9 page */
+@page{size:13.333in 7.5in;margin:0}
+@media print{
+ html,body{margin:0!important;padding:0!important;width:13.333in!important;height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important;color:#172b4d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ body:before{display:none!important}
+ #deck{display:block!important;position:static!important;width:13.333in!important;height:auto!important;margin:0!important;padding:0!important}
+ .slide,.slide.active,.slide:not(.active){
+  display:flex!important;position:relative!important;inset:auto!important;
+  width:13.333in!important;min-width:13.333in!important;max-width:13.333in!important;
+  height:7.5in!important;min-height:7.5in!important;max-height:7.5in!important;
+  aspect-ratio:16/9!important;box-sizing:border-box!important;
+  margin:0!important;padding:.38in .58in .32in!important;
+  overflow:hidden!important;break-after:page!important;page-break-after:always!important;
+  background:#fff!important;color:#172b4d!important;box-shadow:none!important;
+  animation:none!important;transform:none!important;isolation:isolate
+ }
+ .slide:last-of-type{break-after:auto!important;page-break-after:auto!important}
+ .slide:after{opacity:.12!important}
+ #controls,#progress,#help,#notes{display:none!important}
+ h1{font-size:34pt!important;line-height:1.04!important;margin:16pt 0 12pt!important;max-width:8.6in!important}
+ h2{font-size:25pt!important;line-height:1.08!important;margin:8pt 0 10pt!important;max-width:11.7in!important}
+ h3{font-size:13pt!important;line-height:1.15!important;margin:0 0 5pt!important}
+ p,.body{font-size:9.5pt!important;line-height:1.32!important;margin-bottom:6pt!important;color:#334155!important}
+ .lead{font-size:13pt!important;line-height:1.35!important;max-width:8.8in!important}
+ .kicker{font-size:8pt!important;letter-spacing:.13em!important}
+ .label{font-size:7.5pt!important}
+ .grid{gap:8pt!important}
+ .card{padding:10pt!important;border-radius:8pt!important;box-shadow:none!important;background:#fff!important;border-color:#cbd5e1!important;break-inside:avoid!important}
+ .card p{font-size:8.5pt!important;line-height:1.28!important}
+ .icon{font-size:19pt!important;margin-bottom:5pt!important}
+ .tag,.pill{font-size:7.5pt!important;padding:4pt 6pt!important}
+ .pillrow{gap:4pt!important}
+ .diagram{gap:7pt!important;margin:9pt 0!important}
+ .node{padding:7pt 9pt!important;min-width:0!important;font-size:8.5pt!important}
+ .arrow{font-size:16pt!important}
+ .timeline{gap:9pt!important;margin-top:10pt!important}
+ .phase{padding-top:8pt!important}
+ .phase p{font-size:8.5pt!important;line-height:1.28!important}
+ .matrix{gap:7pt!important}
+ .matrix .card{min-height:0!important}
+ .quote{font-size:13pt!important;line-height:1.3!important;padding:5pt 0 5pt 12pt!important;max-width:100%!important}
+ .chart{height:1.35in!important;padding:8pt 4pt 0!important;gap:10pt!important}
+ .chart-col span{font-size:7pt!important}.chart-col b{font-size:8pt!important}
+ .big-number{font-size:27pt!important}
+ .source{font-size:7pt!important;line-height:1.18!important;margin-top:5pt!important;color:#334155!important;overflow-wrap:anywhere!important}
+ .source a,.source a:visited{color:#174f78!important;text-decoration:underline!important}
+ .foot{font-size:7pt!important;gap:10pt!important;padding-top:6pt!important;margin-top:auto!important;color:#475569!important;border-top-color:#d8e1eb!important}
+ .cover-art{opacity:.55!important}
+ .cover-copy{max-width:78%!important}
+ .meta{margin-top:14pt!important;gap:6pt!important}
+ .meta span{font-size:8pt!important;padding:5pt 7pt!important}
+ *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+
 </style>
 </head>
 <body>
