@@ -71,13 +71,32 @@ kbd{background:#edf2f7;border-color:#d5dfe9;color:#172b4d}
  .card{box-shadow:none}
 }
 
+
+/* Accessibility pass: stronger contrast for secondary and accent text */
+:root{--muted:#40536a;--gold:#704800;--pink:#8a3152;--green:#17603a;--blue:#1f4f91;--cyan:#00666d}
+p,.body,.card p,.phase p,.source,.small,.meta span{color:#334155}
+.label,.phase .label,.card .label{color:#334155}
+.kicker{color:#00666d}
+.accent{color:#00666d!important}
+.blue{color:#1f4f91!important}
+.gold{color:#704800!important}
+.pink{color:#8a3152!important}
+.green{color:#17603a!important}
+.tag{color:#00565c;background:#e8f6f6;border-color:#8fc7c9}
+.pill{color:#24364b;background:#e8eef5;border-color:#bdcbd9}
+.quote{color:#24364b;background:#edf3f8;border-color:#aabccc}
+.node{color:#172b4d;background:#edf2f7;border-color:#aebfce}
+.chart-col span,.source,.foot{color:#475569}
+.meta span{color:#334155;background:#fff;border-color:#c3cfdb}
+#notes .small{color:#475569}
+
 </style>
 </head>
 <body>
 <div id="deck" aria-live="polite">
 <section class="slide active" data-title="Title" data-notes="Frame the talk around one core proposition: AI capability is inseparable from the systems that compute, deliver, govern, and sustain it.">
 <div class="cover-art"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="wire"></div></div>
-<div class="cover-copy"><div class="kicker">Industry outlook · Research agenda</div><h1>Industry Challenges &amp; Research Opportunities in <span class="accent">AI</span>, Cloud Computing &amp; <span class="gold">Sovereign Digital Infrastructure</span></h1><p class="lead">Building intelligent systems that are efficient, resilient, and under meaningful local control.</p><div class="meta"><span>Research &amp; Industry</span><span>20-slide briefing</span><span>October 2026</span></div></div>
+<div class="cover-copy"><div class="kicker">Industry outlook · Research agenda</div><h1>Industry Challenges &amp; Research Opportunities in <span class="accent">AI</span>, Cloud Computing &amp; <span class="gold">Sovereign Digital Infrastructure</span></h1><p class="lead">Building intelligent systems that are efficient, resilient, and under meaningful local control.</p><div class="meta"><span>Research &amp; Industry</span><span>October 2026</span></div></div>
 <div class="foot"><span>AI × CLOUD × SOVEREIGNTY</span><span>01 / 20</span></div></section>
 <section class="slide" data-title="Three domains, one system" data-notes="Explain the dependencies. A strong model can still fail as a product if inference is expensive, infrastructure unreliable, or data governance unacceptable.">
 <div class="kicker">01 · Strategic context</div><h2>Three domains. <span class="accent">One interdependent system.</span></h2><p class="lead">The strategic question is no longer only what AI can do—but what it takes to operate it responsibly at scale.</p>
