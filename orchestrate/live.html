@@ -12,7 +12,7 @@
   .big { font-size: 56px; font-weight: 800; color: var(--blue); line-height: 1; }
   .join { display: flex; gap: 20px; align-items: center; }
   .join img { width: 150px; height: 150px; }
-  .rowb { display: grid; grid-template-columns: 1fr 200px; gap: 10px; align-items: center; font-size: 14px; margin: 6px 0; }
+  .rowb { display: grid; grid-template-columns: 1fr 240px; gap: 10px; align-items: center; font-size: 14px; margin: 6px 0; }
   .stack { display: flex; height: 18px; border-radius: 5px; overflow: hidden; background: var(--line); }
   .stack i { display: block; height: 100%; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; font-size: 13px; }
@@ -30,7 +30,7 @@
   </div>
   <div class="grid">
     <div class="card"><h2>Mission 1 · Task Triage</h2>
-      <div class="legend"><span><i style="background:#0e2841"></i>Human</span><span><i style="background:#1e6fd9"></i>Review</span><span><i style="background:#f58528"></i>Auto</span><span class="ans">✓ recommended</span></div>
+      <div class="legend"><span><i style="background:#0e2841"></i>Human</span><span><i style="background:#1e6fd9"></i>Review</span><span><i style="background:#f58528"></i>Auto</span><span class="ans">✓ recommended</span><span><b>%</b> = agree with ✓ · most debated first</span></div>
       <div id="m1"></div></div>
     <div class="card"><h2>Mission 2 · Flaws caught by the room</h2><div id="m2"></div></div>
   </div>
@@ -61,9 +61,12 @@ async function tick() {
     const L = (m) => Object.values(last[m] || {});
 
     const m1 = L("m1");
-    $("m1").innerHTML = TRIAGE.map((q, i) => { const c = { HUMAN: 0, REVIEW: 0, AUTO: 0 }; m1.forEach((x) => c[x.choices[i]]++);
-      return `<div class="rowb"><div>${q.t.length > 52 ? q.t.slice(0, 50) + "…" : q.t} <span class="ans">✓ ${MODES[q.a].short}</span></div>
-        <div class="stack">${TRIAGE_OPTIONS.map((k) => `<i style="width:${pct(c[k], m1.length)}%;background:${COL[k]}" title="${k} ${c[k]}"></i>`).join("")}</div></div>`; }).join("");
+    // Most-debated tasks (lowest agreement with the recommendation) first.
+    $("m1").innerHTML = !m1.length ? "" : TRIAGE.map((q, i) => { const c = { HUMAN: 0, REVIEW: 0, AUTO: 0 }; m1.forEach((x) => c[x.choices[i]]++);
+      return { q, c, agree: pct(c[q.a], m1.length) }; }).sort((a, b) => a.agree - b.agree).map(({ q, c, agree }) =>
+      `<div class="rowb"><div>${q.t.length > 52 ? q.t.slice(0, 50) + "…" : q.t} <span class="ans">✓ ${MODES[q.a].short}</span></div>
+        <div style="display:flex;gap:8px;align-items:center"><div class="stack" style="flex:1">${TRIAGE_OPTIONS.map((k) => `<i style="width:${pct(c[k], m1.length)}%;background:${COL[k]}" title="${k} ${c[k]}"></i>`).join("")}</div>
+        <b class="agree" style="color:${agree >= 70 ? "var(--good)" : agree >= 40 ? "var(--orange)" : "var(--bad)"}">${agree}%</b></div></div>`).join("");
 
     const m2 = L("m2");
     $("m2").innerHTML = m2.length ? bars(AUDIT.map((a, i) => [a, i]).filter(([a]) => a.bad)
