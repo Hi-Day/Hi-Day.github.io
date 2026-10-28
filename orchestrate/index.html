@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orchestrate: Human + AI Lab</title>
+<meta name="description" content="Interactive simulation companion for the training 'Orchestrating Human Intelligence & Artificial Intelligence for the Future of Work'.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">Orchestrate<b>.</b>Lab</div>
+  <div class="who" id="who"></div>
+</header>
+<div class="steps" id="steps"></div>
+<main id="app"></main>
+<div class="bar" id="bar"></div>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script>
+const KEY = "orchestrate-v1";
+const fresh = () => ({ step: 0, name: "", role: "", sid: Math.random().toString(36).slice(2, 10),
+  m1: {}, m1done: false, m2: [], m2done: false, m3: WORKFLOW.map(() => null), m3done: false,
+  p: { del: [], skill: "", guard: "" } });
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch { S = fresh(); }
+if (new URLSearchParams(location.search).has("reset")) S = fresh();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 2200); }
+
+// Fire-and-forget to the Google Sheet; no-cors because Apps Script does not answer preflight.
+function send(mission, data) {
+  if (!LIVE_URL) return;
+  fetch(LIVE_URL, { method: "POST", mode: "no-cors",
+    body: JSON.stringify({ sid: S.sid, name: S.name, role: S.role, mission, data }) }).catch(() => {});
+}
+
+// ---------- scoring ----------
+const tIdx = (k) => TRIAGE_OPTIONS.indexOf(k);
+function m1Score() {
+  let pts = 0, bias = 0;
+  TRIAGE.forEach((q, i) => { const d = tIdx(S.m1[i]) - tIdx(q.a); pts += d === 0 ? 2 : Math.abs(d) === 1 ? 1 : 0; bias += d; });
+  return { pts, max: TRIAGE.length * 2, pct: pts / (TRIAGE.length * 2), bias };
+}
+function m2Score() {
+  const hits = S.m2.filter((i) => AUDIT[i].bad).length, falses = S.m2.length - hits, total = AUDIT.filter((a) => a.bad).length;
+  return { hits, falses, total, pct: Math.max(0, hits - falses) / total };
+}
+function m3Score() {
+  const r = scoreWorkflow(S.m3);
+  r.bias = WORKFLOW.reduce((b, st, i) => b + MODES[S.m3[i]].lvl - MODES[st.ideal].lvl, 0);
+  return r;
+}
+
+// ---------- screens ----------
+const SCREENS = [welcome, mission1, mission2, mission3, mission4, results];
+function go(n) { S.step = n; save(); render(); scrollTo(0, 0); }
+function render() {
+  $("who").textContent = S.name ? S.name : "";
+  $("steps").innerHTML = SCREENS.map((_, i) => `<span class="${i < S.step ? "done" : i === S.step ? "on" : ""}"></span>`).join("");
+  SCREENS[S.step]();
+}
+function bar(html) { $("bar").innerHTML = html; }
+
+function welcome() {
+  $("app").innerHTML = `
+    <div class="eyebrow">Human + AI Lab</div>
+    <h1>Orchestrating Human &amp; Artificial Intelligence</h1>
+    <p class="lead">Four short missions. You'll decide what AI should do, what people should do, and how the two work together. There are no trick questions, but there are better and worse calls.</p>
+    <div class="card">
+      <label class="f" for="nm">Your first name</label>
+      <input id="nm" maxlength="30" autocomplete="given-name" value="${esc(S.name)}" placeholder="e.g. Rina">
+      <label class="f" for="rl">Your function</label>
+      <select id="rl">
+        ${["", "Operations", "Sales & Marketing", "Finance", "HR & People", "IT & Digital", "Customer Service", "Strategy & Management", "Other"]
+          .map((r) => `<option value="${r}" ${r === S.role ? "selected" : ""}>${r || "Choose…"}</option>`).join("")}
+      </select>
+    </div>
+    <div class="card"><b>Missions</b>
+      <ol class="muted" style="margin:6px 0 0;padding-left:20px">
+        <li>Task Triage: who should do the work?</li>
+        <li>AI Output Audit: would you send this?</li>
+        <li>Workflow Orchestrator: design the human–AI system</li>
+        <li>My Orchestration Pledge</li>
+      </ol></div>`;
+  bar(`<button class="btn" id="start">Start</button>`);
+  const check = () => ($("start").disabled = !$("nm").value.trim() || !$("rl").value);
+  $("nm").oninput = $("rl").onchange = check; check();
+  $("start").onclick = () => { S.name = $("nm").value.trim(); S.role = $("rl").value; send("join", {}); go(1); };
+}
+
+function mission1() {
+  const done = S.m1done;
+  $("app").innerHTML = `
+    <div class="eyebrow">Mission 1 · Task Triage</div>
+    <h2>Who should do the work?</h2>
+    <p class="lead">For each task, pick the right lane. Think about volume, stakes, and how much judgment or empathy it needs.</p>
+    ${done ? (() => { const s = m1Score(); return `<div class="card"><b>Score: ${s.pts}/${s.max}</b> · ${s.bias > 2 ? "You lean towards automating." : s.bias < -2 ? "You lean towards keeping work human." : "Well-balanced instincts."}<br><span class="muted">Green outline = recommended lane. Exact match = 2 pts, one lane off = 1 pt.</span></div>`; })() : ""}
+    ${TRIAGE.map((q, i) => {
+      const me = S.m1[i], d = me ? Math.abs(tIdx(me) - tIdx(q.a)) : 0;
+      return `<div class="card task"><div class="t">${i + 1}. ${q.t}</div>
+        <div class="seg">${TRIAGE_OPTIONS.map((k) => `<button data-i="${i}" data-k="${k}" class="${me === k ? "sel" : ""} ${done && k === q.a ? "ans" : ""} ${done && me === k && k !== q.a ? "wrong" : ""}" ${done ? "disabled" : ""}>
+          <span class="i">${MODES[k].icon}</span>${MODES[k].short}</button>`).join("")}</div>
+        ${done ? `<div class="why ${d === 0 ? "" : d === 1 ? "half" : "miss"}"><b>${MODES[q.a].label}.</b> ${q.why}</div>` : ""}
+      </div>`;
+    }).join("")}
+    <div class="card muted">🧑 Human = people lead (AI may help prep) · 🤝 Review = AI drafts, human reviews &amp; owns · 🤖 Auto = AI runs it, human spot-checks</div>`;
+  $("app").querySelectorAll(".seg button").forEach((b) => (b.onclick = () => { S.m1[b.dataset.i] = b.dataset.k; save(); mission1(); }));
+  const n = Object.keys(S.m1).length;
+  bar(done ? `<button class="btn" id="nx">Next: AI Output Audit →</button>`
+           : `<span class="hint">${n}/${TRIAGE.length}</span><button class="btn orange" id="ck" ${n < TRIAGE.length ? "disabled" : ""}>Check my answers</button>`);
+  if (done) $("nx").onclick = () => go(2);
+  else $("ck").onclick = () => { S.m1done = true; save(); const s = m1Score(); send("m1", { choices: S.m1, pts: s.pts, bias: s.bias }); mission1(); scrollTo(0, 0); };
+}
+
+function mission2() {
+  const done = S.m2done;
+  $("app").innerHTML = `
+    <div class="eyebrow">Mission 2 · AI Output Audit</div>
+    <h2>Would you send this?</h2>
+    <p class="lead">You asked an AI assistant to turn your Q3 customer-service data at <b>Nusantara Retail</b> into a memo for your director. <b>Tap every sentence you would not send without fixing.</b></p>
+    <div class="card"><b>📊 Your source data</b>
+      <table class="src"><tr><th></th><th>Q2</th><th>Q3</th></tr>
+      ${AUDIT_SOURCE.map((r) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table></div>
+    ${done ? (() => { const s = m2Score(); return `<div class="card"><b>Caught ${s.hits}/${s.total} flaws · ${s.falses} false alarm${s.falses === 1 ? "" : "s"}</b><br><span class="muted">Green = caught · dashed red = missed · solid red = flagged a sentence that was fine.</span></div>`; })() : ""}
+    <div class="card memo"><b>🤖 AI draft: "Q3 Customer Service Brief"</b>
+      ${AUDIT.map((a, i) => {
+        const f = S.m2.includes(i);
+        const cls = !done ? (f ? "flag" : "") : a.bad ? (f ? "r-hit" : "r-miss") : f ? "r-false" : "";
+        return `<button class="sent ${cls}" data-i="${i}" ${done ? "disabled" : ""}>${a.s}
+          ${done && (a.bad || f) ? `<span class="ex">${a.bad ? `<span class="tag">${a.tag}</span>` : ""}${a.why}</span>` : ""}</button>`;
+      }).join("")}</div>`;
+  $("app").querySelectorAll(".sent").forEach((b) => (b.onclick = () => {
+    const i = +b.dataset.i; S.m2 = S.m2.includes(i) ? S.m2.filter((x) => x !== i) : [...S.m2, i]; save(); mission2();
+  }));
+  bar(done ? `<button class="btn" id="nx">Next: Workflow Orchestrator →</button>`
+           : `<span class="hint">🚩 ${S.m2.length} flagged</span><button class="btn orange" id="ck">Check my audit</button>`);
+  if (done) $("nx").onclick = () => go(3);
+  else $("ck").onclick = () => { S.m2done = true; save(); const s = m2Score(); send("m2", { flags: S.m2, hits: s.hits, falses: s.falses }); mission2(); scrollTo(0, 0); };
+}
+
+function mission3() {
+  const done = S.m3done, full = S.m3.every(Boolean);
+  const r = full ? m3Score() : null;
+  const cls = (v, good, bad, inv) => (v == null ? "" : inv ? (v <= good ? "ok" : v >= bad ? "bad" : "warn") : v >= good ? "ok" : v <= bad ? "bad" : "warn");
+  $("app").innerHTML = `
+    <div class="eyebrow">Mission 3 · Workflow Orchestrator</div>
+    <h2>Hire 20 agents in 4 weeks</h2>
+    <p class="lead">Nusantara Retail must hire 20 customer-service agents. Doing everything manually takes <b>250 hours</b>; your team has <b>${WF_BUDGET} hours</b>. Choose the right level of AI autonomy for every step.</p>
+    <div class="meters">
+      <div class="meter ${r ? (r.onTime ? "ok" : "bad") : ""}"><div class="v">${r ? r.hours + "h" : "–"}</div><div class="k">of ${WF_BUDGET}h budget</div></div>
+      <div class="meter ${cls(r && r.saved, 50, 20)}"><div class="v">${r ? r.saved + "%" : "–"}</div><div class="k">time saved</div></div>
+      <div class="meter ${cls(r && r.quality, 85, 60)}"><div class="v">${r ? r.quality : "–"}</div><div class="k">quality</div></div>
+      <div class="meter ${cls(r && r.risk, 10, 30, true)}"><div class="v">${r ? r.risk : "–"}</div><div class="k">risk</div></div>
+    </div>
+    ${WORKFLOW.map((st, i) => {
+      const me = S.m3[i], ok = me === st.ideal;
+      return `<div class="card task wf"><div class="t">${i + 1}. ${st.t}</div>
+        <div class="meta">${st.h}h if manual · stakes ${"●".repeat(Math.round(st.stakes * 5)).padEnd(5, "○")}</div>
+        <div class="seg">${Object.keys(MODES).map((k) => `<button data-i="${i}" data-k="${k}" class="${me === k ? "sel" : ""} ${done && k === st.ideal ? "ans" : ""} ${done && me === k && !ok ? "wrong" : ""}" ${done ? "disabled" : ""}>
+          <span class="i">${MODES[k].icon}</span>${MODES[k].short}</button>`).join("")}</div>
+        ${done ? `<div class="why ${ok ? "" : "miss"}"><b>${MODES[st.ideal].label}.</b> ${st.why}</div>` : ""}
+      </div>`;
+    }).join("")}
+    <div class="card muted">🧑 Human only · 🧑‍💻 Assist = human leads, AI helps · 🤝 Review = AI drafts, human reviews · 🤖 Auto = AI runs, human spot-checks.<br>
+      Risk rises when you give AI more autonomy than a high-stakes step can tolerate. Quality drops when you go too far either way.</div>
+    ${done ? `<div class="card"><b>The recommended design</b> finishes in about ${scoreWorkflow(WORKFLOW.map((s) => s.ideal)).hours}h with zero excess risk. AI takes the volume, and humans keep judgment, relationships and accountability.</div>` : ""}`;
+  $("app").querySelectorAll(".seg button").forEach((b) => (b.onclick = () => { S.m3[b.dataset.i] = b.dataset.k; save(); mission3(); }));
+  bar(done ? `<button class="btn" id="nx">Next: My Pledge →</button>`
+           : `<button class="btn orange" id="ck" ${full ? "" : "disabled"}>Lock in my workflow</button>`);
+  if (done) $("nx").onclick = () => go(4);
+  else $("ck").onclick = () => { S.m3done = true; save(); const s = m3Score(); send("m3", { plan: S.m3, ...s }); mission3(); scrollTo(0, 0); };
+}
+
+function mission4() {
+  const P = S.p;
+  const chips = (list, sel, key) => `<div class="chips">${list.map((x) => `<button class="chip ${sel.includes(x) ? "sel" : ""}" data-key="${key}" data-v="${esc(x)}">${x}</button>`).join("")}</div>`;
+  $("app").innerHTML = `
+    <div class="eyebrow">Mission 4 · My Orchestration Pledge</div>
+    <h2>What changes on Monday?</h2>
+    <p class="lead">Turn today into a 30-day commitment.</p>
+    <div class="card"><b>1. Up to 3 things I'll delegate to AI</b> <span class="muted">(${P.del.length}/3)</span>${chips(PLEDGE_DELEGATE, P.del, "del")}</div>
+    <div class="card"><b>2. One human skill I'll double down on</b>${chips(PLEDGE_SKILL, [P.skill], "skill")}</div>
+    <div class="card"><b>3. One guardrail I'll always apply</b>${chips(PLEDGE_GUARD, [P.guard], "guard")}</div>`;
+  $("app").querySelectorAll(".chip").forEach((b) => (b.onclick = () => {
+    const v = b.dataset.v, k = b.dataset.key;
+    if (k === "del") P.del = P.del.includes(v) ? P.del.filter((x) => x !== v) : P.del.length < 3 ? [...P.del, v] : P.del;
+    else P[k] = P[k] === v ? "" : v;
+    save(); mission4();
+  }));
+  const ok = P.del.length && P.skill && P.guard;
+  bar(`<button class="btn orange" id="ck" ${ok ? "" : "disabled"}>See my orchestrator profile →</button>`);
+  $("ck").onclick = () => { send("m4", P); go(5); };
+}
+
+function results() {
+  const a = m1Score(), b = m2Score(), c = m3Score();
+  const arch = archetype(a.bias + c.bias, (a.pct + b.pct + c.quality / 100) / 3);
+  $("app").innerHTML = `
+    <div class="pledge">
+      <div class="sub">Orchestrator profile · ${esc(S.name)} · ${esc(S.role)}</div>
+      <h3>The ${arch.k}</h3>
+      <div class="sub">${arch.d}</div>
+      <div class="scores">
+        <div><b>${a.pts}/${a.max}</b><span>Triage</span></div>
+        <div><b>${b.hits}/${b.total}</b><span>Flaws caught</span></div>
+        <div><b>${c.quality}</b><span>Workflow quality</span></div>
+      </div>
+      <div class="row"><div class="k">I'll delegate to AI</div><div class="v">${S.p.del.join(" · ")}</div></div>
+      <div class="row"><div class="k">I'll double down on</div><div class="v">${S.p.skill}</div></div>
+      <div class="row"><div class="k">My guardrail</div><div class="v">${S.p.guard}</div></div>
+    </div>
+    <p class="muted">📸 Screenshot this card as your 30-day reminder. You can go back to review any mission using the buttons below.</p>
+    <div class="card"><b>The orchestrator loop</b><br><span class="muted">Decompose the work → Delegate by stakes → Direct with context → Verify the output → Decide &amp; own it.</span></div>`;
+  send("done", { arch: arch.k });
+  bar(`<button class="btn ghost" id="b1">Review missions</button><button class="btn ghost" id="rs">Start over</button>`);
+  $("b1").onclick = () => go(1);
+  $("rs").onclick = () => { if (confirm("Clear your answers and start over?")) { S = fresh(); save(); render(); } };
+}
+
+render();
+</script>
+</body>
+</html>

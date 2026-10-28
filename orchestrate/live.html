@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orchestrate Live Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  main { max-width: 1280px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
+  .big { font-size: 56px; font-weight: 800; color: var(--blue); line-height: 1; }
+  .join { display: flex; gap: 20px; align-items: center; }
+  .join img { width: 150px; height: 150px; }
+  .rowb { display: grid; grid-template-columns: 1fr 200px; gap: 10px; align-items: center; font-size: 14px; margin: 6px 0; }
+  .stack { display: flex; height: 18px; border-radius: 5px; overflow: hidden; background: var(--line); }
+  .stack i { display: block; height: 100%; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; font-size: 13px; }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .hbar { height: 18px; border-radius: 5px; background: var(--orange); }
+  .ans { font-weight: 700; color: var(--good); }
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">Orchestrate<b>.</b>Live</div><div class="who" id="st">Connecting…</div></header>
+<main>
+  <div class="grid">
+    <div class="card join"><img src="qr.png" alt="QR code to join the lab"><div><div class="muted">Join at</div><b id="url"></b><div class="big" id="n">0</div><div class="muted">participants</div></div></div>
+    <div class="card"><h2>Orchestrator profiles</h2><div id="arch" class="muted">Waiting for results…</div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Mission 1 · Task Triage</h2>
+      <div class="legend"><span><i style="background:#0e2841"></i>Human</span><span><i style="background:#1e6fd9"></i>Review</span><span><i style="background:#f58528"></i>Auto</span><span class="ans">✓ recommended</span></div>
+      <div id="m1"></div></div>
+    <div class="card"><h2>Mission 2 · Flaws caught by the room</h2><div id="m2"></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Mission 3 · Room average</h2><div id="m3"></div></div>
+    <div class="card"><h2>Mission 4 · Human skills we'll double down on</h2><div id="m4"></div></div>
+  </div>
+</main>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+$("url").textContent = location.href.replace(/live\.html.*$/, "");
+const COL = { HUMAN: "#0e2841", REVIEW: "#1e6fd9", AUTO: "#f58528" };
+const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);
+const bars = (pairs, unit = "") => { const m = Math.max(1, ...pairs.map((p) => p[1]));
+  return pairs.map(([k, v]) => `<div class="rowb"><div>${k}</div><div style="display:flex;gap:8px;align-items:center"><div class="hbar" style="width:${(150 * v) / m}px"></div>${v}${unit}</div></div>`).join(""); };
+
+async function tick() {
+  if (!LIVE_URL) { $("st").textContent = "Live mode off: set LIVE_URL in config.js"; return; }
+  try {
+    const rows = await (await fetch(LIVE_URL)).json();
+    const last = {}; // latest record per participant per mission
+    const people = new Set();
+    rows.forEach((r) => { if (!r[1] || r[1] === "sid") return; people.add(r[1]);
+      try { (last[r[4]] ||= {})[r[1]] = JSON.parse(r[5]); } catch {} });
+    $("n").textContent = people.size;
+    const L = (m) => Object.values(last[m] || {});
+
+    const m1 = L("m1");
+    $("m1").innerHTML = TRIAGE.map((q, i) => { const c = { HUMAN: 0, REVIEW: 0, AUTO: 0 }; m1.forEach((x) => c[x.choices[i]]++);
+      return `<div class="rowb"><div>${q.t.length > 52 ? q.t.slice(0, 50) + "…" : q.t} <span class="ans">✓ ${MODES[q.a].short}</span></div>
+        <div class="stack">${TRIAGE_OPTIONS.map((k) => `<i style="width:${pct(c[k], m1.length)}%;background:${COL[k]}" title="${k} ${c[k]}"></i>`).join("")}</div></div>`; }).join("");
+
+    const m2 = L("m2");
+    $("m2").innerHTML = m2.length ? bars(AUDIT.map((a, i) => [a, i]).filter(([a]) => a.bad)
+      .map(([a, i]) => [`<span class="tag">${a.tag}</span>`, pct(m2.filter((x) => x.flags.includes(i)).length, m2.length)]), "%")
+      + `<p class="muted">% of the room that caught each flaw · avg false alarms ${(m2.reduce((s, x) => s + x.falses, 0) / m2.length).toFixed(1)}</p>` : "";
+
+    const m3 = L("m3"), avg = (k) => Math.round(m3.reduce((s, x) => s + x[k], 0) / (m3.length || 1));
+    $("m3").innerHTML = m3.length ? `<div class="meters" style="position:static">
+      <div class="meter"><div class="v">${avg("hours")}h</div><div class="k">avg hours (budget ${WF_BUDGET})</div></div>
+      <div class="meter"><div class="v">${avg("saved")}%</div><div class="k">time saved</div></div>
+      <div class="meter"><div class="v">${avg("quality")}</div><div class="k">quality</div></div>
+      <div class="meter"><div class="v">${avg("risk")}</div><div class="k">risk</div></div></div>
+      <p class="muted">${m3.filter((x) => x.onTime).length} of ${m3.length} designs finished within budget.</p>` : "";
+
+    const count = (arr) => Object.entries(arr.reduce((o, k) => ((o[k] = (o[k] || 0) + 1), o), {})).sort((a, b) => b[1] - a[1]);
+    $("m4").innerHTML = bars(count(L("m4").map((x) => x.skill)));
+    const ar = count(L("done").map((x) => x.arch));
+    if (ar.length) $("arch").innerHTML = bars(ar);
+    $("st").textContent = "Live · updated " + new Date().toLocaleTimeString();
+  } catch (e) { $("st").textContent = "Retrying… (" + e.message + ")"; }
+}
+tick(); setInterval(tick, 5000);
+</script>
+</body>
+</html>
