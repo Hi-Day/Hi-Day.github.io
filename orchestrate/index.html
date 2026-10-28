@@ -7,7 +7,7 @@
 <meta name="description" content="Interactive simulation companion for the training 'Orchestrating Human Intelligence & Artificial Intelligence for the Future of Work'.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header class="top">
@@ -18,8 +18,8 @@
 <main id="app"></main>
 <div class="bar" id="bar"></div>
 
-<script src="config.js"></script>
-<script src="data.js"></script>
+<script src="config.js?v=2"></script>
+<script src="data.js?v=2"></script>
 <script>
 const KEY = "orchestrate-v1";
 const fresh = () => ({ step: 0, name: "", role: "", sid: Math.random().toString(36).slice(2, 10),

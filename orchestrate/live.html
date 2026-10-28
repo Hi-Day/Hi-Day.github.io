@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Orchestrate Live Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 <style>
   main { max-width: 1280px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
@@ -39,8 +39,8 @@
     <div class="card"><h2>Mission 4 · Human skills we'll double down on</h2><div id="m4"></div></div>
   </div>
 </main>
-<script src="config.js"></script>
-<script src="data.js"></script>
+<script src="config.js?v=2"></script>
+<script src="data.js?v=2"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 $("url").textContent = location.href.replace(/live\.html.*$/, "");
