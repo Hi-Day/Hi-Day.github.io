@@ -26,3 +26,11 @@ Without this, everything still works and results stay on each participant's devi
 
 - If a participant needs to start over, they can open `…/orchestrate/?reset`.
 - Edit scenarios in `data.js`. Run `node selftest.js` afterwards to sanity-check the scoring.
+
+## v2: AI Ops Tycoon (90-minute session)
+
+- Player app: `https://hi-day.github.io/orchestrate/v2/`
+- Leaderboard: `https://hi-day.github.io/orchestrate/v2/live.html`
+- Uses the same Google Sheet as v1 (rows are tagged `v2…`). Clear it between sessions.
+- Unlock codes for the facilitator: Act 2 (Q3) = `VERIFY`, Act 3 (Q5) = `GOVERN`. Change them in `v2/game.js` (`ACT_CODES`).
+- After changing numbers in `v2/game.js`, run `node v2/selftest.js` to check that balanced orchestration still beats the extremes.

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tycoon Live Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css?v=2">
+<style>
+  main { max-width: 1320px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+  .big { font-size: 56px; font-weight: 800; color: var(--blue); line-height: 1; }
+  .join { display: flex; gap: 20px; align-items: center; }
+  .join img { width: 140px; height: 140px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { padding: 7px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:first-child td { font-weight: 800; }
+  .rowb { display: grid; grid-template-columns: 1fr 230px; gap: 10px; align-items: center; font-size: 14px; margin: 7px 0; }
+  .hbar { height: 18px; border-radius: 5px; background: var(--orange); }
+  .prog { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; text-align: center; }
+  .prog div { background: var(--bg); border-radius: 10px; padding: 8px 0; }
+  .prog b { display: block; font-size: 26px; color: var(--blue); }
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">AI Ops <b>Tycoon</b> · Live</div><div class="who" id="st">Connecting…</div></header>
+<main>
+  <div class="grid">
+    <div class="card join"><img src="qr.png" alt="QR code to join the game"><div><div class="muted">Join at</div><b id="url"></b><div class="big" id="n">0</div><div class="muted">players</div></div></div>
+    <div class="card"><h2>Progress</h2><p class="muted" style="margin:0 0 8px">Players who have finished each quarter</p><div class="prog" id="prog"></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>🏆 Leaderboard</h2><div id="lb" class="muted">Final scores appear when players finish Q6.</div></div>
+    <div class="card"><h2>🔥 Incidents across the room</h2><div id="inc" class="muted">No incidents yet.</div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Declared strategy vs average score</h2><div id="strat"></div></div>
+    <div class="card"><h2>Average room so far</h2><div id="avg"></div></div>
+  </div>
+</main>
+<script src="../config.js?v=2"></script>
+<script src="game.js?v=1"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+$("url").textContent = location.href.replace(/live\.html.*$/, "");
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const STRAT = { speed: "🚀 Speed first", safety: "🛡️ Safety first", people: "🤝 People first", balanced: "⚖️ Balanced" };
+const INC = { hallucination: "Chatbot invented a policy (Q2)", privacy: "Campaign data without consent (Q3)", audit: "Failed regulator audit (Q5)" };
+const incName = (id) => INC[id] || "Unchecked AI error: " + (WS.find((w) => "unchecked-" + w.id === id) || { t: id }).t;
+const bars = (pairs, unit = "") => { const m = Math.max(1, ...pairs.map((p) => p[1]));
+  return pairs.map(([k, v]) => `<div class="rowb"><div>${k}</div><div style="display:flex;gap:8px;align-items:center"><div class="hbar" style="width:${(160 * v) / m}px"></div>${v}${unit}</div></div>`).join(""); };
+
+async function tick() {
+  if (!LIVE_URL) { $("st").textContent = "Live mode off: set LIVE_URL in config.js"; return; }
+  try {
+    const rows = await (await fetch(LIVE_URL)).json();
+    const last = {}, names = {}, people = new Set();
+    rows.forEach((r) => { if (!r[1] || r[1] === "sid" || !String(r[4]).startsWith("v2")) return;
+      people.add(r[1]); if (r[2]) names[r[1]] = r[2];
+      try { (last[r[4]] ||= {})[r[1]] = JSON.parse(r[5]); } catch {} });
+    const L = (m) => Object.entries(last[m] || {});
+    $("n").textContent = people.size;
+    $("prog").innerHTML = [1, 2, 3, 4, 5, 6].map((q) => `<div><b>${L("v2q" + q).length}</b>Q${q}</div>`).join("");
+
+    const fin = L("v2final").map(([sid, d]) => ({ name: names[sid], ...d })).sort((a, b) => b.score - a.score);
+    if (fin.length) $("lb").innerHTML = `<table><tr><th>#</th><th>Player</th><th>Strategy</th><th class="n">Value</th><th class="n">Trust</th><th class="n">Morale</th><th class="n">Score</th></tr>
+      ${fin.slice(0, 10).map((p, i) => `<tr><td>${["🥇", "🥈", "🥉"][i] || i + 1}</td><td>${esc(p.name)}</td><td>${STRAT[p.strat] || ""}</td><td class="n">${p.value}</td><td class="n">${p.trust}</td><td class="n">${p.morale}</td><td class="n">${p.score}</td></tr>`).join("")}</table>`;
+
+    // % of players hit by each incident at least once
+    const hit = {}, players = new Set();
+    for (let q = 1; q <= 6; q++) L("v2q" + q).forEach(([sid, d]) => { players.add(sid); new Set(d.inc).forEach((id) => (hit[id] ||= new Set()).add(sid)); });
+    const inc = Object.entries(hit).map(([id, s]) => [incName(id), Math.round((100 * s.size) / players.size)]).sort((a, b) => b[1] - a[1]);
+    if (inc.length) $("inc").innerHTML = bars(inc, "%") + `<p class="muted">% of players hit at least once</p>`;
+
+    const by = {};
+    fin.forEach((p) => (by[p.strat] ||= []).push(p.score));
+    $("strat").innerHTML = Object.keys(by).length ? bars(Object.entries(by).map(([k, s]) => [`${STRAT[k]} <span class="muted">(${s.length})</span>`, Math.round(s.reduce((a, b) => a + b, 0) / s.length)]))
+      : `<p class="muted">Appears when players finish.</p>`;
+
+    const latest = Object.values(Object.fromEntries([1, 2, 3, 4, 5, 6].flatMap((q) => L("v2q" + q))));
+    const avg = (k) => Math.round(latest.reduce((s, d) => s + d[k], 0) / (latest.length || 1));
+    const inv = (k) => (latest.reduce((s, d) => s + d.inv[k], 0) / (latest.length || 1)).toFixed(1);
+    $("avg").innerHTML = latest.length ? `<div class="meters" style="position:static;grid-template-columns:repeat(3,1fr)">
+      <div class="meter"><div class="v">${avg("value")}</div><div class="k">value</div></div>
+      <div class="meter"><div class="v">${avg("trust")}</div><div class="k">trust</div></div>
+      <div class="meter"><div class="v">${avg("morale")}</div><div class="k">morale</div></div></div>
+      <p class="muted">Avg investment level · Guardrails ${inv("guard")} · Review ${inv("qa")} · Upskilling ${inv("up")} · Agents ${inv("agent")}</p>` : "";
+    $("st").textContent = "Live · updated " + new Date().toLocaleTimeString();
+  } catch (e) { $("st").textContent = "Retrying… (" + e.message + ")"; }
+}
+tick(); setInterval(tick, 5000);
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Ops Tycoon</title>
+<meta name="description" content="Six-quarter strategy simulation: orchestrate people and AI agents at Nusantara Retail.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css?v=2">
+<style>
+  .hud { position: sticky; top: 45px; z-index: 4; background: var(--bg); padding: 8px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .hud .meter .v { font-size: 20px; }
+  .news { background: var(--ink); color: #fff; border: 0; }
+  .news .eyebrow { color: var(--orange); }
+  .news p { margin: 4px 0 0; opacity: .9; font-size: 15px; }
+  .capbar { height: 12px; border-radius: 6px; background: var(--line); overflow: hidden; margin: 8px 0 4px; }
+  .capbar i { display: block; height: 100%; background: var(--good); transition: width .2s; }
+  .capbar i.over { background: var(--bad); }
+  .inv { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+  .inv:first-of-type { border-top: 0; }
+  .inv .d { font-size: 13px; color: var(--muted); }
+  .lv { letter-spacing: 2px; color: var(--orange); font-size: 14px; }
+  .step { display: flex; align-items: center; gap: 6px; }
+  .step button { width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; font-size: 18px; font-weight: 700; color: var(--ink); }
+  .step button:disabled { opacity: .3; }
+  .step b { min-width: 22px; text-align: center; }
+  .ev { padding: 10px 12px; border-radius: 10px; margin: 8px 0; font-size: 15px; background: var(--bg); }
+  .ev.bad { background: var(--bad-soft); }
+  .ev.tip { background: var(--blue-soft); }
+  .delta { font-weight: 800; }
+  .delta.up { color: var(--good); } .delta.down { color: var(--bad); }
+  .strat { display: block; width: 100%; text-align: left; margin: 8px 0; padding: 14px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); }
+  .strat.sel { border-color: var(--orange); background: var(--orange-soft); }
+  .strat b { display: block; }
+  .tag2 { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--blue-soft); color: var(--blue); margin-left: 6px; }
+  .big { font-size: 44px; font-weight: 800; color: var(--blue); line-height: 1; }
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">AI Ops <b>Tycoon</b></div><div class="who" id="who"></div></header>
+<main id="app"></main>
+<div class="bar" id="bar"></div>
+
+<script src="../config.js?v=2"></script>
+<script src="game.js?v=1"></script>
+<script>
+const KEY = "tycoon-v1";
+const STRATS = {
+  speed:    ["🚀 Speed first", "Automate fast, capture value early, fix problems as they come."],
+  safety:   ["🛡️ Safety first", "Protect trust: invest in guardrails and review before scaling AI."],
+  people:   ["🤝 People first", "Bring the team along: upskilling and change before automation."],
+  balanced: ["⚖️ Balanced", "Match autonomy to stakes, and invest a little in everything."],
+};
+const fresh = () => ({ name: "", role: "", sid: Math.random().toString(36).slice(2, 10), strat: "", screen: "welcome",
+  g: newGame(), modes: {}, buy: { guard: 0, qa: 0, up: 0, agent: 0 }, change: false, unlocked: {}, report: null });
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch { S = fresh(); }
+if (new URLSearchParams(location.search).has("reset")) S = fresh();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function send(mission, data) {
+  if (!LIVE_URL) return;
+  fetch(LIVE_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ sid: S.sid, name: S.name, role: S.role, mission, data }) }).catch(() => {});
+}
+const bar = (h) => ($("bar").innerHTML = h);
+const go = (screen) => { S.screen = screen; save(); render(); scrollTo(0, 0); };
+const spend = () => Object.entries(S.buy).reduce((s, [k, n]) => s + n * (k === "agent" ? agentCost(S.g.q) : INVEST[k].cost), 0) + (S.change ? 1 : 0);
+const modesNow = () => Object.fromEntries(active(S.g.q).map((w) => [w.id, S.modes[w.id] || S.g.modes[w.id] || "HUMAN"]));
+
+function hud() {
+  const g = S.g, m = (v, k, cls = "") => `<div class="meter ${cls}"><div class="v">${v}</div><div class="k">${k}</div></div>`;
+  const c = (v) => (v >= 65 ? "ok" : v >= 40 ? "warn" : "bad");
+  return `<div class="hud">${m(g.value, "value")}${m(g.trust, "trust", c(g.trust))}${m(g.morale, "morale", c(g.morale))}${m(g.credits - spend(), "credits left")}</div>`;
+}
+
+function render() {
+  $("who").textContent = S.name ? `${S.name} · Q${Math.min(S.g.q, QUARTERS)}/${QUARTERS}` : "";
+  ({ welcome, strategy, quarter, result, final })[S.screen]();
+}
+
+function welcome() {
+  $("app").innerHTML = `
+    <div class="eyebrow">Strategy simulation · 6 quarters</div>
+    <h1>You are the new Head of Operations</h1>
+    <p class="lead">Nusantara Retail gives you a team of 4 people, a budget for AI, and a board that wants more output with zero public AI incidents. Every quarter you decide how much autonomy each workstream gets, and what to invest in.</p>
+    <div class="card">
+      <label class="f" for="nm">Your first name (shown on the leaderboard)</label>
+      <input id="nm" maxlength="20" value="${esc(S.name)}" placeholder="e.g. Rina">
+      <label class="f" for="rl">Your function</label>
+      <select id="rl">${["", "Operations", "Sales & Marketing", "Finance", "HR & People", "IT & Digital", "Customer Service", "Strategy & Management", "Other"]
+        .map((r) => `<option value="${r}" ${r === S.role ? "selected" : ""}>${r || "Choose…"}</option>`).join("")}</select>
+    </div>
+    <div class="card"><b>How you win</b>
+      <p class="muted" style="margin:6px 0 0"><b>Final score = Value × Trust% × Morale factor.</b><br>
+      Value comes from finished work, plus innovation from the hours AI frees up. Incidents destroy Trust. Burnout and fear destroy Morale. Your decisions carry over: what you invest early pays off (or bites) later.</p></div>
+    <div class="card muted">Autonomy levels: 🧑 Human · 🧑‍💻 Assist (human leads) · 🤝 Review (AI drafts, human checks) · 🤖 Auto (AI runs it)</div>`;
+  bar(`<button class="btn" id="go">Next: choose your strategy</button>`);
+  const ok = () => ($("go").disabled = !$("nm").value.trim() || !$("rl").value);
+  $("nm").oninput = $("rl").onchange = ok; ok();
+  $("go").onclick = () => { S.name = $("nm").value.trim(); S.role = $("rl").value; send("v2join", {}); go("strategy"); };
+}
+
+function strategy() {
+  $("app").innerHTML = `
+    <div class="eyebrow">Before Q1</div>
+    <h2>Declare your strategy</h2>
+    <p class="lead">Commit to a direction. At the end we'll compare what you said with what you actually did.</p>
+    ${Object.entries(STRATS).map(([k, [t, d]]) => `<button class="strat ${S.strat === k ? "sel" : ""}" data-k="${k}"><b>${t}</b><span class="muted">${d}</span></button>`).join("")}`;
+  $("app").querySelectorAll(".strat").forEach((b) => (b.onclick = () => { S.strat = b.dataset.k; save(); strategy(); }));
+  bar(`<button class="btn orange" id="go" ${S.strat ? "" : "disabled"}>Start Q1 →</button>`);
+  $("go").onclick = () => go("quarter");
+}
+
+function quarter() {
+  const g = S.g, q = g.q, code = ACT_CODES[q];
+  if (code && !S.unlocked[q]) {
+    $("app").innerHTML = `${hud()}<div class="card news"><div class="eyebrow">Act ${q === 3 ? 2 : 3} is locked</div>
+      <h2>Wait for the facilitator</h2><p>We'll unlock the next act together. Enter the code shown on the screen.</p></div>
+      <div class="card"><label class="f" for="cd">Unlock code</label><input id="cd" autocomplete="off" autocapitalize="characters"></div>`;
+    bar(`<button class="btn" id="go">Unlock</button>`);
+    $("go").onclick = () => { if ($("cd").value.trim().toUpperCase() === code) { S.unlocked[q] = true; save(); quarter(); } else { $("cd").value = ""; $("cd").placeholder = "Not quite, check the screen"; } };
+    return;
+  }
+  const modes = modesNow(), need = hoursNeeded(g, modes, S.buy), cap = capacity(g), left = g.credits - spend(), n = NEWS[q];
+  $("app").innerHTML = `${hud()}
+    <div class="card news"><div class="eyebrow">Q${q} briefing</div><h2>${n.h}</h2><p>${n.b}</p></div>
+    <h2 style="margin-top:20px">1 · Set autonomy per workstream</h2>
+    ${active(q).map((w) => `<div class="card task"><div class="t">${w.t}${w.from === q && q > 1 ? '<span class="tag2">NEW</span>' : ""}</div>
+      <div class="muted" style="font-size:13px;margin:-6px 0 10px">${Math.round(w.h * (q === 2 && w.id === "chat" ? 1.5 : 1))} h if manual · stakes ${"●".repeat(Math.round(w.stakes * 5)).padEnd(5, "○")} · AI fit: ${w.fit}</div>
+      <div class="seg" style="grid-template-columns:repeat(4,1fr)">${MODE_KEYS.map((k) => `<button data-w="${w.id}" data-k="${k}" class="${modes[w.id] === k ? "sel" : ""}"><span class="i">${MODES[k].icon}</span>${MODES[k].short}</button>`).join("")}</div></div>`).join("")}
+    <div class="card"><b>Team hours: ${need} needed of ${cap}</b>
+      <div class="capbar"><i class="${need > cap ? "over" : ""}" style="width:${Math.min(100, (100 * need) / cap)}%"></i></div>
+      <span class="muted">${need > cap ? "⚠️ Overloaded: work will be left unfinished and morale will drop." : `${cap - need} h free → innovation projects.`}</span></div>
+    <h2 style="margin-top:20px">2 · Invest (${left} credits left)</h2>
+    <div class="card">${Object.entries(INVEST).map(([k, v]) => { const lvl = g.inv[k] + S.buy[k], cost = k === "agent" ? agentCost(q) : v.cost;
+      return `<div class="inv"><div><b>${v.t}</b> <span class="lv">${"■".repeat(lvl)}${"□".repeat(v.max - lvl)}</span><div class="d">${v.d} · ${cost} cr</div></div>
+        <div class="step"><button data-k="${k}" data-d="-1" ${S.buy[k] ? "" : "disabled"}>−</button><b>${S.buy[k] ? "+" + S.buy[k] : ""}</b><button data-k="${k}" data-d="1" ${lvl < v.max && left >= cost ? "" : "disabled"}>+</button></div></div>`; }).join("")}
+      <div class="inv"><div><b>Change management push</b><div class="d">Town hall, role redesign, involving people in the automation choices · 1 cr · once per quarter</div></div>
+        <div class="step"><button id="chg" style="width:auto;padding:0 12px;${S.change ? "border-color:var(--orange);background:var(--orange-soft)" : ""}" ${S.change || left >= 1 ? "" : "disabled"}>${S.change ? "✓ On" : "Off"}</button></div></div></div>`;
+  $("app").querySelectorAll(".seg button").forEach((b) => (b.onclick = () => { S.modes[b.dataset.w] = b.dataset.k; save(); quarter(); }));
+  $("app").querySelectorAll(".step button[data-k]").forEach((b) => (b.onclick = () => { S.buy[b.dataset.k] += +b.dataset.d; save(); quarter(); }));
+  $("chg").onclick = () => { S.change = !S.change; save(); quarter(); };
+  bar(`<button class="btn orange" id="go">Run Q${q} ▶</button>`);
+  $("go").onclick = () => {
+    const g2 = runQuarter(g, { modes, buy: S.buy, change: S.change });
+    S.report = g2.log[g2.log.length - 1]; S.g = g2; S.modes = {}; S.buy = { guard: 0, qa: 0, up: 0, agent: 0 }; S.change = false;
+    send("v2q" + q, { value: g2.value, trust: g2.trust, morale: g2.morale, inc: S.report.inc.map((i) => i.id), inv: g2.inv, modes: g2.modes });
+    go("result");
+  };
+}
+
+function result() {
+  const r = S.report, g = S.g, d = (v) => `<span class="delta ${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : ""}${v}</span>`;
+  $("app").innerHTML = `${hud()}
+    <div class="eyebrow">Q${r.q} results</div>
+    <h2>${r.inc.length ? "Rough quarter." : r.trustD >= 0 && r.moraleD >= 0 ? "Strong quarter." : "Mixed quarter."}</h2>
+    <div class="meters" style="position:static;grid-template-columns:repeat(3,1fr)">
+      <div class="meter"><div class="v">+${r.value}</div><div class="k">value</div></div>
+      <div class="meter"><div class="v">${d(r.trustD)}</div><div class="k">trust</div></div>
+      <div class="meter"><div class="v">${d(r.moraleD)}</div><div class="k">morale</div></div></div>
+    <div class="card"><b>What happened</b>
+      ${r.inc.map((i) => `<div class="ev bad">🔥 <b>${i.t}</b> · trust −${i.hit}</div>`).join("")}
+      ${r.events.map((e) => `<div class="ev">${e}</div>`).join("")}
+      ${r.tips.map((t) => `<div class="ev tip">🧭 ${t}</div>`).join("")}
+      ${!r.inc.length && !r.tips.length ? `<div class="ev">Average work quality ${r.avgQ}%. No incidents.</div>` : `<p class="muted">Average work quality: ${r.avgQ}%</p>`}
+    </div>`;
+  const done = g.q > QUARTERS;
+  bar(`<button class="btn" id="go">${done ? "See final score 🏆" : `Plan Q${g.q} →`}</button>`);
+  $("go").onclick = () => { if (done) send("v2final", { score: score(g), value: g.value, trust: g.trust, morale: g.morale, strat: S.strat, inv: g.inv }); go(done ? "final" : "quarter"); };
+}
+
+function final() {
+  const g = S.g, inc = g.log.flatMap((r) => r.inc);
+  const auto = Object.values(g.modes).filter((m) => MODES[m].lvl >= 2).length / Object.keys(g.modes).length;
+  const actual = g.inv.guard + g.inv.qa >= 4 ? "safety" : g.inv.up >= 2 && g.change >= 3 ? "people" : auto > 0.7 ? "speed" : "balanced";
+  $("app").innerHTML = `
+    <div class="pledge"><div class="sub">${esc(S.name)} · ${esc(S.role)}</div>
+      <div class="sub">Final score</div><div style="font-size:52px;font-weight:800;line-height:1">${score(g)}</div>
+      <div class="sub" style="margin-top:6px">= ${g.value} value × ${g.trust}% trust × ${(0.5 + g.morale / 200).toFixed(2)} morale factor</div>
+      <div class="row"><div class="k">You declared</div><div class="v">${STRATS[S.strat][0]}</div></div>
+      <div class="row"><div class="k">You actually played</div><div class="v">${STRATS[actual][0]}</div></div>
+      <div class="row"><div class="k">Incidents</div><div class="v">${inc.length ? inc.length + ": " + [...new Set(inc.map((i) => i.t))].slice(0, 3).join("; ") : "None. Clean run."}</div></div>
+      <div class="row"><div class="k">Final investments</div><div class="v">Guardrails ${g.inv.guard} · Review ${g.inv.qa} · Upskilling ${g.inv.up} · Agents ${g.inv.agent} · Change pushes ${g.change}</div></div>
+    </div>
+    <div class="card"><b>Quarter by quarter</b>
+      ${g.log.map((r) => `<div class="ev ${r.inc.length ? "bad" : ""}">Q${r.q}: +${r.value} value · trust ${r.trustD >= 0 ? "+" : ""}${r.trustD} · morale ${r.moraleD >= 0 ? "+" : ""}${r.moraleD}${r.inc.length ? " · 🔥 " + r.inc.length : ""}</div>`).join("")}</div>
+    <p class="muted">👀 Look at the leaderboard on the big screen. What did the top players do differently in Q1 and Q2?</p>`;
+  bar(`<button class="btn ghost" id="rs">Play again</button>`);
+  $("rs").onclick = () => { if (confirm("Start a new game? Your next final score will replace this one on the leaderboard.")) { const { name, role, sid } = S; S = fresh(); Object.assign(S, { name, role, sid, screen: "strategy" }); save(); render(); } };
+}
+
+render();
+</script>
+</body>
+</html>
