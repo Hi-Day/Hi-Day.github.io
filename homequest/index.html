@@ -23,7 +23,7 @@
 .auth-form{display:grid;gap:12px;margin-top:18px}.auth-form label{font-size:.82rem;font-weight:800}.auth-form input{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}
 .auth-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.auth-error{color:#9a4939;background:#fae8e3;padding:12px 14px;border-radius:12px;margin-top:12px;font-size:.9rem;border:1px solid #f0c9c0}.auth-error.success{color:#245b3b;background:#e8f4e9;border-color:#b9d9bf}.auth-error.info{color:#34556b;background:#edf4f8;border-color:#c8dce8}
 #accountbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.setup{max-width:620px;margin:24px auto;padding:22px;background:var(--card);border:1px solid var(--line);border-radius:20px}.setup h2{margin-top:0}
-</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn" onclick="homeQuestReset(event)">Lupa kata sandi?</button></div></form><div id="autherror" class="auth-error hidden" role="status" aria-live="polite"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
+</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn" onclick="homeQuestReset(event)">Lupa kata sandi?</button></div></form><form id="recoveryform" class="auth-form hidden"><div><h2 style="margin:0">Buat kata sandi baru</h2><p class="muted">Tautan pemulihan berhasil dibuka. Masukkan kata sandi baru untuk akun Anda.</p></div><div><label for="newpassword">Kata sandi baru</label><input id="newpassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Minimal 8 karakter"></div><div><label for="confirmnewpassword">Ulangi kata sandi baru</label><input id="confirmnewpassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Ketik ulang kata sandi"></div><div class="auth-actions"><button class="primary" id="savepasswordbtn">Simpan kata sandi baru</button></div></form><div id="autherror" class="auth-error hidden" role="status" aria-live="polite"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
 <header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div id="accountbar"><span class="pill" id="mode">Cloud</span><span class="pill" id="accountemail"></span><button class="pill" id="logout">Keluar</button></div></header>
 <section class="setup hidden" id="setup"><h2>Siapkan ruang keluarga</h2><p>Akun ini belum memiliki household HomeQuest. Buat satu ruang keluarga agar misi, XP, coins, dan hadiah tersimpan di cloud.</p><form id="householdform" class="formgrid"><div class="field full"><label>Nama keluarga</label><input name="name" required value="Keluarga Rahman" maxlength="80"></div><div class="field full"><button class="primary">Buat household</button></div></form></section>
 <main id="mainview">
@@ -219,6 +219,34 @@ $('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries
 $('loginform').addEventListener('submit',signIn);
 $('householdform').addEventListener('submit',createHousehold);
 $('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
-supabase.auth.onAuthStateChange((_event,s)=>{session=s;user=s?.user||null;if(!user)setScreen('auth')});
+let recoveryMode=false;
+supabase.auth.onAuthStateChange((event,s)=>{
+ session=s;user=s?.user||null;
+ if(event==='PASSWORD_RECOVERY'){
+  recoveryMode=true;
+  $('loginform').classList.add('hidden');
+  $('recoveryform').classList.remove('hidden');
+  showAuthError('Tautan pemulihan valid. Silakan buat kata sandi baru.','success');
+  setScreen('auth');
+ }else if(!user){setScreen('auth')}
+});
+$('recoveryform').addEventListener('submit',async e=>{
+ e.preventDefault();clearAuthError();
+ const p=$('newpassword').value,confirm=$('confirmnewpassword').value,btn=$('savepasswordbtn');
+ if(p.length<8){showAuthError('Kata sandi minimal 8 karakter.');return}
+ if(p!==confirm){showAuthError('Kedua kata sandi belum sama. Periksa kembali.');return}
+ btn.disabled=true;btn.textContent='Menyimpan…';
+ try{
+  const {data:d,error}=await supabase.auth.updateUser({password:p});
+  if(error){showAuthError('Kata sandi belum berhasil diperbarui: '+error.message);return}
+  showAuthError('Kata sandi berhasil diperbarui. Anda dapat melanjutkan ke HomeQuest.','success');
+  $('recoveryform').classList.add('hidden');
+  $('loginform').classList.remove('hidden');
+  $('password').value=p;
+  recoveryMode=false;
+  if(d?.user){user=d.user;session=(await supabase.auth.getSession()).data.session;await boot()}
+ }catch(error){console.error('HomeQuest password update failed:',error);showAuthError('Gagal memperbarui kata sandi: '+(error?.message||'Kesalahan tidak diketahui.'))}
+ finally{btn.disabled=false;btn.textContent='Simpan kata sandi baru'}
+});
 (async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
 </script></body></html>
