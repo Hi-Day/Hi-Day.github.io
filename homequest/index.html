@@ -71,12 +71,22 @@ function setScreen(state){
 }
 function err(e){console.error(e);alert(e?.message||'Terjadi kesalahan. Coba kembali.')}
 async function signIn(e){
- e.preventDefault();clearAuthError();const f=new FormData(e.target),email=String(f.get('email')).trim(),password=String(f.get('password'));
- $('loginbtn').disabled=true;$('loginbtn').textContent='Memeriksa...';
- const {data:d,error}=await supabase.auth.signInWithPassword({email,password});
- $('loginbtn').disabled=false;$('loginbtn').textContent='Masuk';
- if(error){showAuthError(error.message);return}
- session=d.session;user=d.user;try{await boot()}catch(e){showAuthError(e.message||'Gagal memuat HomeQuest.');setScreen('auth')}
+ e.preventDefault();clearAuthError();
+ const form=e.currentTarget, f=new FormData(form), email=String(f.get('email')||'').trim(), password=String(f.get('password')||'');
+ const btn=$('loginbtn');
+ if(!email||!password){showAuthError('Email dan kata sandi wajib diisi.');return}
+ btn.disabled=true;btn.textContent='Memeriksa...';
+ try{
+  const {data:d,error}=await supabase.auth.signInWithPassword({email,password});
+  if(error){showAuthError(error.message);return}
+  session=d.session;user=d.user;
+  await boot();
+ }catch(error){
+  console.error('HomeQuest sign-in error:',error);
+  showAuthError(error?.message||'Tidak dapat menghubungi layanan login. Periksa koneksi internet lalu coba kembali.');
+ }finally{
+  btn.disabled=false;btn.textContent='Masuk';
+ }
 }
 async function boot(){
  if(!user){setScreen('auth');return}
@@ -180,7 +190,7 @@ $('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries
 $('loginform').addEventListener('submit',signIn);
 $('householdform').addEventListener('submit',createHousehold);
 $('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
-$('resetbtn').onclick=async()=>{const email=$('email').value.trim();if(!email){showAuthError('Masukkan email terlebih dahulu.');return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)showAuthError(error.message);else showAuthError('Tautan reset kata sandi dikirim jika email terdaftar.')};
+$('resetbtn').onclick=async()=>{clearAuthError();const email=$('email').value.trim();if(!email){showAuthError('Masukkan email terlebih dahulu.');return}const btn=$('resetbtn');btn.disabled=true;try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)showAuthError(error.message);else showAuthError('Tautan reset kata sandi dikirim jika email terdaftar.')}catch(error){console.error('HomeQuest password reset error:',error);showAuthError(error?.message||'Tidak dapat menghubungi layanan reset kata sandi. Periksa koneksi internet.')}finally{btn.disabled=false}};
 supabase.auth.onAuthStateChange((_event,s)=>{session=s;user=s?.user||null;if(!user)setScreen('auth')});
 (async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
 </script></body></html>
