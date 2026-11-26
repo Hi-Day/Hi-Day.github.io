@@ -17,8 +17,16 @@
 .empty{text-align:center;padding:22px;color:var(--muted);border:1px dashed var(--line);border-radius:16px}.notice{background:#fff3d7;color:#6d5526;padding:12px;border-radius:13px;margin:18px 0;font-size:.86rem}footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:25px}.hidden{display:none!important}
 .modalbg{position:fixed;inset:0;background:#18241dcc;display:none;place-items:center;padding:15px;z-index:5}.modalbg.open{display:grid}.modal{background:var(--paper);border-radius:22px;padding:20px;width:min(520px,100%);max-height:90vh;overflow:auto}.close{float:right;border-radius:50%;width:32px;height:32px}
 @media(max-width:650px){.app{padding:12px 12px 70px}.hero{grid-template-columns:1fr;padding:20px}.art{position:absolute;right:5px;bottom:0;opacity:.22;font-size:8rem}.hero>div:first-child{position:relative;z-index:1}.grid{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:10px}.stat b{font-size:1.25rem}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
-</style></head><body><div class="app">
-<header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div><span class="pill" id="mode">Demo lokal</span> <button class="pill" id="parent">🛠 Orang tua</button></div></header>
+
+.auth-screen{max-width:460px;margin:7vh auto;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.auth-screen h1{font-size:2rem;margin:8px 0}.auth-screen p{color:var(--muted)}
+.auth-form{display:grid;gap:12px;margin-top:18px}.auth-form label{font-size:.82rem;font-weight:800}.auth-form input{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}
+.auth-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.auth-error{color:#9a4939;background:#fae8e3;padding:10px 12px;border-radius:10px;margin-top:12px;font-size:.86rem}
+#accountbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.setup{max-width:620px;margin:24px auto;padding:22px;background:var(--card);border:1px solid var(--line);border-radius:20px}.setup h2{margin-top:0}
+</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required value="Hidayaturrahman7@gmail.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn">Lupa kata sandi?</button></div></form><div id="autherror" class="auth-error hidden"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
+<header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div id="accountbar"><span class="pill" id="mode">Cloud</span><span class="pill" id="accountemail"></span><button class="pill" id="logout">Keluar</button></div></header>
+<section class="setup hidden" id="setup"><h2>Siapkan ruang keluarga</h2><p>Akun ini belum memiliki household HomeQuest. Buat satu ruang keluarga agar misi, XP, coins, dan hadiah tersimpan di cloud.</p><form id="householdform" class="formgrid"><div class="field full"><label>Nama keluarga</label><input name="name" required value="Keluarga Rahman" maxlength="80"></div><div class="field full"><button class="primary">Buat household</button></div></form></section>
+<main id="mainview">
 <section class="hero"><div><div class="eyebrow">Your little adventure</div><h1>Setiap kebiasaan baik adalah petualangan.</h1><p class="sub">Selesaikan misi, kumpulkan bintang, dan tumbuh menjadi penjelajah hebat.</p><div class="progress-wrap"><div class="progress-label"><span id="level">Level 1 · Beginner</span><span id="progtext">0 / 100 XP</span></div><div class="progress"><span id="bar"></span></div></div></div><div class="art">🧭🏕️</div></section>
 <div class="stats"><div class="stat"><b id="xp">0</b><small>✨ Total XP</small></div><div class="stat"><b id="coins">0</b><small>🪙 Coins</small></div><div class="stat"><b id="done">0</b><small>🏅 Quest selesai</small></div></div>
 <nav class="tabs" id="tabs"><button class="tab active" data-tab="child">🗺️ Petualangan</button><button class="tab" data-tab="rewards">🎁 Hadiah</button><button class="tab parentonly hidden" data-tab="approvals">✅ Verifikasi</button><button class="tab parentonly hidden" data-tab="manage">⚙️ Kelola misi</button><button class="tab parentonly hidden" data-tab="history">📚 Riwayat</button></nav>
@@ -27,40 +35,144 @@
 <section id="v-approvals" class="hidden"><div class="section-head"><div><h2>Perlu verifikasi</h2><p>Tinjau aktivitas yang diajukan anak.</p></div></div><div id="approvals"></div></section>
 <section id="v-manage" class="hidden"><div class="section-head"><div><h2>Quest manager</h2><p>Buat misi yang sesuai rutinitas keluarga.</p></div><button class="primary" id="add">＋ Misi</button></div><div id="managelist"></div><div class="panel"><h3>Tambah hadiah</h3><form id="rewardform" class="formgrid"><div class="field"><label>Nama hadiah</label><input name="name" required placeholder="Pilih cerita sebelum tidur"></div><div class="field"><label>Harga coins</label><input name="cost" type="number" min="1" value="30" required></div><div class="field full"><label>Jenis hadiah</label><select name="kind"><option>Aktivitas</option><option>Privilege</option><option>Barang</option></select></div><div class="field full"><button class="primary">Simpan hadiah</button></div></form></div></section>
 <section id="v-history" class="hidden"><div class="section-head"><div><h2>Jejak petualangan</h2><p>Catatan XP dan coins.</p></div></div><div id="history"></div></section>
-<div class="notice">🌱 Yang terpenting bukan menyelesaikan semua misi, tetapi belajar bertanggung jawab dan menikmati prosesnya. Tidak ada pengurangan XP.</div><footer>HomeQuest · Made for little explorers and their families</footer></div>
+<div class="notice">🌱 Yang terpenting bukan menyelesaikan semua misi, tetapi belajar bertanggung jawab dan menikmati prosesnya. Tidak ada pengurangan XP.</div><footer>HomeQuest · Made for little explorers and their families</footer></main></div>
 <div class="modalbg" id="modal"><div class="modal"><button class="close" id="close">×</button><h2>Buat quest baru</h2><form id="questform" class="formgrid"><div class="field full"><label>Nama misi</label><input name="title" required placeholder="Contoh: Rapikan mainan"></div><div class="field"><label>Kategori</label><select name="category"><option value="home">Home Hero</option><option value="math">Brain Master</option><option value="reading">Book Explorer</option><option value="quran">Faith Journey</option><option value="english">Language Explorer</option></select></div><div class="field"><label>Emoji</label><input name="icon" value="⭐" maxlength="4"></div><div class="field"><label>XP</label><input name="xp" type="number" min="1" max="100" value="10"></div><div class="field"><label>Coins</label><input name="coins" type="number" min="0" max="100" value="2"></div><div class="field full"><label>Instruksi</label><textarea name="description" rows="2"></textarea></div><div class="field full"><button class="primary">Simpan quest</button></div></form></div></div>
-<script>
-const KEY='homequest-v1',cats={home:'Home Hero',math:'Brain Master',reading:'Book Explorer',quran:'Faith Journey',english:'Language Explorer'};
-const initial={xp:0,coins:0,done:0,parent:false,quests:[
-{id:'q1',title:'Rapikan mainan',category:'home',icon:'🧸',xp:5,coins:2,description:'Kembalikan mainan ke tempatnya.'},
-{id:'q2',title:'Rapikan tempat tidur',category:'home',icon:'🛏️',xp:5,coins:2,description:'Rapikan bantal dan selimut.'},
-{id:'q3',title:'Petualangan angka',category:'math',icon:'🔢',xp:15,coins:3,description:'Selesaikan latihan berhitung.'},
-{id:'q4',title:'Baca buku cerita',category:'reading',icon:'📚',xp:10,coins:2,description:'Baca bersama selama 10 menit.'},
-{id:'q5',title:'Murajaah hafalan',category:'quran',icon:'🌙',xp:10,coins:2,description:'Ulangi hafalan bersama orang tua.'},
-{id:'q6',title:'English word explorer',category:'english',icon:'🔤',xp:10,coins:2,description:'Pelajari lima kosakata baru.'}],
-subs:[],rewards:[{id:'r1',name:'Pilih cerita sebelum tidur',cost:20,kind:'Aktivitas'},{id:'r2',name:'Pilih permainan keluarga',cost:35,kind:'Privilege'},{id:'r3',name:'Mainan kecil pilihan',cost:100,kind:'Barang'}],history:[],badges:[]};
-let s;try{s={...structuredClone(initial),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{s=structuredClone(initial)}
-const $=id=>document.getElementById(id),uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function save(){localStorage.setItem(KEY,JSON.stringify(s));render()}
-function lvl(x){let a=[['Beginner',0,100],['Explorer',100,250],['Adventurer',250,450],['Champion',450,700],['Master',700,1000],['Legend',1000,1500]];return [...a].reverse().find(v=>x>=v[1])||a[0]}
-function render(){let l=lvl(s.xp),p=Math.min(100,(s.xp-l[1])/(l[2]-l[1])*100);$('level').textContent='Level '+(['Beginner','Explorer','Adventurer','Champion','Master','Legend'].indexOf(l[0])+1)+' · '+l[0];$('progtext').textContent=(s.xp-l[1])+' / '+(l[2]-l[1])+' XP';$('bar').style.width=p+'%';$('xp').textContent=s.xp;$('coins').textContent=s.coins;$('done').textContent=s.done;$('mode').textContent='Demo lokal';
-let pend=new Set(s.subs.filter(x=>x.status==='pending').map(x=>x.questId));$('count').textContent=s.quests.length+' misi';
-$('quests').innerHTML=s.quests.map(q=>'<article class="quest"><div class="qicon">'+esc(q.icon)+'</div><div class="qinfo"><strong>'+esc(q.title)+'</strong><small>'+esc(cats[q.category])+'<br>'+esc(q.description)+'</small></div><div class="qaction"><span class="xp">+'+q.xp+' XP</span><button class="'+(pend.has(q.id)?'secondary':'primary')+'" '+(pend.has(q.id)?'disabled':'')+' onclick="submitQ(\''+q.id+'\')">'+(pend.has(q.id)?'Menunggu':'Selesai!')+'</button></div></article>').join('')||'<div class="empty">Belum ada misi.</div>';
-let b=[['🌟','First Quest'],['🧹','Little Helper'],['📖','Book Explorer'],['🧠','Number Star'],['🌙','Faith Journey']];$('badges').innerHTML=b.map(x=>'<div class="badge" style="opacity:'+(s.badges.includes(x[1])?'1':'.4')+'">'+x[0]+' <b>'+x[1]+'</b></div>').join('');
-$('rewardlist').innerHTML=s.rewards.map(r=>'<div class="panel row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc(r.kind)+' · '+r.cost+' coins</div></div><button class="primary" '+(s.coins<r.cost?'disabled':'')+' onclick="redeem(\''+r.id+'\')">Tukar</button></div>').join('');
-$('approvals').innerHTML=s.subs.filter(x=>x.status==='pending').map(x=>{let q=s.quests.find(y=>y.id===x.questId)||x.snapshot;return '<div class="panel row"><div><b>'+esc(q.title)+'</b><div class="muted">+'+q.xp+' XP · +'+q.coins+' coins</div></div><div><button class="primary" onclick="approve(\''+x.id+'\')">Setujui</button> <button class="secondary" onclick="retry(\''+x.id+'\')">Ulangi</button></div></div>'}).join('')||'<div class="empty">Tidak ada misi menunggu.</div>';
-$('managelist').innerHTML=s.quests.map(q=>'<div class="row"><div><b>'+esc(q.icon)+' '+esc(q.title)+'</b><div class="muted">'+esc(cats[q.category])+' · '+q.xp+' XP · '+q.coins+' coins</div></div><button class="danger" onclick="delQ(\''+q.id+'\')">Hapus</button></div>').join('');
-$('history').innerHTML=[...s.history].reverse().map(h=>'<div class="row"><div><b>'+esc(h.label)+'</b><div class="muted">'+new Date(h.at).toLocaleString('id-ID')+'</div></div><b>'+(h.xp>0?'+':'')+h.xp+' XP · '+(h.coins>0?'+':'')+h.coins+' coins</b></div>').join('')||'<div class="empty">Belum ada histori.</div>';
-document.querySelectorAll('.parentonly').forEach(x=>x.classList.toggle('hidden',!s.parent))}
-window.submitQ=qid=>{let q=s.quests.find(x=>x.id===qid);if(!q||s.subs.some(x=>x.questId===qid&&x.status==='pending'))return;s.subs.push({id:uid(),questId:qid,status:'pending',snapshot:{...q}});save();alert('Hebat! Misi dikirim untuk diperiksa orang tua.')};
-window.approve=sid=>{let x=s.subs.find(v=>v.id===sid);if(!x||x.status!=='pending')return;let q=s.quests.find(v=>v.id===x.questId)||x.snapshot;x.status='approved';s.xp+=q.xp;s.coins+=q.coins;s.done++;s.history.push({label:q.title,xp:q.xp,coins:q.coins,at:new Date().toISOString()});let count=cat=>s.history.filter(h=>{let z=s.quests.find(v=>v.title===h.label);return z&&z.category===cat}).length;if(s.done>=1&&!s.badges.includes('First Quest'))s.badges.push('First Quest');[['home','Little Helper'],['reading','Book Explorer'],['math','Number Star'],['quran','Faith Journey']].forEach(([c,b])=>{if(count(c)>=5&&!s.badges.includes(b))s.badges.push(b)});save()};
-window.retry=sid=>{let x=s.subs.find(v=>v.id===sid);if(x){x.status='needs_retry';save()}};
-window.delQ=id=>{if(confirm('Hapus misi ini?')){s.quests=s.quests.filter(q=>q.id!==id);save()}};
-window.redeem=id=>{let r=s.rewards.find(v=>v.id===id);if(!r||s.coins<r.cost)return;if(!confirm('Ajukan penukaran '+r.name+'?'))return;s.coins-=r.cost;s.history.push({label:'Penukaran: '+r.name,xp:0,coins:-r.cost,at:new Date().toISOString()});save();alert('Dicatat dalam demo. Konfirmasikan hadiah bersama orang tua.')};
-function tab(t){if(['approvals','manage','history'].includes(t)&&!s.parent)return;['child','rewards','approvals','manage','history'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==t));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t))}
-$('tabs').onclick=e=>{let b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};$('parent').onclick=()=>{s.parent=!s.parent;save();tab(s.parent?'manage':'child')};
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
+
+const SUPABASE_URL = 'https://sljrtrwkrweiaaoxkumy.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp';
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+});
+const cats={home:'Home Hero',math:'Brain Master',reading:'Book Explorer',quran:'Faith Journey',english:'Language Explorer',other:'Special Quest'};
+const defaultQuests=[
+ {title:'Rapikan mainan',category:'home',icon:'🧸',xp:5,coins:2,description:'Kembalikan mainan ke tempatnya.'},
+ {title:'Rapikan tempat tidur',category:'home',icon:'🛏️',xp:5,coins:2,description:'Rapikan bantal dan selimut.'},
+ {title:'Petualangan angka',category:'math',icon:'🔢',xp:15,coins:3,description:'Selesaikan latihan berhitung.'},
+ {title:'Baca buku cerita',category:'reading',icon:'📚',xp:10,coins:2,description:'Baca bersama selama 10 menit.'},
+ {title:'Murajaah hafalan',category:'quran',icon:'🌙',xp:10,coins:2,description:'Ulangi hafalan bersama orang tua.'},
+ {title:'English word explorer',category:'english',icon:'🔤',xp:10,coins:2,description:'Pelajari lima kosakata baru.'}
+];
+const defaultRewards=[
+ {name:'Pilih cerita sebelum tidur',description:'Anak memilih cerita yang dibacakan.',kind:'activity',cost:20},
+ {name:'Pilih permainan keluarga',description:'Anak memilih permainan keluarga.',kind:'privilege',cost:35},
+ {name:'Mainan kecil pilihan',description:'Hadiah barang sesuai kesepakatan.',kind:'item',cost:100}
+];
+const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let session=null,user=null,household=null,role=null,childId=null,data={quests:[],subs:[],rewards:[],redemptions:[],xp:[],coins:[],achievements:[]},activeTab='child';
+function showAuthError(msg){$('autherror').textContent=msg;$('autherror').classList.remove('hidden')}
+function clearAuthError(){$('autherror').textContent='';$('autherror').classList.add('hidden')}
+function setScreen(state){
+ $('authscreen').classList.toggle('hidden',state!=='auth');
+ $('app').classList.toggle('hidden',state==='auth');
+ $('setup').classList.toggle('hidden',state!=='setup');
+ $('mainview').classList.toggle('hidden',state!=='ready');
+}
+function err(e){console.error(e);alert(e?.message||'Terjadi kesalahan. Coba kembali.')}
+async function signIn(e){
+ e.preventDefault();clearAuthError();const f=new FormData(e.target),email=String(f.get('email')).trim(),password=String(f.get('password'));
+ $('loginbtn').disabled=true;$('loginbtn').textContent='Memeriksa...';
+ const {data:d,error}=await supabase.auth.signInWithPassword({email,password});
+ $('loginbtn').disabled=false;$('loginbtn').textContent='Masuk';
+ if(error){showAuthError(error.message);return}
+ session=d.session;user=d.user;await boot();
+}
+async function boot(){
+ if(!user){setScreen('auth');return}
+ $('accountemail').textContent=user.email||'Akun aktif';
+ const {data:members,error}=await supabase.from('household_members').select('household_id,role').eq('user_id',user.id).limit(1);
+ if(error){showAuthError('Gagal memuat household: '+error.message);setScreen('auth');return}
+ if(!members?.length){setScreen('setup');return}
+ household=members[0].household_id;role=members[0].role;
+ const {data:h,error:he}=await supabase.from('households').select('id,name').eq('id',household).single();
+ if(he){err(he);return} household=h;
+ await loadData();setScreen('ready');
+ $('parent').classList.toggle('hidden',role!=='parent');
+ $('parent').textContent=role==='parent'?'🛠 Mode orang tua':'🧒 Mode anak';
+ document.querySelectorAll('.parentonly').forEach(x=>x.classList.toggle('hidden',role!=='parent'));
+ if(role==='parent'){
+   const {data:m}=await supabase.from('household_members').select('user_id,role').eq('household_id',household.id).eq('role','child').limit(1);
+   childId=m?.[0]?.user_id||null;
+ }else childId=user.id;
+ render();tab(role==='parent'?'approvals':'child');
+}
+async function createHousehold(e){
+ e.preventDefault();const name=String(new FormData(e.target).get('name')).trim();
+ const {data:id,error}=await supabase.rpc('create_household',{p_name:name});
+ if(error){err(error);return}
+ await seedDefaults(id);await boot();
+}
+async function seedDefaults(hid){
+ const quests=defaultQuests.map(q=>({...q,household_id:hid,created_by:user.id}));
+ const rewards=defaultRewards.map(r=>({...r,household_id:hid,created_by:user.id}));
+ const [a,b]=await Promise.all([
+   supabase.from('quests').insert(quests),
+   supabase.from('rewards').insert(rewards)
+ ]);
+ if(a.error)throw a.error;if(b.error)throw b.error;
+}
+async function loadData(){
+ const [q,s,r,rd,x,c,ach]=await Promise.all([
+  supabase.from('quests').select('*').eq('household_id',household.id).eq('is_active',true).order('created_at'),
+  supabase.from('quest_submissions').select('*').eq('household_id',household.id).order('submitted_at',{ascending:false}),
+  supabase.from('rewards').select('*').eq('household_id',household.id).eq('is_active',true).order('cost'),
+  supabase.from('reward_redemptions').select('*').eq('household_id',household.id).order('requested_at',{ascending:false}),
+  supabase.from('xp_ledger').select('*').eq('household_id',household.id).order('created_at'),
+  supabase.from('coin_ledger').select('*').eq('household_id',household.id).order('created_at'),
+  supabase.from('child_achievements').select('*').eq('household_id',household.id)
+ ]);
+ for(const z of [q,s,r,rd,x,c,ach])if(z.error)throw z.error;
+ data={quests:q.data||[],subs:s.data||[],rewards:r.data||[],redemptions:rd.data||[],xp:x.data||[],coins:c.data||[],achievements:ach.data||[]};
+}
+function targetChild(){return role==='child'?user.id:childId}
+function totals(){
+ const cid=targetChild();return {
+  xp:data.xp.filter(x=>!cid||x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
+  coins:data.coins.filter(x=>!cid||x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
+  done:data.subs.filter(x=>x.status==='approved'&&(!cid||x.child_user_id===cid)).length
+ };
+}
+function lvl(x){const a=[['Beginner',0,100],['Explorer',100,250],['Adventurer',250,450],['Champion',450,700],['Master',700,1000],['Legend',1000,1500]];return [...a].reverse().find(v=>x>=v[1])||a[0]}
+function render(){
+ const t=totals(),l=lvl(t.xp),p=Math.min(100,(t.xp-l[1])/(l[2]-l[1])*100);
+ $('level').textContent='Level '+(['Beginner','Explorer','Adventurer','Champion','Master','Legend'].indexOf(l[0])+1)+' · '+l[0];
+ $('progtext').textContent=(t.xp-l[1])+' / '+(l[2]-l[1])+' XP';$('bar').style.width=p+'%';
+ $('xp').textContent=t.xp;$('coins').textContent=t.coins;$('done').textContent=t.done;
+ $('mode').textContent='Cloud · '+(role==='parent'?'Orang tua':'Anak');$('count').textContent=data.quests.length+' misi';
+ const cid=targetChild(),mySubs=data.subs.filter(s=>!cid||s.child_user_id===cid);
+ const pendingIds=new Set(mySubs.filter(s=>s.status==='pending').map(s=>s.quest_id));
+ $('quests').innerHTML=data.quests.map(q=>'<article class="quest"><div class="qicon">'+esc(q.icon)+'</div><div class="qinfo"><strong>'+esc(q.title)+'</strong><small>'+esc(cats[q.category]||q.category)+'<br>'+esc(q.description)+'</small></div><div class="qaction"><span class="xp">+'+q.xp+' XP</span><button class="'+(pendingIds.has(q.id)?'secondary':'primary')+'" '+(role!=='child'||pendingIds.has(q.id)?'disabled':'')+' onclick="submitQ(\''+q.id+'\')">'+(pendingIds.has(q.id)?'Menunggu':role==='parent'?'Mode orang tua':'Selesai!')+'</button></div></article>').join('')||'<div class="empty">Belum ada misi.</div>';
+ const badges=[['🌟','first_quest','First Quest'],['🧹','little_helper','Little Helper'],['📚','book_explorer','Book Explorer'],['🧠','number_star','Number Star'],['🌙','faith_journey','Faith Journey']];
+ const earned=new Set(data.achievements.filter(a=>!cid||a.child_user_id===cid).map(a=>a.achievement_code));
+ $('badges').innerHTML=badges.map(([ico,code,name])=>'<div class="badge" style="opacity:'+(earned.has(code)?'1':'.4')+'">'+ico+' <b>'+name+'</b></div>').join('');
+ $('rewardlist').innerHTML=data.rewards.map(r=>'<div class="panel row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc({activity:'Aktivitas',privilege:'Privilege',item:'Barang'}[r.kind]||r.kind)+' · '+r.cost+' coins</div></div><button class="primary" '+(role!=='child'||t.coins<r.cost?'disabled':'')+' onclick="redeem(\''+r.id+'\')">Tukar</button></div>').join('')||'<div class="empty">Belum ada hadiah.</div>';
+ $('approvals').innerHTML=(role==='parent'?mySubs.filter(s=>s.status==='pending').map(s=>{const q=s.quest_snapshot||{};return '<div class="panel row"><div><b>'+esc(q.title||'Quest')+'</b><div class="muted">Anak · +'+(q.xp||0)+' XP · +'+(q.coins||0)+' coins</div></div><button class="primary" onclick="approve(\''+s.id+'\')">Setujui</button></div>'}).join(''):'')+
+ (role==='parent'?data.redemptions.filter(r=>r.status==='pending').map(r=>'<div class="panel row"><div><b>Penukaran: '+esc(r.reward_snapshot?.name||'Hadiah')+'</b><div class="muted">'+(r.reward_snapshot?.cost||0)+' coins</div></div><div><button class="primary" onclick="approveReward(\''+r.id+'\')">Setujui</button> <button class="secondary" onclick="rejectReward(\''+r.id+'\')">Tolak</button></div></div>').join(''):'')||'<div class="empty">Belum ada pengajuan yang perlu diverifikasi.</div>';
+ $('managelist').innerHTML=data.quests.map(q=>'<div class="row"><div><b>'+esc(q.icon)+' '+esc(q.title)+'</b><div class="muted">'+esc(cats[q.category]||q.category)+' · '+q.xp+' XP · '+q.coins+' coins</div></div><button class="danger" onclick="delQ(\''+q.id+'\')">Hapus</button></div>').join('')||'<div class="empty">Belum ada misi.</div>';
+ const hist=[
+  ...data.xp.filter(x=>!cid||x.child_user_id===cid).map(x=>({label:'Quest disetujui',xp:x.delta,coins:0,at:x.created_at})),
+  ...data.coins.filter(x=>!cid||x.child_user_id===cid).map(x=>({label:x.delta<0?'Penukaran hadiah':'Quest disetujui',xp:0,coins:x.delta,at:x.created_at}))
+ ].sort((a,b)=>new Date(a.at)-new Date(b.at));
+ $('history').innerHTML=hist.reverse().map(h=>'<div class="row"><div><b>'+h.label+'</b><div class="muted">'+new Date(h.at).toLocaleString('id-ID')+'</div></div><b>'+(h.xp?'+'+h.xp+' XP':'')+' '+(h.coins?(h.coins>0?'+':'')+h.coins+' coins':'')+'</b></div>').join('')||'<div class="empty">Belum ada histori.</div>';
+}
+async function refresh(){await loadData();render()}
+window.submitQ=async id=>{if(role!=='child')return;const {error}=await supabase.rpc('submit_quest',{p_quest_id:id});if(error){err(error);return}await refresh();alert('Misi dikirim untuk diperiksa orang tua.')};
+window.approve=async id=>{const {error}=await supabase.rpc('approve_quest_submission',{p_submission_id:id});if(error){err(error);return}await refresh()};
+window.approveReward=async id=>{const {error}=await supabase.rpc('approve_reward_redemption',{p_redemption_id:id});if(error){err(error);return}await refresh()};
+window.rejectReward=async id=>{const {error}=await supabase.rpc('reject_reward_redemption',{p_redemption_id:id});if(error){err(error);return}await refresh()};
+window.redeem=async id=>{if(role!=='child')return;const {error}=await supabase.rpc('request_reward',{p_reward_id:id});if(error){err(error);return}await refresh();alert('Permintaan hadiah dikirim kepada orang tua.')};
+window.delQ=async id=>{if(role!=='parent'||!confirm('Nonaktifkan misi ini?'))return;const {error}=await supabase.from('quests').update({is_active:false}).eq('id',id).eq('household_id',household.id);if(error){err(error);return}await refresh()};
+function tab(t){if(['approvals','manage','history'].includes(t)&&role!=='parent')return;activeTab=t;['child','rewards','approvals','manage','history'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==t));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t))}
+$('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
+$('parent').onclick=()=>tab(role==='parent'?'approvals':'child');
 $('add').onclick=()=>$('modal').classList.add('open');$('close').onclick=()=>$('modal').classList.remove('open');$('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};
-$('questform').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));s.quests.push({id:uid(),...d,xp:+d.xp,coins:+d.coins});e.target.reset();$('modal').classList.remove('open');save()};
-$('rewardform').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target));s.rewards.push({id:uid(),...d,cost:+d.cost});e.target.reset();save()};
-render();tab('child');
+$('questform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const row={household_id:household.id,created_by:user.id,title:d.title,category:d.category,icon:d.icon||'⭐',xp:+d.xp,coins:+d.coins,description:d.description||''};const {error}=await supabase.from('quests').insert(row);if(error){err(error);return}e.target.reset();$('modal').classList.remove('open');await refresh()};
+$('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const {error}=await supabase.from('rewards').insert({household_id:household.id,created_by:user.id,name:d.name,description:'',kind:({Aktivitas:'activity',Privilege:'privilege',Barang:'item'})[d.kind],cost:+d.cost});if(error){err(error);return}e.target.reset();await refresh()};
+$('loginform').addEventListener('submit',signIn);
+$('householdform').addEventListener('submit',createHousehold);
+$('logout').onclick=async()=>{await supabase.auth.signOut();session=null;user=null;household=null;setScreen('auth')};
+$('resetbtn').onclick=async()=>{const email=$('email').value.trim();if(!email){showAuthError('Masukkan email terlebih dahulu.');return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)showAuthError(error.message);else showAuthError('Tautan reset kata sandi dikirim jika email terdaftar.')};
+supabase.auth.onAuthStateChange((_event,s)=>{session=s;user=s?.user||null;if(!user)setScreen('auth')});
+(async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
 </script></body></html>
