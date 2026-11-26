@@ -23,7 +23,7 @@
 .auth-form{display:grid;gap:12px;margin-top:18px}.auth-form label{font-size:.82rem;font-weight:800}.auth-form input{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}
 .auth-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.auth-error{color:#9a4939;background:#fae8e3;padding:12px 14px;border-radius:12px;margin-top:12px;font-size:.9rem;border:1px solid #f0c9c0}.auth-error.success{color:#245b3b;background:#e8f4e9;border-color:#b9d9bf}.auth-error.info{color:#34556b;background:#edf4f8;border-color:#c8dce8}
 #accountbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.setup{max-width:620px;margin:24px auto;padding:22px;background:var(--card);border:1px solid var(--line);border-radius:20px}.setup h2{margin-top:0}
-</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn" onclick="document.getElementById('autherror').className='auth-error info';document.getElementById('autherror').textContent='Menyiapkan permintaan reset kata sandi… Jika pesan ini tidak berubah, muat ulang halaman.'">Lupa kata sandi?</button></div></form><div id="autherror" class="auth-error hidden" role="status" aria-live="polite"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
+</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn" onclick="homeQuestReset(event)">Lupa kata sandi?</button></div></form><div id="autherror" class="auth-error hidden" role="status" aria-live="polite"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
 <header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div id="accountbar"><span class="pill" id="mode">Cloud</span><span class="pill" id="accountemail"></span><button class="pill" id="logout">Keluar</button></div></header>
 <section class="setup hidden" id="setup"><h2>Siapkan ruang keluarga</h2><p>Akun ini belum memiliki household HomeQuest. Buat satu ruang keluarga agar misi, XP, coins, dan hadiah tersimpan di cloud.</p><form id="householdform" class="formgrid"><div class="field full"><label>Nama keluarga</label><input name="name" required value="Keluarga Rahman" maxlength="80"></div><div class="field full"><button class="primary">Buat household</button></div></form></section>
 <main id="mainview">
@@ -37,6 +37,35 @@
 <section id="v-history" class="hidden"><div class="section-head"><div><h2>Jejak petualangan</h2><p>Catatan XP dan coins.</p></div></div><div id="history"></div></section>
 <div class="notice">🌱 Yang terpenting bukan menyelesaikan semua misi, tetapi belajar bertanggung jawab dan menikmati prosesnya. Tidak ada pengurangan XP.</div><footer>HomeQuest · Made for little explorers and their families</footer></main></div>
 <div class="modalbg" id="modal"><div class="modal"><button class="close" id="close">×</button><h2>Buat quest baru</h2><form id="questform" class="formgrid"><div class="field full"><label>Nama misi</label><input name="title" required placeholder="Contoh: Rapikan mainan"></div><div class="field"><label>Kategori</label><select name="category"><option value="home">Home Hero</option><option value="math">Brain Master</option><option value="reading">Book Explorer</option><option value="quran">Faith Journey</option><option value="english">Language Explorer</option></select></div><div class="field"><label>Emoji</label><input name="icon" value="⭐" maxlength="4"></div><div class="field"><label>XP</label><input name="xp" type="number" min="1" max="100" value="10"></div><div class="field"><label>Coins</label><input name="coins" type="number" min="0" max="100" value="2"></div><div class="field full"><label>Instruksi</label><textarea name="description" rows="2"></textarea></div><div class="field full"><button class="primary">Simpan quest</button></div></form></div></div>
+<script>
+window.homeQuestReset=async function(event){
+ if(event)event.preventDefault();
+ const emailInput=document.getElementById('email');
+ const status=document.getElementById('autherror');
+ const button=document.getElementById('resetbtn');
+ const email=(emailInput?.value||'').trim();
+ const show=(message,type='error')=>{status.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');status.textContent=message;status.setAttribute('role','status');status.setAttribute('aria-live','polite')};
+ if(!email){show('Masukkan alamat email terlebih dahulu.');emailInput?.focus();return}
+ if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){show('Format email belum benar. Periksa kembali alamat email.');emailInput?.focus();return}
+ const original=button.textContent;button.disabled=true;button.textContent='Mengirim…';
+ show('Mengirim permintaan reset untuk '+email+'…','info');
+ try{
+  const response=await fetch('https://sljrtrwkrweiaaoxkumy.supabase.co/auth/v1/recover?redirect_to='+encodeURIComponent(location.origin+location.pathname),{
+   method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp'},body:JSON.stringify({email})
+  });
+  if(response.ok){
+   show('Permintaan reset berhasil diproses. Jika email terdaftar, tautan reset akan dikirim ke '+email+'. Periksa Inbox dan Spam/Junk.','success');
+  }else{
+   let detail='HTTP '+response.status;
+   try{const body=await response.json();detail=body.msg||body.message||body.error_description||body.error||detail}catch(_){}
+   show('Permintaan reset gagal dikirim: '+detail+'. Periksa koneksi dan coba kembali.');
+  }
+ }catch(error){
+  console.error('HomeQuest standalone reset failed:',error);
+  show('Tidak dapat terhubung ke layanan reset. Periksa koneksi internet atau coba dari browser lain. Detail: '+(error?.message||'Network error'));
+ }finally{button.disabled=false;button.textContent=original}
+};
+</script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 
@@ -190,19 +219,6 @@ $('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries
 $('loginform').addEventListener('submit',signIn);
 $('householdform').addEventListener('submit',createHousehold);
 $('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
-$('resetbtn').addEventListener('click',async()=>{
- clearAuthError();const email=$('email').value.trim();
- if(!email){showAuthError('Isi kolom email terlebih dahulu, lalu tekan “Lupa kata sandi?”');$('email').focus();return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showAuthError('Format email belum benar. Periksa kembali alamat email Anda.');$('email').focus();return}
- const btn=$('resetbtn'),original=btn.textContent;btn.disabled=true;btn.textContent='Mengirim…';
- showAuthError('Sedang mengirim permintaan reset ke '+email+'…','info');
- try{
-  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
-  if(error)showAuthError('Permintaan belum berhasil dikirim. '+error.message+' Periksa koneksi internet, lalu coba lagi.');
-  else showAuthError('Permintaan reset berhasil diproses. Jika alamat email terdaftar, tautan reset akan dikirim ke '+email+'. Periksa Inbox dan folder Spam/Junk. Jika belum masuk dalam beberapa menit, coba lagi atau hubungi administrator.','success');
- }catch(error){console.error('HomeQuest password reset error:',error);showAuthError('HomeQuest tidak dapat menghubungi layanan reset. Periksa koneksi internet, muat ulang halaman, lalu coba lagi. Detail: '+(error?.message||'Kesalahan jaringan tidak diketahui.'))}
- finally{btn.disabled=false;btn.textContent=original}
-});
 supabase.auth.onAuthStateChange((_event,s)=>{session=s;user=s?.user||null;if(!user)setScreen('auth')});
 (async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
 </script></body></html>
