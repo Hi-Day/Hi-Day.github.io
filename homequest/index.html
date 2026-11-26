@@ -46,7 +46,7 @@ window.homeQuestReset=async function(event){
  const email=(emailInput?.value||'').trim();
  const show=(message,type='error')=>{status.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');status.textContent=message;status.setAttribute('role','status');status.setAttribute('aria-live','polite')};
  if(!email){show('Masukkan alamat email terlebih dahulu.');emailInput?.focus();return}
- if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){show('Format email belum benar. Periksa kembali alamat email.');emailInput?.focus();return}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){show('Format email belum benar. Periksa kembali alamat email.');emailInput?.focus();return}
  const original=button.textContent;button.disabled=true;button.textContent='Mengirim…';
  show('Mengirim permintaan reset untuk '+email+'…','info');
  try{
