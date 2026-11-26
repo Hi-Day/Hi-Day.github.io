@@ -60,7 +60,7 @@ const defaultRewards=[
  {name:'Mainan kecil pilihan',description:'Hadiah barang sesuai kesepakatan.',kind:'item',cost:100}
 ];
 const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let session=null,user=null,household=null,role=null,childId=null,data={quests:[],subs:[],rewards:[],redemptions:[],xp:[],coins:[],achievements:[]},activeTab='child';
+let session=null,user=null,household=null,role=null,childId=null,realtimeChannel=null,data={quests:[],subs:[],rewards:[],redemptions:[],xp:[],coins:[],achievements:[]},activeTab='child';
 function showAuthError(msg){$('autherror').textContent=msg;$('autherror').classList.remove('hidden')}
 function clearAuthError(){$('autherror').textContent='';$('autherror').classList.add('hidden')}
 function setScreen(state){
@@ -76,7 +76,7 @@ async function signIn(e){
  const {data:d,error}=await supabase.auth.signInWithPassword({email,password});
  $('loginbtn').disabled=false;$('loginbtn').textContent='Masuk';
  if(error){showAuthError(error.message);return}
- session=d.session;user=d.user;await boot();
+ session=d.session;user=d.user;try{await boot()}catch(e){showAuthError(e.message||'Gagal memuat HomeQuest.');setScreen('auth')}
 }
 async function boot(){
  if(!user){setScreen('auth');return}
@@ -87,7 +87,7 @@ async function boot(){
  household=members[0].household_id;role=members[0].role;
  const {data:h,error:he}=await supabase.from('households').select('id,name').eq('id',household).single();
  if(he){err(he);return} household=h;
- await loadData();setScreen('ready');
+ await loadData();setScreen('ready');subscribeRealtime();
  $('parent').classList.toggle('hidden',role!=='parent');
  $('parent').textContent=role==='parent'?'🛠 Mode orang tua':'🧒 Mode anak';
  document.querySelectorAll('.parentonly').forEach(x=>x.classList.toggle('hidden',role!=='parent'));
@@ -101,7 +101,7 @@ async function createHousehold(e){
  e.preventDefault();const name=String(new FormData(e.target).get('name')).trim();
  const {data:id,error}=await supabase.rpc('create_household',{p_name:name});
  if(error){err(error);return}
- await seedDefaults(id);await boot();
+ try{await seedDefaults(id);await boot()}catch(e){err(e)}
 }
 async function seedDefaults(hid){
  const quests=defaultQuests.map(q=>({...q,household_id:hid,created_by:user.id}));
@@ -125,6 +125,14 @@ async function loadData(){
  for(const z of [q,s,r,rd,x,c,ach])if(z.error)throw z.error;
  data={quests:q.data||[],subs:s.data||[],rewards:r.data||[],redemptions:rd.data||[],xp:x.data||[],coins:c.data||[],achievements:ach.data||[]};
 }
+function subscribeRealtime(){
+ if(realtimeChannel) supabase.removeChannel(realtimeChannel);
+ realtimeChannel=supabase.channel('homequest-'+household.id);
+ ['household_members','quests','quest_submissions','xp_ledger','coin_ledger','rewards','reward_redemptions','child_achievements'].forEach(table=>{
+  realtimeChannel=realtimeChannel.on('postgres_changes',{event:'*',schema:'public',table,filter:'household_id=eq.'+household.id},()=>refresh().catch(err));
+ });
+ realtimeChannel.subscribe();
+}
 function targetChild(){return role==='child'?user.id:childId}
 function totals(){
  const cid=targetChild();return {
@@ -139,7 +147,7 @@ function render(){
  $('level').textContent='Level '+(['Beginner','Explorer','Adventurer','Champion','Master','Legend'].indexOf(l[0])+1)+' · '+l[0];
  $('progtext').textContent=(t.xp-l[1])+' / '+(l[2]-l[1])+' XP';$('bar').style.width=p+'%';
  $('xp').textContent=t.xp;$('coins').textContent=t.coins;$('done').textContent=t.done;
- $('mode').textContent='Cloud · '+(role==='parent'?'Orang tua':'Anak');$('count').textContent=data.quests.length+' misi';
+ $('mode').textContent='Cloud · '+(role==='parent'?(childId?'Orang tua':'Orang tua · Anak belum ditautkan'):'Anak');$('count').textContent=data.quests.length+' misi';
  const cid=targetChild(),mySubs=data.subs.filter(s=>!cid||s.child_user_id===cid);
  const pendingIds=new Set(mySubs.filter(s=>s.status==='pending').map(s=>s.quest_id));
  $('quests').innerHTML=data.quests.map(q=>'<article class="quest"><div class="qicon">'+esc(q.icon)+'</div><div class="qinfo"><strong>'+esc(q.title)+'</strong><small>'+esc(cats[q.category]||q.category)+'<br>'+esc(q.description)+'</small></div><div class="qaction"><span class="xp">+'+q.xp+' XP</span><button class="'+(pendingIds.has(q.id)?'secondary':'primary')+'" '+(role!=='child'||pendingIds.has(q.id)?'disabled':'')+' onclick="submitQ(\''+q.id+'\')">'+(pendingIds.has(q.id)?'Menunggu':role==='parent'?'Mode orang tua':'Selesai!')+'</button></div></article>').join('')||'<div class="empty">Belum ada misi.</div>';
@@ -171,7 +179,7 @@ $('questform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(
 $('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const {error}=await supabase.from('rewards').insert({household_id:household.id,created_by:user.id,name:d.name,description:'',kind:({Aktivitas:'activity',Privilege:'privilege',Barang:'item'})[d.kind],cost:+d.cost});if(error){err(error);return}e.target.reset();await refresh()};
 $('loginform').addEventListener('submit',signIn);
 $('householdform').addEventListener('submit',createHousehold);
-$('logout').onclick=async()=>{await supabase.auth.signOut();session=null;user=null;household=null;setScreen('auth')};
+$('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
 $('resetbtn').onclick=async()=>{const email=$('email').value.trim();if(!email){showAuthError('Masukkan email terlebih dahulu.');return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)showAuthError(error.message);else showAuthError('Tautan reset kata sandi dikirim jika email terdaftar.')};
 supabase.auth.onAuthStateChange((_event,s)=>{session=s;user=s?.user||null;if(!user)setScreen('auth')});
 (async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
