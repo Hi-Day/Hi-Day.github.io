@@ -176,7 +176,6 @@ window.redeem=id=>{
 window.delQ=id=>{if(role!=='parent'||!confirm('Nonaktifkan misi ini?'))return;const q=state.quests.find(x=>x.id===id);if(q)q.is_active=false;save();render()};
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 $('parent').onclick=()=>role==='parent'?setRole('child'):openGate();
-$('gatesubmit').onclick=verifyGate;
 $('gateform').addEventListener('submit',verifyGate);
 $('gatecancel').onclick=closeGate;
 $('gatemodal').onclick=e=>{if(e.target.id==='gatemodal')closeGate()};
