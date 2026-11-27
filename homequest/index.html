@@ -72,7 +72,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
 const SUPABASE_URL = 'https://sljrtrwkrweiaaoxkumy.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp';
 const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
 });
 const cats={home:'Home Hero',math:'Brain Master',reading:'Book Explorer',quran:'Faith Journey',english:'Language Explorer',other:'Special Quest'};
 const defaultQuests=[
@@ -220,15 +220,17 @@ $('loginform').addEventListener('submit',signIn);
 $('householdform').addEventListener('submit',createHousehold);
 $('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
 let recoveryMode=false;
+function showRecoveryForm(){
+ recoveryMode=true;
+ $('loginform').classList.add('hidden');
+ $('recoveryform').classList.remove('hidden');
+ showAuthError('Tautan pemulihan berhasil diverifikasi. Buat kata sandi baru di bawah ini.','success');
+ setScreen('auth');
+}
 supabase.auth.onAuthStateChange((event,s)=>{
  session=s;user=s?.user||null;
- if(event==='PASSWORD_RECOVERY'){
-  recoveryMode=true;
-  $('loginform').classList.add('hidden');
-  $('recoveryform').classList.remove('hidden');
-  showAuthError('Tautan pemulihan valid. Silakan buat kata sandi baru.','success');
-  setScreen('auth');
- }else if(!user){setScreen('auth')}
+ if(event==='PASSWORD_RECOVERY')showRecoveryForm();
+ else if(!user&&!recoveryMode)setScreen('auth');
 });
 $('recoveryform').addEventListener('submit',async e=>{
  e.preventDefault();clearAuthError();
@@ -248,5 +250,32 @@ $('recoveryform').addEventListener('submit',async e=>{
  }catch(error){console.error('HomeQuest password update failed:',error);showAuthError('Gagal memperbarui kata sandi: '+(error?.message||'Kesalahan tidak diketahui.'))}
  finally{btn.disabled=false;btn.textContent='Simpan kata sandi baru'}
 });
-(async()=>{const {data:d,error}=await supabase.auth.getSession();if(error){showAuthError(error.message);return}session=d.session;user=session?.user||null;if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth')})();
+(async()=>{
+ try{
+  const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+  const query=new URLSearchParams(location.search);
+  const authError=query.get('error_description')||hash.get('error_description')||query.get('error')||hash.get('error');
+  if(authError){showAuthError('Tautan pemulihan tidak dapat digunakan: '+authError+' Minta tautan reset baru.');setScreen('auth');return}
+  const code=query.get('code');
+  if(code){
+   const {data:d,error}=await supabase.auth.exchangeCodeForSession(code);
+   if(error){showAuthError('Verifikasi tautan gagal: '+error.message+' Minta tautan reset baru.');setScreen('auth');return}
+   session=d.session;user=d.user;showRecoveryForm();history.replaceState({},document.title,location.pathname);
+   return;
+  }
+  const access_token=hash.get('access_token'),refresh_token=hash.get('refresh_token');
+  if(access_token&&refresh_token){
+   const {data:d,error}=await supabase.auth.setSession({access_token,refresh_token});
+   if(error){showAuthError('Sesi pemulihan tidak valid: '+error.message+' Minta tautan reset baru.');setScreen('auth');return}
+   session=d.session;user=d.user;
+   if(hash.get('type')==='recovery'){showRecoveryForm();history.replaceState({},document.title,location.pathname)}
+   else if(user){await boot()}
+   return;
+  }
+  const {data:d,error}=await supabase.auth.getSession();
+  if(error){showAuthError(error.message);return}
+  session=d.session;user=session?.user||null;
+  if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth');
+ }catch(e){console.error('HomeQuest auth callback error:',e);showAuthError('Tidak dapat memproses tautan pemulihan: '+(e?.message||'Kesalahan tidak diketahui')+'. Minta tautan reset baru.');setScreen('auth')}
+})();
 </script></body></html>
