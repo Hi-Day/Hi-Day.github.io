@@ -23,8 +23,8 @@
 .auth-form{display:grid;gap:12px;margin-top:18px}.auth-form label{font-size:.82rem;font-weight:800}.auth-form input{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:white}
 .auth-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.auth-error{color:#9a4939;background:#fae8e3;padding:12px 14px;border-radius:12px;margin-top:12px;font-size:.9rem;border:1px solid #f0c9c0}.auth-error.success{color:#245b3b;background:#e8f4e9;border-color:#b9d9bf}.auth-error.info{color:#34556b;background:#edf4f8;border-color:#c8dce8}
 #accountbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.setup{max-width:620px;margin:24px auto;padding:22px;background:var(--card);border:1px solid var(--line);border-radius:20px}.setup h2{margin-top:0}
-</style></head><body><section class="auth-screen" id="authscreen"><div class="brand"><div class="mark">✦</div>HomeQuest</div><h1>Masuk ke petualangan keluarga</h1><p>Gunakan akun orang tua untuk mengakses data HomeQuest yang tersimpan di cloud.</p><form id="loginform" class="auth-form"><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></div><div><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Kata sandi akun Supabase"></div><div class="auth-actions"><button class="primary" id="loginbtn">Masuk</button><button type="button" class="secondary" id="resetbtn" onclick="homeQuestReset(event)">Lupa kata sandi?</button></div></form><form id="recoveryform" class="auth-form hidden"><div><h2 style="margin:0">Buat kata sandi baru</h2><p class="muted">Tautan pemulihan berhasil dibuka. Masukkan kata sandi baru untuk akun Anda.</p></div><div><label for="newpassword">Kata sandi baru</label><input id="newpassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Minimal 8 karakter"></div><div><label for="confirmnewpassword">Ulangi kata sandi baru</label><input id="confirmnewpassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Ketik ulang kata sandi"></div><div class="auth-actions"><button class="primary" id="savepasswordbtn">Simpan kata sandi baru</button></div></form><div id="autherror" class="auth-error hidden" role="status" aria-live="polite"></div><p class="muted">Akun menggunakan autentikasi Supabase. Kata sandi tidak disimpan oleh HomeQuest.</p></section><div class="app hidden" id="app">
-<header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div id="accountbar"><span class="pill" id="mode">Cloud</span><span class="pill" id="accountemail"></span><button class="pill" id="logout">Keluar</button></div></header>
+</style></head><body><div class="app" id="app">
+<header><div class="brand"><div class="mark">✦</div>HomeQuest</div><div id="accountbar"><span class="pill" id="mode">Child Mode</span><button class="secondary" id="parent">🔒 Parent Mode</button></div></header>
 <section class="setup hidden" id="setup"><h2>Siapkan ruang keluarga</h2><p>Akun ini belum memiliki household HomeQuest. Buat satu ruang keluarga agar misi, XP, coins, dan hadiah tersimpan di cloud.</p><form id="householdform" class="formgrid"><div class="field full"><label>Nama keluarga</label><input name="name" required value="Keluarga Rahman" maxlength="80"></div><div class="field full"><button class="primary">Buat household</button></div></form></section>
 <main id="mainview">
 <section class="hero"><div><div class="eyebrow">Your little adventure</div><h1>Setiap kebiasaan baik adalah petualangan.</h1><p class="sub">Selesaikan misi, kumpulkan bintang, dan tumbuh menjadi penjelajah hebat.</p><div class="progress-wrap"><div class="progress-label"><span id="level">Level 1 · Beginner</span><span id="progtext">0 / 100 XP</span></div><div class="progress"><span id="bar"></span></div></div></div><div class="art">🧭🏕️</div></section>
@@ -36,84 +36,12 @@
 <section id="v-manage" class="hidden"><div class="section-head"><div><h2>Quest manager</h2><p>Buat misi yang sesuai rutinitas keluarga.</p></div><button class="primary" id="add">＋ Misi</button></div><div id="managelist"></div><div class="panel"><h3>Tambah hadiah</h3><form id="rewardform" class="formgrid"><div class="field"><label>Nama hadiah</label><input name="name" required placeholder="Pilih cerita sebelum tidur"></div><div class="field"><label>Harga coins</label><input name="cost" type="number" min="1" value="30" required></div><div class="field full"><label>Jenis hadiah</label><select name="kind"><option>Aktivitas</option><option>Privilege</option><option>Barang</option></select></div><div class="field full"><button class="primary">Simpan hadiah</button></div></form></div></section>
 <section id="v-history" class="hidden"><div class="section-head"><div><h2>Jejak petualangan</h2><p>Catatan XP dan coins.</p></div></div><div id="history"></div></section>
 <div class="notice">🌱 Yang terpenting bukan menyelesaikan semua misi, tetapi belajar bertanggung jawab dan menikmati prosesnya. Tidak ada pengurangan XP.</div><footer>HomeQuest · Made for little explorers and their families</footer></main></div>
+<div class="modalbg" id="gatemodal" role="dialog" aria-modal="true" aria-labelledby="gatetitle"><div class="modal"><button class="close" id="gatecancel" type="button" aria-label="Tutup">×</button><div class="eyebrow">Parent access</div><h2 id="gatetitle">Verifikasi orang tua</h2><p class="muted">Selesaikan penjumlahan dua bilangan tiga digit untuk membuka Parent Mode.</p><form id="gateform"><div style="font-size:2rem;font-weight:900;text-align:center;padding:18px 0" id="gatequestion">000 + 000 = ?</div><div class="field"><label for="gateinput">Jawaban</label><input id="gateinput" type="number" inputmode="numeric" autocomplete="off" required placeholder="Masukkan hasil penjumlahan"></div><p id="gatefeedback" class="muted" role="status" aria-live="polite"></p><button class="primary" id="gatesubmit" type="submit">Buka Parent Mode</button></form></div></div>
 <div class="modalbg" id="modal"><div class="modal"><button class="close" id="close">×</button><h2>Buat quest baru</h2><form id="questform" class="formgrid"><div class="field full"><label>Nama misi</label><input name="title" required placeholder="Contoh: Rapikan mainan"></div><div class="field"><label>Kategori</label><select name="category"><option value="home">Home Hero</option><option value="math">Brain Master</option><option value="reading">Book Explorer</option><option value="quran">Faith Journey</option><option value="english">Language Explorer</option></select></div><div class="field"><label>Emoji</label><input name="icon" value="⭐" maxlength="4"></div><div class="field"><label>XP</label><input name="xp" type="number" min="1" max="100" value="10"></div><div class="field"><label>Coins</label><input name="coins" type="number" min="0" max="100" value="2"></div><div class="field full"><label>Instruksi</label><textarea name="description" rows="2"></textarea></div><div class="field full"><button class="primary">Simpan quest</button></div></form></div></div>
 <script>
-(function(){
- const params=new URLSearchParams(location.hash.replace(/^#/,''));
- const recovery=params.get('type')==='recovery'&&params.get('access_token');
- if(!recovery)return;
- window.__homeQuestRecoveryToken=params.get('access_token');
- window.addEventListener('DOMContentLoaded',()=>{
-  const login=document.getElementById('loginform');
-  const form=document.getElementById('recoveryform');
-  const status=document.getElementById('autherror');
-  if(login)login.classList.add('hidden');
-  if(form)form.classList.remove('hidden');
-  if(status){status.className='auth-error info';status.textContent='Tautan pemulihan terdeteksi. Silakan buat kata sandi baru.'}
-  if(form&&!form.dataset.standaloneBound){
-   form.dataset.standaloneBound='1';
-   form.addEventListener('submit',async e=>{
-    e.preventDefault();
-    const p=document.getElementById('newpassword').value;
-    const confirm=document.getElementById('confirmnewpassword').value;
-    const btn=document.getElementById('savepasswordbtn');
-    const show=(msg,type='error')=>{status.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');status.textContent=msg};
-    if(p.length<8){show('Kata sandi minimal 8 karakter.');return}
-    if(p!==confirm){show('Kedua kata sandi belum sama.');return}
-    btn.disabled=true;btn.textContent='Menyimpan…';show('Menyimpan kata sandi baru…','info');
-    try{
-     const response=await fetch('https://sljrtrwkrweiaaoxkumy.supabase.co/auth/v1/user',{
-      method:'PUT',headers:{'Content-Type':'application/json','apikey':'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp','Authorization':'Bearer '+window.__homeQuestRecoveryToken},
-      body:JSON.stringify({password:p})
-     });
-     if(!response.ok){let msg='HTTP '+response.status;try{const d=await response.json();msg=d.msg||d.message||d.error_description||msg}catch(_){}show('Kata sandi belum berhasil diubah: '+msg+'. Minta tautan reset baru jika tautan sudah kedaluwarsa.');return}
-     show('Kata sandi berhasil diperbarui. Silakan masuk menggunakan kata sandi baru.','success');
-     window.__homeQuestRecoveryToken=null;
-     history.replaceState({},document.title,location.pathname);
-     form.classList.add('hidden');login.classList.remove('hidden');
-     document.getElementById('password').value='';
-    }catch(error){show('Gagal menghubungi layanan: '+(error.message||'Periksa koneksi internet.'))}
-    finally{btn.disabled=false;btn.textContent='Simpan kata sandi baru'}
-   });
-  }
- });
-})();
-window.homeQuestReset=async function(event){
- if(event)event.preventDefault();
- const emailInput=document.getElementById('email');
- const status=document.getElementById('autherror');
- const button=document.getElementById('resetbtn');
- const email=(emailInput?.value||'').trim();
- const show=(message,type='error')=>{status.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');status.textContent=message;status.setAttribute('role','status');status.setAttribute('aria-live','polite')};
- if(!email){show('Masukkan alamat email terlebih dahulu.');emailInput?.focus();return}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){show('Format email belum benar. Periksa kembali alamat email.');emailInput?.focus();return}
- const original=button.textContent;button.disabled=true;button.textContent='Mengirim…';
- show('Mengirim permintaan reset untuk '+email+'…','info');
- try{
-  const response=await fetch('https://sljrtrwkrweiaaoxkumy.supabase.co/auth/v1/recover?redirect_to='+encodeURIComponent(location.origin+location.pathname),{
-   method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp'},body:JSON.stringify({email})
-  });
-  if(response.ok){
-   show('Permintaan reset berhasil diproses. Jika email terdaftar, tautan reset akan dikirim ke '+email+'. Periksa Inbox dan Spam/Junk.','success');
-  }else{
-   let detail='HTTP '+response.status;
-   try{const body=await response.json();detail=body.msg||body.message||body.error_description||body.error||detail}catch(_){}
-   show('Permintaan reset gagal dikirim: '+detail+'. Periksa koneksi dan coba kembali.');
-  }
- }catch(error){
-  console.error('HomeQuest standalone reset failed:',error);
-  show('Tidak dapat terhubung ke layanan reset. Periksa koneksi internet atau coba dari browser lain. Detail: '+(error?.message||'Network error'));
- }finally{button.disabled=false;button.textContent=original}
-};
-</script>
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.0';
-
-const SUPABASE_URL = 'https://sljrtrwkrweiaaoxkumy.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp';
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
-});
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const STORAGE_KEY='homequest-local-v1';
 const cats={home:'Home Hero',math:'Brain Master',reading:'Book Explorer',quran:'Faith Journey',english:'Language Explorer',other:'Special Quest'};
 const defaultQuests=[
  {title:'Rapikan mainan',category:'home',icon:'🧸',xp:5,coins:2,description:'Kembalikan mainan ke tempatnya.'},
@@ -128,96 +56,54 @@ const defaultRewards=[
  {name:'Pilih permainan keluarga',description:'Anak memilih permainan keluarga.',kind:'privilege',cost:35},
  {name:'Mainan kecil pilihan',description:'Hadiah barang sesuai kesepakatan.',kind:'item',cost:100}
 ];
-const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let session=null,user=null,household=null,role=null,childId=null,realtimeChannel=null,data={quests:[],subs:[],rewards:[],redemptions:[],xp:[],coins:[],achievements:[]},activeTab='child';
-function showAuthError(msg,type='error'){const el=$('autherror');el.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');el.textContent=msg;el.setAttribute('role','status');el.setAttribute('aria-live','polite')}
-function clearAuthError(){const el=$('autherror');el.textContent='';el.className='auth-error hidden'}
-function setScreen(state){
- $('authscreen').classList.toggle('hidden',state!=='auth');
- $('app').classList.toggle('hidden',state==='auth');
- $('setup').classList.toggle('hidden',state!=='setup');
- $('mainview').classList.toggle('hidden',state!=='ready');
-}
-function err(e){console.error(e);alert(e?.message||'Terjadi kesalahan. Coba kembali.')}
-async function signIn(e){
- e.preventDefault();clearAuthError();
- const form=e.currentTarget, f=new FormData(form), email=String(f.get('email')||'').trim(), password=String(f.get('password')||'');
- const btn=$('loginbtn');
- if(!email||!password){showAuthError('Email dan kata sandi wajib diisi.');return}
- btn.disabled=true;btn.textContent='Memeriksa...';
+const uid=()=>crypto.randomUUID?crypto.randomUUID():'hq-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+const stamp=()=>new Date().toISOString();
+let state=loadState(), role='child', activeTab='child', gateAnswer=null;
+function loadState(){
  try{
-  const {data:d,error}=await supabase.auth.signInWithPassword({email,password});
-  if(error){showAuthError(error.message);return}
-  session=d.session;user=d.user;
-  await boot();
- }catch(error){
-  console.error('HomeQuest sign-in error:',error);
-  showAuthError(error?.message||'Tidak dapat menghubungi layanan login. Periksa koneksi internet lalu coba kembali.');
- }finally{
-  btn.disabled=false;btn.textContent='Masuk';
- }
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(raw){const d=JSON.parse(raw);if(d&&Array.isArray(d.quests))return d}
+ }catch(e){console.warn('HomeQuest local data could not be read',e)}
+ return {
+  quests:defaultQuests.map(q=>({...q,id:uid(),is_active:true,created_at:stamp()})),
+  subs:[], rewards:defaultRewards.map(r=>({...r,id:uid(),is_active:true})),
+  redemptions:[], xp:[], coins:[], achievements:[]
+ };
 }
-async function boot(){
- if(!user){setScreen('auth');return}
- $('accountemail').textContent=user.email||'Akun aktif';
- const {data:members,error}=await supabase.from('household_members').select('household_id,role').eq('user_id',user.id).limit(1);
- if(error){showAuthError('Gagal memuat household: '+error.message);setScreen('auth');return}
- if(!members?.length){setScreen('setup');return}
- household=members[0].household_id;role=members[0].role;
- const {data:h,error:he}=await supabase.from('households').select('id,name').eq('id',household).single();
- if(he){err(he);return} household=h;
- await loadData();setScreen('ready');subscribeRealtime();
- $('parent').classList.toggle('hidden',role!=='parent');
- $('parent').textContent=role==='parent'?'🛠 Mode orang tua':'🧒 Mode anak';
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function err(e){console.error(e);alert(e?.message||'Terjadi kesalahan.')}
+function setRole(next){
+ role=next;
+ $('mode').textContent=role==='parent'?'Parent Mode':'Child Mode';
+ $('parent').textContent=role==='parent'?'🔓 Keluar Parent Mode':'🔒 Parent Mode';
  document.querySelectorAll('.parentonly').forEach(x=>x.classList.toggle('hidden',role!=='parent'));
- if(role==='parent'){
-   const {data:m}=await supabase.from('household_members').select('user_id,role').eq('household_id',household.id).eq('role','child').limit(1);
-   childId=m?.[0]?.user_id||null;
- }else childId=user.id;
- render();tab(role==='parent'?'approvals':'child');
+ if(role==='parent')tab('approvals');else tab('child');
+ render();
 }
-async function createHousehold(e){
- e.preventDefault();const name=String(new FormData(e.target).get('name')).trim();
- const {data:id,error}=await supabase.rpc('create_household',{p_name:name});
- if(error){err(error);return}
- try{await seedDefaults(id);await boot()}catch(e){err(e)}
+function openGate(){
+ const a=100+Math.floor(Math.random()*900),b=100+Math.floor(Math.random()*900);
+ gateAnswer=a+b;
+ $('gatequestion').textContent=a.toLocaleString('id-ID')+' + '+b.toLocaleString('id-ID')+' = ?';
+ $('gateinput').value='';$('gatefeedback').textContent='';
+ $('gatemodal').classList.add('open');
+ setTimeout(()=>$('gateinput').focus(),80);
 }
-async function seedDefaults(hid){
- const quests=defaultQuests.map(q=>({...q,household_id:hid,created_by:user.id}));
- const rewards=defaultRewards.map(r=>({...r,household_id:hid,created_by:user.id}));
- const [a,b]=await Promise.all([
-   supabase.from('quests').insert(quests),
-   supabase.from('rewards').insert(rewards)
- ]);
- if(a.error)throw a.error;if(b.error)throw b.error;
+function closeGate(){$('gatemodal').classList.remove('open');gateAnswer=null}
+function verifyGate(e){
+ e.preventDefault();
+ const answer=Number($('gateinput').value);
+ if(Number.isInteger(answer)&&answer===gateAnswer){closeGate();setRole('parent');return}
+ $('gatefeedback').textContent='Belum tepat. Coba soal baru.';
+ openGate();
+ $('gatefeedback').textContent='Jawaban belum tepat. Soal baru sudah dibuat.';
 }
-async function loadData(){
- const [q,s,r,rd,x,c,ach]=await Promise.all([
-  supabase.from('quests').select('*').eq('household_id',household.id).eq('is_active',true).order('created_at'),
-  supabase.from('quest_submissions').select('*').eq('household_id',household.id).order('submitted_at',{ascending:false}),
-  supabase.from('rewards').select('*').eq('household_id',household.id).eq('is_active',true).order('cost'),
-  supabase.from('reward_redemptions').select('*').eq('household_id',household.id).order('requested_at',{ascending:false}),
-  supabase.from('xp_ledger').select('*').eq('household_id',household.id).order('created_at'),
-  supabase.from('coin_ledger').select('*').eq('household_id',household.id).order('created_at'),
-  supabase.from('child_achievements').select('*').eq('household_id',household.id)
- ]);
- for(const z of [q,s,r,rd,x,c,ach])if(z.error)throw z.error;
- data={quests:q.data||[],subs:s.data||[],rewards:r.data||[],redemptions:rd.data||[],xp:x.data||[],coins:c.data||[],achievements:ach.data||[]};
-}
-function subscribeRealtime(){
- if(realtimeChannel) supabase.removeChannel(realtimeChannel);
- realtimeChannel=supabase.channel('homequest-'+household.id);
- ['household_members','quests','quest_submissions','xp_ledger','coin_ledger','rewards','reward_redemptions','child_achievements'].forEach(table=>{
-  realtimeChannel=realtimeChannel.on('postgres_changes',{event:'*',schema:'public',table,filter:'household_id=eq.'+household.id},()=>refresh().catch(err));
- });
- realtimeChannel.subscribe();
-}
-function targetChild(){return role==='child'?user.id:childId}
+function targetChild(){return 'local-child'}
 function totals(){
- const cid=targetChild();return {
-  xp:data.xp.filter(x=>!cid||x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
-  coins:data.coins.filter(x=>!cid||x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
-  done:data.subs.filter(x=>x.status==='approved'&&(!cid||x.child_user_id===cid)).length
+ const cid=targetChild();
+ return {
+  xp:state.xp.filter(x=>x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
+  coins:state.coins.filter(x=>x.child_user_id===cid).reduce((n,x)=>n+x.delta,0),
+  done:state.subs.filter(x=>x.status==='approved'&&x.child_user_id===cid).length
  };
 }
 function lvl(x){const a=[['Beginner',0,100],['Explorer',100,250],['Adventurer',250,450],['Champion',450,700],['Master',700,1000],['Legend',1000,1500]];return [...a].reverse().find(v=>x>=v[1])||a[0]}
@@ -226,96 +112,88 @@ function render(){
  $('level').textContent='Level '+(['Beginner','Explorer','Adventurer','Champion','Master','Legend'].indexOf(l[0])+1)+' · '+l[0];
  $('progtext').textContent=(t.xp-l[1])+' / '+(l[2]-l[1])+' XP';$('bar').style.width=p+'%';
  $('xp').textContent=t.xp;$('coins').textContent=t.coins;$('done').textContent=t.done;
- $('mode').textContent='Cloud · '+(role==='parent'?(childId?'Orang tua':'Orang tua · Anak belum ditautkan'):'Anak');$('count').textContent=data.quests.length+' misi';
- const cid=targetChild(),mySubs=data.subs.filter(s=>!cid||s.child_user_id===cid);
+ $('count').textContent=state.quests.filter(q=>q.is_active!==false).length+' misi';
+ const mySubs=state.subs.filter(s=>s.child_user_id===targetChild());
  const pendingIds=new Set(mySubs.filter(s=>s.status==='pending').map(s=>s.quest_id));
- $('quests').innerHTML=data.quests.map(q=>'<article class="quest"><div class="qicon">'+esc(q.icon)+'</div><div class="qinfo"><strong>'+esc(q.title)+'</strong><small>'+esc(cats[q.category]||q.category)+'<br>'+esc(q.description)+'</small></div><div class="qaction"><span class="xp">+'+q.xp+' XP</span><button class="'+(pendingIds.has(q.id)?'secondary':'primary')+'" '+(role!=='child'||pendingIds.has(q.id)?'disabled':'')+' onclick="submitQ(\''+q.id+'\')">'+(pendingIds.has(q.id)?'Menunggu':role==='parent'?'Mode orang tua':'Selesai!')+'</button></div></article>').join('')||'<div class="empty">Belum ada misi.</div>';
+ $('quests').innerHTML=state.quests.filter(q=>q.is_active!==false).map(q=>'<article class="quest"><div class="qicon">'+esc(q.icon)+'</div><div class="qinfo"><strong>'+esc(q.title)+'</strong><small>'+esc(cats[q.category]||q.category)+'<br>'+esc(q.description)+'</small></div><div class="qaction"><span class="xp">+'+q.xp+' XP</span><button class="'+(pendingIds.has(q.id)?'secondary':'primary')+'" '+(role!=='child'||pendingIds.has(q.id)?'disabled':'')+' onclick="submitQ(\''+q.id+'\')">'+(pendingIds.has(q.id)?'Menunggu':role==='parent'?'Mode orang tua':'Selesai!')+'</button></div></article>').join('')||'<div class="empty">Belum ada misi.</div>';
  const badges=[['🌟','first_quest','First Quest'],['🧹','little_helper','Little Helper'],['📚','book_explorer','Book Explorer'],['🧠','number_star','Number Star'],['🌙','faith_journey','Faith Journey']];
- const earned=new Set(data.achievements.filter(a=>!cid||a.child_user_id===cid).map(a=>a.achievement_code));
+ const earned=new Set(state.achievements.map(a=>a.achievement_code));
  $('badges').innerHTML=badges.map(([ico,code,name])=>'<div class="badge" style="opacity:'+(earned.has(code)?'1':'.4')+'">'+ico+' <b>'+name+'</b></div>').join('');
- $('rewardlist').innerHTML=data.rewards.map(r=>'<div class="panel row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc({activity:'Aktivitas',privilege:'Privilege',item:'Barang'}[r.kind]||r.kind)+' · '+r.cost+' coins</div></div><button class="primary" '+(role!=='child'||t.coins<r.cost?'disabled':'')+' onclick="redeem(\''+r.id+'\')">Tukar</button></div>').join('')||'<div class="empty">Belum ada hadiah.</div>';
- $('approvals').innerHTML=(role==='parent'?mySubs.filter(s=>s.status==='pending').map(s=>{const q=s.quest_snapshot||{};return '<div class="panel row"><div><b>'+esc(q.title||'Quest')+'</b><div class="muted">Anak · +'+(q.xp||0)+' XP · +'+(q.coins||0)+' coins</div></div><button class="primary" onclick="approve(\''+s.id+'\')">Setujui</button></div>'}).join(''):'')+
- (role==='parent'?data.redemptions.filter(r=>r.status==='pending').map(r=>'<div class="panel row"><div><b>Penukaran: '+esc(r.reward_snapshot?.name||'Hadiah')+'</b><div class="muted">'+(r.reward_snapshot?.cost||0)+' coins</div></div><div><button class="primary" onclick="approveReward(\''+r.id+'\')">Setujui</button> <button class="secondary" onclick="rejectReward(\''+r.id+'\')">Tolak</button></div></div>').join(''):'')||'<div class="empty">Belum ada pengajuan yang perlu diverifikasi.</div>';
- $('managelist').innerHTML=data.quests.map(q=>'<div class="row"><div><b>'+esc(q.icon)+' '+esc(q.title)+'</b><div class="muted">'+esc(cats[q.category]||q.category)+' · '+q.xp+' XP · '+q.coins+' coins</div></div><button class="danger" onclick="delQ(\''+q.id+'\')">Hapus</button></div>').join('')||'<div class="empty">Belum ada misi.</div>';
+ $('rewardlist').innerHTML=state.rewards.filter(r=>r.is_active!==false).map(r=>'<div class="panel row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc({activity:'Aktivitas',privilege:'Privilege',item:'Barang'}[r.kind]||r.kind)+' · '+r.cost+' coins</div></div><button class="primary" '+(role!=='child'||t.coins<r.cost?'disabled':'')+' onclick="redeem(\''+r.id+'\')">Tukar</button></div>').join('')||'<div class="empty">Belum ada hadiah.</div>';
+ $('approvals').innerHTML=(role==='parent'?mySubs.filter(s=>s.status==='pending').map(s=>{const q=s.quest_snapshot||{};return '<div class="panel row"><div><b>'+esc(q.title||'Quest')+'</b><div class="muted">Pengajuan anak · +'+(q.xp||0)+' XP · +'+(q.coins||0)+' coins</div></div><button class="primary" onclick="approve(\''+s.id+'\')">Setujui</button></div>'}).join(''):'')+
+ (role==='parent'?state.redemptions.filter(r=>r.status==='pending').map(r=>'<div class="panel row"><div><b>Penukaran: '+esc(r.reward_snapshot?.name||'Hadiah')+'</b><div class="muted">'+(r.reward_snapshot?.cost||0)+' coins</div></div><div><button class="primary" onclick="approveReward(\''+r.id+'\')">Setujui</button> <button class="secondary" onclick="rejectReward(\''+r.id+'\')">Tolak</button></div></div>').join(''):'')||'<div class="empty">Belum ada pengajuan yang perlu diverifikasi.</div>';
+ $('managelist').innerHTML=state.quests.filter(q=>q.is_active!==false).map(q=>'<div class="row"><div><b>'+esc(q.icon)+' '+esc(q.title)+'</b><div class="muted">'+esc(cats[q.category]||q.category)+' · '+q.xp+' XP · '+q.coins+' coins</div></div><button class="danger" onclick="delQ(\''+q.id+'\')">Hapus</button></div>').join('')||'<div class="empty">Belum ada misi.</div>';
  const hist=[
-  ...data.xp.filter(x=>!cid||x.child_user_id===cid).map(x=>({label:'Quest disetujui',xp:x.delta,coins:0,at:x.created_at})),
-  ...data.coins.filter(x=>!cid||x.child_user_id===cid).map(x=>({label:x.delta<0?'Penukaran hadiah':'Quest disetujui',xp:0,coins:x.delta,at:x.created_at}))
+  ...state.xp.map(x=>({label:'Quest disetujui',xp:x.delta,coins:0,at:x.created_at})),
+  ...state.coins.map(x=>({label:x.delta<0?'Penukaran hadiah':'Quest disetujui',xp:0,coins:x.delta,at:x.created_at}))
  ].sort((a,b)=>new Date(a.at)-new Date(b.at));
  $('history').innerHTML=hist.reverse().map(h=>'<div class="row"><div><b>'+h.label+'</b><div class="muted">'+new Date(h.at).toLocaleString('id-ID')+'</div></div><b>'+(h.xp?'+'+h.xp+' XP':'')+' '+(h.coins?(h.coins>0?'+':'')+h.coins+' coins':'')+'</b></div>').join('')||'<div class="empty">Belum ada histori.</div>';
 }
-async function refresh(){await loadData();render()}
-window.submitQ=async id=>{if(role!=='child')return;const {error}=await supabase.rpc('submit_quest',{p_quest_id:id});if(error){err(error);return}await refresh();alert('Misi dikirim untuk diperiksa orang tua.')};
-window.approve=async id=>{const {error}=await supabase.rpc('approve_quest_submission',{p_submission_id:id});if(error){err(error);return}await refresh()};
-window.approveReward=async id=>{const {error}=await supabase.rpc('approve_reward_redemption',{p_redemption_id:id});if(error){err(error);return}await refresh()};
-window.rejectReward=async id=>{const {error}=await supabase.rpc('reject_reward_redemption',{p_redemption_id:id});if(error){err(error);return}await refresh()};
-window.redeem=async id=>{if(role!=='child')return;const {error}=await supabase.rpc('request_reward',{p_reward_id:id});if(error){err(error);return}await refresh();alert('Permintaan hadiah dikirim kepada orang tua.')};
-window.delQ=async id=>{if(role!=='parent'||!confirm('Nonaktifkan misi ini?'))return;const {error}=await supabase.from('quests').update({is_active:false}).eq('id',id).eq('household_id',household.id);if(error){err(error);return}await refresh()};
-function tab(t){if(['approvals','manage','history'].includes(t)&&role!=='parent')return;activeTab=t;['child','rewards','approvals','manage','history'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==t));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t))}
-$('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
-$('parent').onclick=()=>tab(role==='parent'?'approvals':'child');
-$('add').onclick=()=>$('modal').classList.add('open');$('close').onclick=()=>$('modal').classList.remove('open');$('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};
-$('questform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const row={household_id:household.id,created_by:user.id,title:d.title,category:d.category,icon:d.icon||'⭐',xp:+d.xp,coins:+d.coins,description:d.description||''};const {error}=await supabase.from('quests').insert(row);if(error){err(error);return}e.target.reset();$('modal').classList.remove('open');await refresh()};
-$('rewardform').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));const {error}=await supabase.from('rewards').insert({household_id:household.id,created_by:user.id,name:d.name,description:'',kind:({Aktivitas:'activity',Privilege:'privilege',Barang:'item'})[d.kind],cost:+d.cost});if(error){err(error);return}e.target.reset();await refresh()};
-$('loginform').addEventListener('submit',signIn);
-$('householdform').addEventListener('submit',createHousehold);
-$('logout').onclick=async()=>{if(realtimeChannel){await supabase.removeChannel(realtimeChannel);realtimeChannel=null}await supabase.auth.signOut();session=null;user=null;household=null;role=null;childId=null;setScreen('auth')};
-let recoveryMode=false;
-function showRecoveryForm(){
- recoveryMode=true;
- $('loginform').classList.add('hidden');
- $('recoveryform').classList.remove('hidden');
- showAuthError('Tautan pemulihan berhasil diverifikasi. Buat kata sandi baru di bawah ini.','success');
- setScreen('auth');
+function tab(t){
+ if(['approvals','manage','history'].includes(t)&&role!=='parent')return;
+ activeTab=t;['child','rewards','approvals','manage','history'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==t));
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
 }
-supabase.auth.onAuthStateChange((event,s)=>{
- session=s;user=s?.user||null;
- if(event==='PASSWORD_RECOVERY')showRecoveryForm();
- else if(!user&&!recoveryMode)setScreen('auth');
-});
-$('recoveryform').addEventListener('submit',async e=>{
- e.preventDefault();clearAuthError();
- const p=$('newpassword').value,confirm=$('confirmnewpassword').value,btn=$('savepasswordbtn');
- if(p.length<8){showAuthError('Kata sandi minimal 8 karakter.');return}
- if(p!==confirm){showAuthError('Kedua kata sandi belum sama. Periksa kembali.');return}
- btn.disabled=true;btn.textContent='Menyimpan…';
- try{
-  const {data:d,error}=await supabase.auth.updateUser({password:p});
-  if(error){showAuthError('Kata sandi belum berhasil diperbarui: '+error.message);return}
-  showAuthError('Kata sandi berhasil diperbarui. Anda dapat melanjutkan ke HomeQuest.','success');
-  $('recoveryform').classList.add('hidden');
-  $('loginform').classList.remove('hidden');
-  $('password').value=p;
-  recoveryMode=false;
-  if(d?.user){user=d.user;session=(await supabase.auth.getSession()).data.session;await boot()}
- }catch(error){console.error('HomeQuest password update failed:',error);showAuthError('Gagal memperbarui kata sandi: '+(error?.message||'Kesalahan tidak diketahui.'))}
- finally{btn.disabled=false;btn.textContent='Simpan kata sandi baru'}
-});
-(async()=>{
- try{
-  const hash=new URLSearchParams(location.hash.replace(/^#/,''));
-  const query=new URLSearchParams(location.search);
-  const authError=query.get('error_description')||hash.get('error_description')||query.get('error')||hash.get('error');
-  if(authError){showAuthError('Tautan pemulihan tidak dapat digunakan: '+authError+' Minta tautan reset baru.');setScreen('auth');return}
-  const code=query.get('code');
-  if(code){
-   const {data:d,error}=await supabase.auth.exchangeCodeForSession(code);
-   if(error){showAuthError('Verifikasi tautan gagal: '+error.message+' Minta tautan reset baru.');setScreen('auth');return}
-   session=d.session;user=d.user;showRecoveryForm();history.replaceState({},document.title,location.pathname);
-   return;
-  }
-  const access_token=hash.get('access_token'),refresh_token=hash.get('refresh_token');
-  if(access_token&&refresh_token){
-   const {data:d,error}=await supabase.auth.setSession({access_token,refresh_token});
-   if(error){showAuthError('Sesi pemulihan tidak valid: '+error.message+' Minta tautan reset baru.');setScreen('auth');return}
-   session=d.session;user=d.user;
-   if(hash.get('type')==='recovery'){showRecoveryForm();history.replaceState({},document.title,location.pathname)}
-   else if(user){await boot()}
-   return;
-  }
-  const {data:d,error}=await supabase.auth.getSession();
-  if(error){showAuthError(error.message);return}
-  session=d.session;user=session?.user||null;
-  if(user){try{await boot()}catch(e){err(e);setScreen('auth')}}else setScreen('auth');
- }catch(e){console.error('HomeQuest auth callback error:',e);showAuthError('Tidak dapat memproses tautan pemulihan: '+(e?.message||'Kesalahan tidak diketahui')+'. Minta tautan reset baru.');setScreen('auth')}
-})();
+window.submitQ=id=>{
+ if(role!=='child')return;
+ if(state.subs.some(s=>s.quest_id===id&&s.status==='pending'))return;
+ const q=state.quests.find(q=>q.id===id);if(!q)return;
+ state.subs.push({id:uid(),quest_id:id,child_user_id:targetChild(),status:'pending',submitted_at:stamp(),quest_snapshot:{title:q.title,xp:q.xp,coins:q.coins}});
+ save();render();alert('Misi dikirim untuk diperiksa orang tua.');
+};
+window.approve=id=>{
+ if(role!=='parent')return;
+ const s=state.subs.find(x=>x.id===id&&x.status==='pending');if(!s)return;
+ s.status='approved';s.approved_at=stamp();
+ const q=s.quest_snapshot;
+ state.xp.push({id:uid(),child_user_id:s.child_user_id,delta:Number(q.xp)||0,created_at:stamp()});
+ state.coins.push({id:uid(),child_user_id:s.child_user_id,delta:Number(q.coins)||0,created_at:stamp()});
+ const codes=[];
+ if(state.subs.filter(x=>x.status==='approved').length>=1)codes.push('first_quest');
+ if(state.subs.filter(x=>x.status==='approved'&&state.quests.find(q=>q.id===x.quest_id)?.category==='home').length>=5)codes.push('little_helper');
+ if(state.subs.filter(x=>x.status==='approved'&&state.quests.find(q=>q.id===x.quest_id)?.category==='reading').length>=3)codes.push('book_explorer');
+ if(state.subs.filter(x=>x.status==='approved'&&state.quests.find(q=>q.id===x.quest_id)?.category==='math').length>=3)codes.push('number_star');
+ if(state.subs.filter(x=>x.status==='approved'&&state.quests.find(q=>q.id===x.quest_id)?.category==='quran').length>=3)codes.push('faith_journey');
+ codes.forEach(code=>{if(!state.achievements.some(a=>a.achievement_code===code))state.achievements.push({achievement_code:code})});
+ save();render();
+};
+window.approveReward=id=>{
+ if(role!=='parent')return;
+ const r=state.redemptions.find(x=>x.id===id&&x.status==='pending');if(!r)return;
+ const balance=totals().coins;if(balance<r.reward_snapshot.cost){alert('Coins tidak mencukupi.');return}
+ r.status='approved';r.approved_at=stamp();
+ state.coins.push({id:uid(),child_user_id:targetChild(),delta:-Number(r.reward_snapshot.cost),created_at:stamp()});
+ save();render();
+};
+window.rejectReward=id=>{if(role!=='parent')return;const r=state.redemptions.find(x=>x.id===id&&x.status==='pending');if(r){r.status='rejected';save();render()}};
+window.redeem=id=>{
+ if(role!=='child')return;
+ const r=state.rewards.find(x=>x.id===id&&x.is_active!==false);if(!r||totals().coins<r.cost)return;
+ if(state.redemptions.some(x=>x.reward_id===id&&x.status==='pending')){alert('Permintaan hadiah ini masih menunggu persetujuan.');return}
+ state.redemptions.push({id:uid(),reward_id:id,status:'pending',requested_at:stamp(),reward_snapshot:{name:r.name,cost:r.cost}});
+ save();render();alert('Permintaan hadiah dikirim kepada orang tua.');
+};
+window.delQ=id=>{if(role!=='parent'||!confirm('Nonaktifkan misi ini?'))return;const q=state.quests.find(x=>x.id===id);if(q)q.is_active=false;save();render()};
+$('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
+$('parent').onclick=()=>role==='parent'?setRole('child'):openGate();
+$('gatesubmit').onclick=verifyGate;
+$('gateform').addEventListener('submit',verifyGate);
+$('gatecancel').onclick=closeGate;
+$('gatemodal').onclick=e=>{if(e.target.id==='gatemodal')closeGate()};
+$('add').onclick=()=>$('modal').classList.add('open');
+$('close').onclick=()=>$('modal').classList.remove('open');
+$('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};
+$('questform').onsubmit=e=>{
+ e.preventDefault();if(role!=='parent')return;
+ const d=Object.fromEntries(new FormData(e.target));
+ state.quests.push({id:uid(),title:d.title,category:d.category,icon:d.icon||'⭐',xp:+d.xp,coins:+d.coins,description:d.description||'',is_active:true,created_at:stamp()});
+ save();e.target.reset();$('modal').classList.remove('open');render();
+};
+$('rewardform').onsubmit=e=>{
+ e.preventDefault();if(role!=='parent')return;
+ const d=Object.fromEntries(new FormData(e.target));
+ state.rewards.push({id:uid(),name:d.name,description:'',kind:({Aktivitas:'activity',Privilege:'privilege',Barang:'item'})[d.kind],cost:+d.cost,is_active:true});
+ save();e.target.reset();render();
+};
+tab('child');render();
 </script></body></html>
