@@ -38,6 +38,46 @@
 <div class="notice">🌱 Yang terpenting bukan menyelesaikan semua misi, tetapi belajar bertanggung jawab dan menikmati prosesnya. Tidak ada pengurangan XP.</div><footer>HomeQuest · Made for little explorers and their families</footer></main></div>
 <div class="modalbg" id="modal"><div class="modal"><button class="close" id="close">×</button><h2>Buat quest baru</h2><form id="questform" class="formgrid"><div class="field full"><label>Nama misi</label><input name="title" required placeholder="Contoh: Rapikan mainan"></div><div class="field"><label>Kategori</label><select name="category"><option value="home">Home Hero</option><option value="math">Brain Master</option><option value="reading">Book Explorer</option><option value="quran">Faith Journey</option><option value="english">Language Explorer</option></select></div><div class="field"><label>Emoji</label><input name="icon" value="⭐" maxlength="4"></div><div class="field"><label>XP</label><input name="xp" type="number" min="1" max="100" value="10"></div><div class="field"><label>Coins</label><input name="coins" type="number" min="0" max="100" value="2"></div><div class="field full"><label>Instruksi</label><textarea name="description" rows="2"></textarea></div><div class="field full"><button class="primary">Simpan quest</button></div></form></div></div>
 <script>
+(function(){
+ const params=new URLSearchParams(location.hash.replace(/^#/,''));
+ const recovery=params.get('type')==='recovery'&&params.get('access_token');
+ if(!recovery)return;
+ window.__homeQuestRecoveryToken=params.get('access_token');
+ window.addEventListener('DOMContentLoaded',()=>{
+  const login=document.getElementById('loginform');
+  const form=document.getElementById('recoveryform');
+  const status=document.getElementById('autherror');
+  if(login)login.classList.add('hidden');
+  if(form)form.classList.remove('hidden');
+  if(status){status.className='auth-error info';status.textContent='Tautan pemulihan terdeteksi. Silakan buat kata sandi baru.'}
+  if(form&&!form.dataset.standaloneBound){
+   form.dataset.standaloneBound='1';
+   form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const p=document.getElementById('newpassword').value;
+    const confirm=document.getElementById('confirmnewpassword').value;
+    const btn=document.getElementById('savepasswordbtn');
+    const show=(msg,type='error')=>{status.className='auth-error'+(type==='success'?' success':type==='info'?' info':'');status.textContent=msg};
+    if(p.length<8){show('Kata sandi minimal 8 karakter.');return}
+    if(p!==confirm){show('Kedua kata sandi belum sama.');return}
+    btn.disabled=true;btn.textContent='Menyimpan…';show('Menyimpan kata sandi baru…','info');
+    try{
+     const response=await fetch('https://sljrtrwkrweiaaoxkumy.supabase.co/auth/v1/user',{
+      method:'PUT',headers:{'Content-Type':'application/json','apikey':'sb_publishable_PKOC83y9_bvLzCUlrgiAEQ_oUPYKAUp','Authorization':'Bearer '+window.__homeQuestRecoveryToken},
+      body:JSON.stringify({password:p})
+     });
+     if(!response.ok){let msg='HTTP '+response.status;try{const d=await response.json();msg=d.msg||d.message||d.error_description||msg}catch(_){}show('Kata sandi belum berhasil diubah: '+msg+'. Minta tautan reset baru jika tautan sudah kedaluwarsa.');return}
+     show('Kata sandi berhasil diperbarui. Silakan masuk menggunakan kata sandi baru.','success');
+     window.__homeQuestRecoveryToken=null;
+     history.replaceState({},document.title,location.pathname);
+     form.classList.add('hidden');login.classList.remove('hidden');
+     document.getElementById('password').value='';
+    }catch(error){show('Gagal menghubungi layanan: '+(error.message||'Periksa koneksi internet.'))}
+    finally{btn.disabled=false;btn.textContent='Simpan kata sandi baru'}
+   });
+  }
+ });
+})();
 window.homeQuestReset=async function(event){
  if(event)event.preventDefault();
  const emailInput=document.getElementById('email');
